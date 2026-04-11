@@ -53,16 +53,16 @@ I wanted to create a tool that is **fast**, **modern**, **beginner-friendly**, k
 ### How to use
 1.  **Online:** Visit the [Live Demo](https://investmentcalculator.pomerancee.workers.dev).
 2.  **Locally:** 
-    *   Clone this repository: `git clone https://github.com/robinjiri/Investment-Calculator.git`
+    *   Clone this repository: `git clone https://github.com/robajzsek-a11y/Invest-Calculator.git`
     *   Open `index.html` in your favorite browser.
 
 ## Contributing
-Contributions, ideas, and improvements are welcome. [![Contributing](https://img.shields.io/badge/Contributing-Yes-brightgreen)](https://github.com/robinjiri/Investment-Calculator/blob/main/CONTRIBUTING.md)
+Contributions, ideas, and improvements are welcome. [![Contributing](https://img.shields.io/badge/Contributing-Yes-brightgreen)](https://github.com/robinjiri/Invest-Calculator/blob/main/CONTRIBUTING.md)
 Feel free to open an issue or submit a pull request.
 
 ## ⭐ Like this project?
 If you find it useful, give it a star on GitHub!  
-[![GitHub stars](https://img.shields.io/github/stars/robinjiri/Investment-Calculator)](https://github.com/robinjiri/Investment-Calculator/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/robajzsek-a11y/Invest-Calculator)](https://github.com/robajzsek-a11y/Invest-Calculator/stargazers)
 
 ## License
 This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**. 
