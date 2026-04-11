@@ -202,7 +202,7 @@ async function fetchGitHubStars() {
     if (!githubStarCountNode) return;
 
     try {
-        const response = await fetch('https://api.github.com/repos/robinjiri/Investment-Calculator');
+        const response = await fetch('https://api.github.com/repos/robajzsek-a11y/Investing-Calculator');
         if (!response.ok) return; // Keep hardcoded count if rate-limited or failed
         
         const data = await response.json();
