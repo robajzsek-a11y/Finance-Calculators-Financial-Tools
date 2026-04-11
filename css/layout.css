@@ -1,0 +1,2596 @@
+/*---------LAYOUT AND CONTAINERS------------*/
+
+.app-container {
+    /* Main wrapper for the entire application */
+    max-width: 1700px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+#app-header-section {
+    position: relative;
+    z-index: 9999;
+}
+
+.top-controls {
+    /* Container for theme toggle and language selection */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+    z-index: 99999;
+}
+
+/* Ensure the language dropdown fits content and expands to the left instead of overflowing the screen */
+.top-controls #custom-language-select {
+    width: max-content;
+}
+
+.top-controls #custom-language-select .custom-options {
+    width: max-content;
+    min-width: 100%;
+    left: auto;
+    right: 0;
+}
+
+@media (min-width: 901px) {
+    #app-header-section > .github-btn {
+        display: flex;
+        width: fit-content;
+        margin: 1rem 0 0;
+    }
+}
+
+/*---------HEADER STYLES------------*/
+
+header {
+    /* Application title and subtitle section */
+    text-align: center;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+/* Header Controls */
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+
+/*---------CALCULATOR GRID AND PANELS------------*/
+
+.calculator-grid {
+    /* Main layout grid separating inputs from results */
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 1rem;
+    /* 16px as requested */
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .calculator-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Controls Panel - Left side input container */
+.controls-panel {
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    position: relative;
+    z-index: 3;
+}
+
+.controls-panel-border {
+    display: none;
+}
+
+#tabbar {
+    display: none;
+}
+
+@media (min-width: 901px) {
+    .controls-panel {
+        position: relative;
+        isolation: isolate;
+        overflow: visible;
+    }
+
+    .controls-panel > :not(.controls-panel-border) {
+        position: relative;
+        z-index: 1;
+    }
+
+    .controls-panel-border {
+        display: block;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .controls-panel-border path {
+        fill: none;
+        vector-effect: non-scaling-stroke;
+    }
+
+    .controls-panel-border-track {
+        stroke: color-mix(in srgb, var(--primary-color) 84%, white);
+        stroke-width: 0.95;
+        opacity: 0.8;
+        filter: drop-shadow(0 0 6px color-mix(in srgb, var(--primary-color) 34%, transparent)) drop-shadow(0 0 15px color-mix(in srgb, var(--primary-color) 22%, transparent));
+    }
+
+    .controls-panel-border-wave {
+        stroke: color-mix(in srgb, var(--primary-color) 86%, white);
+        stroke-width: 1.3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 12 88;
+        stroke-dashoffset: 0;
+        opacity: 0.7;
+        filter: drop-shadow(0 0 7px color-mix(in srgb, var(--primary-color) 40%, transparent)) drop-shadow(0 0 15px color-mix(in srgb, var(--primary-color) 24%, transparent));
+        animation: controls-panel-wave 18s linear infinite;
+    }
+
+    .controls-panel-border-wave-secondary {
+        stroke: color-mix(in srgb, var(--primary-color) 78%, white);
+        stroke-width: 1.05;
+        stroke-dasharray: 9 91;
+        opacity: 0.44;
+        filter: drop-shadow(0 0 6px color-mix(in srgb, var(--primary-color) 34%, transparent)) drop-shadow(0 0 13px color-mix(in srgb, var(--primary-color) 20%, transparent));
+        animation-duration: 18s;
+        animation-delay: -12s;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .controls-panel-border-wave,
+        .controls-panel-border-wave-secondary {
+            animation: none;
+            stroke-dashoffset: 0;
+        }
+    }
+}
+
+/*---------INPUT GROUPS AND WRAPPERS------------*/
+
+.input-group {
+    /* Standard layout for each input field and its label */
+    margin-bottom: 1.5rem;
+    position: relative;
+    /* Create stacking context for each group */
+    z-index: 1;
+}
+
+.input-group:has(.open) {
+    z-index: 2000;
+    /* Bring the entire group to front when dropdown is open */
+}
+
+/* Keeps tooltip 'i' always inline with label text, even when text wraps */
+.checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+    flex: 1;
+    /* Allow text to take up remaining space */
+    line-height: 1.2;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    z-index: 1;
+    /* Base stacking context */
+}
+
+/* Ensure the wrapper with an open dropdown is always on top */
+.input-wrapper:focus-within,
+.input-wrapper:has(.open) {
+    z-index: 1000;
+}
+
+.currency-symbol,
+.percent-symbol {
+    position: absolute;
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+.currency-symbol {
+    left: 1rem;
+}
+
+.currency-symbol.right {
+    left: auto;
+    right: 1rem;
+}
+
+.percent-symbol {
+    right: 1rem;
+}
+
+.input-wrapper.right-symbol input[type="number"] {
+    padding-left: 1rem;
+    padding-right: 3rem;
+}
+
+input[type="number"],
+select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-wrapper input[type="number"] {
+    padding-left: 3rem;
+}
+
+/* Adjust padding for percentage inputs */
+.input-wrapper input[type="number"]:not([id="initial-investment"]):not([id="contribution"]) {
+    padding-left: 1rem;
+    padding-right: 2.5rem;
+}
+
+/* Inline currency select next to initial investment input */
+.input-wrapper .currency-select {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 120px;
+    padding: 0.5rem;
+    background: var(--input-bg);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    outline: none;
+}
+
+/* Make room for inline currency select */
+.input-wrapper #initial-investment {
+    padding-right: 135px;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+/*---------CYBER CHECKBOX------------*/
+
+/* High-tech animated checkbox with particle effects */
+.checkbox-group {
+    margin-top: 0.5rem;
+}
+
+/* Ensure cyber-checkbox wins over .input-group label specificity */
+.input-group label.cyber-checkbox,
+.cyber-checkbox {
+    --checkbox-size: 22px;
+    --checkbox-color: #5c67ff;
+    --checkbox-check-color: #ffffff;
+    --checkbox-hover-color: #4c57ef;
+    --checkbox-spark-offset: -20px;
+
+    position: relative;
+    display: inline-flex !important;
+    /* Force flex to prevent block override */
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+    width: 100%;
+}
+
+.cyber-checkbox input {
+    display: none;
+}
+
+.cyber-checkbox__mark {
+    position: relative;
+    display: inline-block;
+    width: var(--checkbox-size);
+    height: var(--checkbox-size);
+    flex-shrink: 0;
+    align-self: center;
+    vertical-align: middle;
+}
+
+.cyber-checkbox__box {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--checkbox-color);
+    border-radius: 4px;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.cyber-checkbox__check {
+    position: absolute;
+    inset: 0;
+    padding: 2px;
+    stroke: var(--checkbox-check-color);
+    stroke-width: 2px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    transform: scale(0);
+    transition: transform 0.2s ease;
+}
+
+.cyber-checkbox__effects {
+    position: absolute;
+    inset: var(--checkbox-spark-offset);
+    pointer-events: none;
+}
+
+.cyber-checkbox__spark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px;
+    height: 2px;
+    background: var(--checkbox-color);
+    border-radius: 50%;
+    opacity: 0;
+    transform-origin: center center;
+}
+
+/* Hover */
+.cyber-checkbox:hover .cyber-checkbox__box {
+    border-color: var(--checkbox-hover-color);
+    box-shadow: 0 0 0 2px rgba(92, 103, 255, 0.1);
+}
+
+/* Checked */
+.cyber-checkbox input:checked+.cyber-checkbox__mark .cyber-checkbox__box {
+    background: var(--checkbox-color);
+    border-color: var(--checkbox-color);
+}
+
+.cyber-checkbox input:checked+.cyber-checkbox__mark .cyber-checkbox__check {
+    transform: scale(1);
+}
+
+/* Spark Animation */
+.cyber-checkbox input:checked+.cyber-checkbox__mark .cyber-checkbox__spark {
+    animation: spark 0.4s ease-out;
+}
+
+.cyber-checkbox__spark:nth-child(1) {
+    transform: rotate(0deg) translateX(var(--checkbox-spark-offset));
+}
+
+.cyber-checkbox__spark:nth-child(2) {
+    transform: rotate(90deg) translateX(var(--checkbox-spark-offset));
+}
+
+.cyber-checkbox__spark:nth-child(3) {
+    transform: rotate(180deg) translateX(var(--checkbox-spark-offset));
+}
+
+.cyber-checkbox__spark:nth-child(4) {
+    transform: rotate(270deg) translateX(var(--checkbox-spark-offset));
+}
+
+@keyframes spark {
+    0% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg) translateX(var(--checkbox-spark-offset));
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1) rotate(0deg) translateX(calc(var(--checkbox-spark-offset) * 1.5));
+    }
+}
+
+/* Active */
+.cyber-checkbox:active .cyber-checkbox__box {
+    transform: scale(0.9);
+}
+
+/* Focus */
+.cyber-checkbox input:focus+.cyber-checkbox__mark .cyber-checkbox__box {
+    box-shadow: 0 0 0 4px rgba(92, 103, 255, 0.2);
+}
+
+.cyber-checkbox__particles {
+    position: absolute;
+    inset: -50%;
+    pointer-events: none;
+}
+
+.cyber-checkbox__particles div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--checkbox-color);
+    opacity: 0;
+}
+
+/* Particle animations for check */
+.cyber-checkbox input:checked+.cyber-checkbox__mark .particle-1 {
+    animation: particle-1 0.4s ease-out forwards;
+}
+
+.cyber-checkbox input:checked+.cyber-checkbox__mark .particle-2 {
+    animation: particle-2 0.4s ease-out forwards 0.1s;
+}
+
+.cyber-checkbox input:checked+.cyber-checkbox__mark .particle-3 {
+    animation: particle-3 0.4s ease-out forwards 0.15s;
+}
+
+.cyber-checkbox input:checked+.cyber-checkbox__mark .particle-4 {
+    animation: particle-4 0.4s ease-out forwards 0.05s;
+}
+
+.cyber-checkbox input:checked+.cyber-checkbox__mark .particle-5 {
+    animation: particle-5 0.4s ease-out forwards 0.12s;
+}
+
+.cyber-checkbox input:checked+.cyber-checkbox__mark .particle-6 {
+    animation: particle-6 0.4s ease-out forwards 0.08s;
+}
+
+.cyber-checkbox input:checked+.cyber-checkbox__mark .particle-7 {
+    animation: particle-7 0.4s ease-out forwards 0.18s;
+}
+
+.cyber-checkbox input:checked+.cyber-checkbox__mark .particle-8 {
+    animation: particle-8 0.4s ease-out forwards 0.15s;
+}
+
+/* Particle animations for uncheck */
+.cyber-checkbox input:not(:checked)+.cyber-checkbox__mark .particle-1 {
+    animation: particle-out-1 0.4s ease-out forwards;
+}
+
+.cyber-checkbox input:not(:checked)+.cyber-checkbox__mark .particle-2 {
+    animation: particle-out-2 0.4s ease-out forwards 0.1s;
+}
+
+.cyber-checkbox input:not(:checked)+.cyber-checkbox__mark .particle-3 {
+    animation: particle-out-3 0.4s ease-out forwards 0.15s;
+}
+
+.cyber-checkbox input:not(:checked)+.cyber-checkbox__mark .particle-4 {
+    animation: particle-out-4 0.4s ease-out forwards 0.05s;
+}
+
+.cyber-checkbox input:not(:checked)+.cyber-checkbox__mark .particle-5 {
+    animation: particle-out-5 0.4s ease-out forwards 0.12s;
+}
+
+.cyber-checkbox input:not(:checked)+.cyber-checkbox__mark .particle-6 {
+    animation: particle-out-6 0.4s ease-out forwards 0.08s;
+}
+
+.cyber-checkbox input:not(:checked)+.cyber-checkbox__mark .particle-7 {
+    animation: particle-out-7 0.4s ease-out forwards 0.18s;
+}
+
+.cyber-checkbox input:not(:checked)+.cyber-checkbox__mark .particle-8 {
+    animation: particle-out-8 0.4s ease-out forwards 0.15s;
+}
+
+@keyframes particle-1 {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-20px, -20px) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-2 {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(20px, -20px) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-3 {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(20px, 20px) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-4 {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-20px, 20px) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-5 {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-30px, 0px) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-6 {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(30px, 0px) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-7 {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(0px, -30px) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-8 {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(0px, 30px) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-out-1 {
+    0% {
+        transform: translate(-20px, -20px) scale(1);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-out-2 {
+    0% {
+        transform: translate(20px, -20px) scale(1);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-out-3 {
+    0% {
+        transform: translate(20px, 20px) scale(1);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-out-4 {
+    0% {
+        transform: translate(-20px, 20px) scale(1);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-out-5 {
+    0% {
+        transform: translate(-30px, 0px) scale(1);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-out-6 {
+    0% {
+        transform: translate(30px, 0px) scale(1);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-out-7 {
+    0% {
+        transform: translate(0px, -30px) scale(1);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes particle-out-8 {
+    0% {
+        transform: translate(0px, 30px) scale(1);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+}
+
+/*---------RANGE SLIDER------------*/
+
+/* Custom styling for the investment duration slider */
+.range-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+input[type="range"] {
+    flex: 1;
+    height: 10px;
+    /* Stronger track */
+    background: var(--border-color);
+    border-radius: 50px;
+    appearance: none;
+    outline: none;
+    transition: all 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 24px;
+    /* Bigger knob */
+    height: 24px;
+    background: var(--primary-color);
+    border: 3px solid white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+
+
+input[type="range"]:active::-webkit-slider-thumb {
+    transform: scale(1.2);
+    box-shadow: 0 0 15px var(--primary-color);
+}
+
+input[type="range"].inactive {
+    opacity: 0.5;
+    pointer-events: none;
+    filter: grayscale(100%);
+    cursor: not-allowed;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+/*---------COLLAPSIBLE SECTIONS------------*/
+
+/* Animated panels for optional settings like Inflation, Tax, and FIRE */
+.collapsible-section {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out, opacity 0.4s ease-in-out, margin 0.4s ease;
+    margin-top: 0;
+}
+
+.collapsible-section.expanded {
+    max-height: 1000px;
+    opacity: 1;
+    margin-top: 1.5rem;
+    overflow: visible;
+}
+
+/* Specific adjustment for input containers to keep them closer to checkbox */
+#inflation-input-container.expanded,
+#tax-input-container.expanded {
+    margin-top: 1rem;
+    max-height: 100px;
+}
+
+
+
+
+/*---------RESULTS PANEL------------*/
+
+.results-panel {
+    /* Right side visualization container using Grid Areas */
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 250px;
+    grid-template-areas:
+        "summary  empty1"
+        "header   empty2"
+        "chart    status"
+        "details  status";
+    gap: 1.5rem;
+    align-items: start;
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 1200px) {
+    .results-panel {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "summary"
+            "header"
+            "chart"
+            "status"
+            "details";
+    }
+}
+
+
+/*---------CHART AND GRAPH STYLES------------*/
+
+.status-side {
+    /* Section for milestones and secondary results */
+    grid-area: status;
+}
+
+.status-side--mobile-only {
+    display: none;
+}
+
+.status-side--desktop-only {
+    display: block;
+}
+
+@media (max-width: 1200px) {
+    .status-side {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+}
+
+/* Chart Header & Controls */
+.chart-header {
+    grid-area: header;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: -1rem;
+}
+
+.graph-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(135deg, var(--primary-color), var(--success-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    letter-spacing: -0.02em;
+    flex: 0 1 auto;
+    white-space: nowrap;
+}
+
+.chart-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    flex: 0 0 auto;
+}
+
+.chart-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: var(--bg-body);
+    padding: 0.25rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    flex: 0 0 auto;
+}
+
+.chart-type-switches {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex: 0 0 auto;
+}
+
+.chart-type-btn {
+    flex: 0 0 auto;
+    padding: 0.35rem 0.72rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: calc(var(--radius-md) - 2px);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.chart-type-btn.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.chart-type-btn:hover:not(.active) {
+    color: var(--text-main);
+}
+
+.chart-visual-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    padding: 0.35rem 0.55rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: transparent;
+}
+
+.chart-visual-toggle .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.chart-visual-toggle .container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    font-size: 16px;
+    user-select: none;
+    line-height: 1;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    margin: -10px;
+    border-radius: 14px;
+}
+
+.chart-overlay-bar {
+    position: absolute;
+    top: 0.85rem;
+    right: 1rem;
+    left: 1rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.chart-overlay-legend {
+    display: flex;
+    align-items: center;
+    gap: 0.95rem;
+    flex-wrap: wrap;
+    min-width: 0;
+    pointer-events: auto;
+}
+
+.chart-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.38rem;
+    color: color-mix(in srgb, var(--text-secondary) 88%, transparent);
+    font-size: 0.75rem;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.chart-legend-marker {
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.chart-legend-marker--line,
+.chart-legend-marker--dashed {
+    width: 12px;
+    height: 0;
+    border-top: 2px solid currentColor;
+}
+
+.chart-legend-marker--dashed {
+    border-top-style: dashed;
+}
+
+.chart-legend-marker--box {
+    width: 12px;
+    height: 8px;
+    border-radius: 999px;
+    background: currentColor;
+}
+
+.chart-legend-marker--dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: currentColor;
+}
+
+.chart-legend-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.32rem;
+}
+
+.chart-legend-text {
+    min-width: 0;
+}
+
+.chart-legend-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, var(--border-color) 90%, transparent);
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.chart-visual-toggle--overlay {
+    margin-left: auto;
+    pointer-events: auto;
+}
+
+.chart-visual-toggle .checkmark {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 1.4em;
+    width: 1.4em;
+    border: 2px solid #2196F3;
+    border-radius: 1rem 0rem 1rem;
+    transform: rotate(45deg);
+    transition: all .5s ease-in-out;
+}
+
+.chart-visual-toggle .container input:checked~.checkmark {
+    box-shadow: 0px 0px 40px 5px #2196F3;
+    border-radius: 1rem 0rem 1rem;
+    background-color: #2195f31f;
+}
+
+.chart-visual-toggle .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.chart-visual-toggle .container input:checked~.checkmark:after {
+    display: block;
+}
+
+.chart-visual-toggle .container .checkmark:after {
+    left: 0.35em;
+    top: 0.20em;
+    width: 0.25em;
+    height: 0.5em;
+    border: solid #2196F3;
+    border-width: 0 0.15em 0.15em 0;
+    transform: rotate(-5deg);
+    animation: upAnimate 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes upAnimate {
+    from {
+        transform: translate(-20px, -20px) rotate(-5deg);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(0, 0) rotate(-5deg);
+        opacity: 1;
+    }
+}
+
+/* FIRE Status Styles */
+.fire-stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+}
+
+.fire-stat:last-of-type {
+    border-bottom: none;
+}
+
+.fire-stat strong {
+    color: var(--success-color);
+    font-size: 1rem;
+}
+
+.fire-note {
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.highlight .amount {
+    color: var(--primary-color);
+}
+
+.chart-container {
+    grid-area: chart;
+    background: var(--bg-card);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    height: 500px;
+    position: relative;
+}
+
+
+
+
+/*---------MILESTONES------------*/
+
+/* Financial goals achieved over the investment duration */
+.milestones-container {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.milestones-container h3 {
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+#milestones-list,
+#extra-milestones-list,
+#milestones-list-desktop,
+#extra-milestones-list-desktop {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#milestones-list li,
+#extra-milestones-list li,
+#milestones-list-desktop li,
+#extra-milestones-list-desktop li {
+    background: var(--bg-body);
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    margin-bottom: 0.75rem;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+#milestones-list li:hover,
+#extra-milestones-list li:hover,
+#milestones-list-desktop li:hover,
+#extra-milestones-list-desktop li:hover {
+    transform: translateX(4px);
+    border-color: var(--primary-color);
+}
+
+.milestone-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.milestone-icon {
+    font-size: 1.5rem;
+    background: var(--bg-card);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
+}
+
+.milestone-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.milestone-content strong {
+    font-size: 1.1rem;
+    color: var(--text-main);
+}
+
+.milestone-content .year {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+#extra-milestones-container.expanded,
+#extra-milestones-container-desktop.expanded {
+    margin-top: 0;
+    /* Keep it tight with the main list */
+}
+
+.dark-btn {
+    background: #2d3748 !important;
+    /* Dark gray */
+    color: #a0aec0 !important;
+    border: 1px solid #4a5568 !important;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+}
+
+.dark-btn:hover {
+    background: #4a5568 !important;
+    color: white !important;
+}
+
+/*---------BREAKDOWN TABLE------------*/
+
+/* Year-by-year financial analysis table */
+.details-section {
+    grid-area: details;
+    text-align: center;
+}
+
+#breakdown-table-container.expanded {
+    max-height: 1000px;
+    opacity: 1;
+    margin-top: 1.5rem;
+    overflow: visible;
+}
+
+.table-header-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 2fr;
+    padding: 0.75rem 1.25rem;
+    background: rgba(30, 41, 59, 0.6);
+    /* Subtle background separate from box */
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.table-scroll-area {
+    max-height: 400px;
+    overflow-y: auto;
+    background: rgba(15, 23, 42, 0.3);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+body.light-mode .table-header-grid {
+    background: rgba(241, 245, 249, 0.8);
+    color: #4338ca;
+}
+
+body.light-mode .table-scroll-area {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.breakdown-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 0;
+    /* No margin needed now */
+    font-size: 0.875rem;
+}
+
+.breakdown-table td {
+    padding: 0.75rem 1rem;
+    text-align: right;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+/* Column alignment with header grid */
+.breakdown-table td:nth-child(1) {
+    width: 14.28%;
+    text-align: left;
+}
+
+.breakdown-table td:nth-child(2) {
+    width: 28.57%;
+}
+
+.breakdown-table td:nth-child(3) {
+    width: 28.57%;
+}
+
+.breakdown-table td:nth-child(4) {
+    width: 28.57%;
+}
+
+.table-header-grid span:nth-child(1) {
+    text-align: left;
+}
+
+.table-header-grid span:nth-child(2),
+.table-header-grid span:nth-child(3),
+.table-header-grid span:nth-child(4) {
+    text-align: right;
+}
+
+.breakdown-table tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/*---------DISCLAIMER AND FOOTER------------*/
+
+.disclaimer-section {
+    /* Legal disclaimer and data origin notes */
+    margin: 1.5rem auto 0;
+    max-width: 800px;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.disclaimer-text {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    opacity: 0.8;
+}
+
+body.light-mode .disclaimer-text {
+    color: #64748b;
+    /* Slate 500 */
+    opacity: 1;
+}
+
+.etf-description {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    font-style: italic;
+    min-height: 1.2rem;
+}
+
+
+@media (max-width: 900px) {
+    :root {
+        /* ==========================================================
+           Mobile Layout Variables (Adaptive & Editable values)
+           Uses clamp() to scale perfectly between small/large screens
+           ========================================================== */
+
+        /* Core Spacing */
+        --mobile-app-padding: clamp(0.25rem, 2vw, 0.75rem);
+        --mobile-body-padding: clamp(0.5rem, 3vw, 1.25rem);
+        --mobile-bottom-spacing: clamp(100px, 15vh, 140px);
+        /* Space for the floating tabbar */
+
+        /* Header Configuration (Visible only on Tab 1) */
+        --mobile-header-margin-bottom: clamp(0.5rem, 2vh, 1.5rem);
+        --mobile-header-padding-right: clamp(80px, 25vw, 120px);
+        /* Space for top controls */
+        --mobile-header-title-size: clamp(1rem, 5vw, 1.5rem);
+        --mobile-header-desc-size: clamp(0.2rem, 2vw, 0.95rem);
+
+        /* Top Right Controls (Theme & Language) */
+        --mobile-toggles-scale: 0.65;
+        --mobile-toggles-top: 0;
+        --mobile-toggles-right: 0;
+        --mobile-toggles-gap: clamp(0.25rem, 1.5vw, 1rem);
+
+        /* Summary 3-Boxes Layout */
+        --mobile-card-height: clamp(6rem, 12vh, 8.5rem);
+        --mobile-cards-gap: clamp(0.15rem, 1vw, 0.5rem);
+        --mobile-card-width: 33.333%;
+        --mobile-card-padding: clamp(0.15rem, 0.8vh, 0.4rem) clamp(0.1rem, 0.5vw, 0.5rem);
+        --mobile-card-title-size: clamp(0.5rem, 2.8vw, 0.75rem);
+        --mobile-card-value-size: clamp(0.4rem, 3vw, 0.8rem);
+        --mobile-card-percent-size: clamp(0.6rem, 3.2vw, 0.8rem);
+
+        /* Chart */
+        --mobile-chart-height: clamp(260px, 45vh, 420px);
+        --mobile-chart-padding: clamp(0.25rem, 2vw, 1rem);
+        --mobile-graph-title-size: clamp(0.7rem, 3.5vw, 0.95rem);
+        --mobile-chart-btn-font: clamp(0.65rem, 3vw, 0.8rem);
+        --mobile-chart-btn-padding: clamp(0.3rem, 1.5vw, 0.6rem) clamp(0.4rem, 2vw, 0.85rem);
+
+        /* Tab Bar Navigation */
+        --mobile-tab-active-color: #3b82f6;
+
+        /* Buttons / Touch Interactions */
+        --mobile-touch-target: clamp(40px, 12vw, 56px);
+
+        /* Inputs & Controls (Tab 2) */
+        --mobile-input-padding: clamp(0.5rem, 2vw, 1rem);
+        --mobile-input-font: clamp(0.85rem, 4.5vw, 1.2rem);
+        --mobile-label-font: clamp(0.75rem, 3.5vw, 1rem);
+
+        /* Tables (Tab 3) */
+        --mobile-table-font: clamp(0.65rem, 3vw, 0.85rem);
+        --mobile-table-padding: clamp(0.5rem, 2vw, 1rem);
+
+        /* Milestones (Tab 4) */
+        --mobile-milestone-pad: clamp(0.75rem, 3.5vw, 1.5rem);
+        --mobile-milestone-font: clamp(0.85rem, 4vw, 1.1rem);
+        --mobile-milestone-desc: clamp(0.7rem, 3.5vw, 0.95rem);
+        --mobile-milestone-icon: clamp(32px, 10vw, 48px);
+
+        /* Footer & Disclaimers */
+        --mobile-footer-font: clamp(0.55rem, 2.5vw, 0.75rem);
+    }
+
+    /* Base Container Adjustments */
+    html,
+    body {
+        overflow-x: clip;
+        /* clip (not hidden) so position:fixed children still anchor to viewport */
+        max-width: 100vw;
+        width: 100%;
+    }
+
+    .app-container {
+        padding: var(--mobile-app-padding);
+        overflow-x: clip;
+        width: 100%;
+        max-width: 100vw;
+    }
+
+    body {
+        padding: var(--mobile-body-padding);
+        padding-bottom: var(--mobile-bottom-spacing);
+    }
+
+    /* On tab 1: strip all top padding so the title starts at the very top */
+    body[data-active-tab="1"] {
+        padding-top: 0;
+    }
+
+    body[data-active-tab="1"] .app-container {
+        padding-top: 0;
+    }
+
+    /* Global Mobile Layout */
+    body:not([data-active-tab="0"]) #app-header-section {
+        display: none !important;
+    }
+
+    #app-header-section {
+        margin-bottom: var(--mobile-header-margin-bottom);
+        padding-right: 170px; /* Increased from 120px to comfortably clear the button */
+    }
+
+
+    #app-header-section h1 {
+        font-size: var(--mobile-header-title-size);
+        text-align: left;
+        margin-top: 0;
+        line-height: 1.2;
+    }
+
+    #app-header-section .app-description {
+        font-size: var(--mobile-header-desc-size);
+        text-align: left;
+        margin-top: 0.25rem;
+        margin-bottom: 0.15rem;
+    }
+
+    /* Top controls sit at the top right of the header and scroll away naturally */
+    .top-controls {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: var(--mobile-toggles-gap);
+        z-index: 1000;
+        transform: scale(var(--mobile-toggles-scale));
+        transform-origin: top right;
+    }
+
+    /* Prevent the 1.1 scale jump when touched/highlighted on mobile */
+    .top-controls .toggle-switch:hover,
+    .top-controls .toggle-switch:active {
+        transform: scale(1.0) !important;
+    }
+
+    /* Make the language selector naturally fit its text */
+    .top-controls #custom-language-select {
+        width: max-content;
+    }
+
+    .top-controls .selected-option {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+        min-height: unset !important;
+    }
+
+    /* Dropdown uses standard absolute positioning. 
+       Since .top-controls is fixed and z-index 99999, this will overlap the entire page automatically */
+    #custom-language-select .custom-options {
+        width: max-content;
+        min-width: 100%;
+        left: auto;
+        right: 0;
+        max-height: 55vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+
+
+    /* Make GitHub button compact on mobile - scaled to 75% */
+    .github-btn {
+        position: relative;
+        top: auto;
+        right: auto;
+        padding: 0.5rem 0.75rem;
+        transform: scale(0.75);
+        transform-origin: top left;
+    }
+
+    .github-btn:hover {
+        transform: scale(0.86); /* 0.75 * 1.15 */
+    }
+
+    .github-btn:active {
+        transform: scale(0.71); /* 0.75 * 0.95 */
+    }
+
+    .gh-label {
+        display: inline; /* Show label text on mobile */
+    }
+
+    /* Stack grid properly */
+    .calculator-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    /* Mobile: header is the positioning context, controls pinned top-right */
+    #app-header-section {
+        position: relative;
+        text-align: left;
+        padding-right: 0;
+        z-index: 99999;
+        overflow: visible !important;
+        transform: translateZ(0);
+        /* Force hardware layer for Safari z-index bug */
+    }
+
+    #app-header-section .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+
+
+    /* Tab View Logic */
+    body [data-tab-content]:not(.tab-active) {
+        display: none !important;
+    }
+
+    body[data-active-tab="1"] .calculator-grid {
+        padding-bottom: calc(var(--mobile-bottom-spacing) + 1rem);
+    }
+
+    /* The results panel grid is broken on mobile, make it flex */
+    .results-panel {
+        display: flex !important;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    /* Controls Panel */
+    .controls-content {
+        max-height: none;
+        opacity: 1;
+        overflow: visible;
+        margin-top: 0;
+    }
+
+    /* Summary Cards */
+    .summary-cards,
+    .summary-cards.with-fire {
+        display: flex !important;
+        /* Force flex, override grid */
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .standard-cards-wrapper {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap;
+        gap: var(--mobile-cards-gap) !important;
+        width: 100%;
+        overflow: visible !important;
+        padding-top: 1px;
+        /* added vertical padding for scaled card */
+        padding-bottom: 1px;
+    }
+
+    /* Ensure only 3 main boxes are kept side-by-side */
+    .summary-cards.with-fire .standard-cards-wrapper {
+        display: flex !important;
+        flex-direction: row !important;
+    }
+
+    /* Auto height for cards, strict min-width for horizontal fit */
+    .card.invested,
+    .card.portfolio,
+    .card.profit,
+    .card.fire,
+    .summary-cards.with-fire .card.invested,
+    .summary-cards.with-fire .card.portfolio,
+    .summary-cards.with-fire .card.profit,
+    .summary-cards.with-fire .card.fire {
+        height: var(--mobile-card-height) !important;
+        min-height: auto;
+        padding: var(--mobile-card-padding) !important;
+        width: var(--mobile-card-width) !important;
+        min-width: 0 !important;
+        flex: 1 1 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        word-break: break-word;
+        hyphens: auto;
+        overflow: visible !important; /* Allow tooltips to float freely outside the box */
+        z-index: 1 !important;
+    }
+
+    .card h3 {
+        font-size: var(--mobile-card-title-size) !important;
+        margin-bottom: 0.25rem;
+        white-space: normal;
+        line-height: 1.1;
+    }
+
+    /* Prevent huge tooltips from bleeding off the edge of the mobile screen */
+    [data-tooltip]::before {
+        width: 160px;
+        font-size: 0.7rem;
+        padding: 0.4rem 0.5rem;
+    }
+
+    .card p.value {
+        font-size: var(--mobile-card-value-size) !important;
+        line-height: 1.05;
+        word-break: break-word;
+    }
+
+    .profit-percent {
+        font-size: var(--mobile-card-percent-size) !important;
+    }
+
+    .summary-cards.with-fire .card.fire {
+        width: calc(66.666% + var(--mobile-cards-gap)) !important;
+        max-width: calc(66.666% + var(--mobile-cards-gap));
+        height: auto !important;
+        min-height: 0;
+        flex: 0 0 auto;
+        gap: 0.25rem;
+        margin-inline: auto;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .summary-cards.with-fire .card.fire h3,
+    .summary-cards.with-fire .card.fire #fire-status-content,
+    .summary-cards.with-fire .card.fire .fire-stat {
+        width: 100%;
+    }
+
+    .summary-cards.with-fire .card.fire h3 {
+        margin-bottom: 0.15rem;
+    }
+
+    .summary-cards.with-fire .card.fire #fire-status-content {
+        gap: 0.25rem;
+    }
+
+    .summary-cards.with-fire .card.fire .fire-stat {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.4rem;
+        padding-bottom: 0.2rem;
+    }
+
+    .summary-cards.with-fire .card.fire .fire-stat span {
+        font-size: var(--mobile-card-title-size);
+        line-height: 1.1;
+    }
+
+    .summary-cards.with-fire .card.fire .fire-stat strong {
+        font-size: var(--mobile-card-value-size);
+        line-height: 1.05;
+    }
+
+    .summary-cards.with-fire .card.fire .fire-achieved-year {
+        width: 100%;
+        margin-top: 0.15rem;
+        padding: 0.15rem 0.3rem;
+        font-size: var(--mobile-card-percent-size);
+        line-height: 1.1;
+        text-align: center;
+    }
+
+    /* Touch Friendly Targets */
+    .secondary-btn,
+    .chart-type-btn,
+    input[type="number"],
+    select,
+    .selected-option,
+    .selected-currency,
+    .custom-option {
+        min-height: var(--mobile-touch-target);
+    }
+
+    .input-wrapper .custom-currency-select {
+        right: 0.6rem;
+        width: 104px;
+    }
+
+    .input-wrapper #initial-investment {
+        padding-right: 124px;
+    }
+
+    .selected-currency {
+        padding: 0.5rem 0.55rem;
+        gap: 0.35rem;
+    }
+
+    .selected-currency .select-arrow {
+        margin-left: 0;
+        flex-shrink: 0;
+    }
+
+    .selected-currency .currency-short {
+        min-width: 0;
+        font-size: 0.78rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Chart Adjustments */
+    .chart-container {
+        height: var(--mobile-chart-height);
+        padding: var(--mobile-chart-padding);
+        width: 100%;
+        min-width: 0;
+        max-width: 100vw;
+        overflow: visible;
+        display: block !important;
+    }
+
+    .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 0;
+        display: flex !important;
+    }
+
+    .chart-toolbar {
+        width: 100%;
+        display: flex;
+        gap: 0.55rem;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .chart-controls {
+        width: auto;
+        display: flex;
+        gap: 0.4rem;
+    }
+
+    .chart-type-switches {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .chart-type-btn {
+        text-align: center;
+        font-size: clamp(0.6rem, 2.5vw, 0.75rem);
+        padding: 0.28rem 0.2rem;
+        min-height: unset !important;
+        height: auto;
+        line-height: 1.2;
+    }
+
+    .chart-visual-toggle {
+        padding: 0.32rem 0.45rem;
+        gap: 0.6rem;
+    }
+
+    .chart-visual-toggle .container {
+        font-size: 16px;
+    }
+
+    .chart-overlay-bar {
+        top: 0.75rem;
+        right: 0.85rem;
+        left: 0.85rem;
+        gap: 0.75rem;
+    }
+
+    .chart-overlay-legend {
+        gap: 0.7rem;
+    }
+
+    .chart-legend-item--mobile {
+        padding: 0.12rem 0.18rem;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.14);
+    }
+
+    .chart-legend-item--mobile .chart-legend-toggle {
+        display: inline-flex;
+        width: 12px;
+        height: 12px;
+        margin-left: 1px;
+        font-size: 8px;
+        border-width: 1px;
+    }
+
+    .chart-legend-item--mobile .chart-legend-label {
+        display: inline-flex;
+        max-width: 0;
+        max-height: 0;
+        opacity: 0;
+        margin-left: 0;
+        gap: 0;
+        overflow: hidden;
+        align-items: center;
+        transform: translateX(-0.2rem);
+        transition: max-width 0.28s ease, max-height 0.28s ease, opacity 0.22s ease, margin-left 0.28s ease, gap 0.28s ease, transform 0.28s ease;
+        pointer-events: none;
+    }
+
+    .chart-legend-item--mobile.is-expanded .chart-legend-label {
+        max-width: 10.5rem;
+        max-height: 1.6rem;
+        opacity: 1;
+        margin-left: 0.12rem;
+        gap: 0.2rem;
+        overflow: visible;
+        transform: translateX(0);
+        pointer-events: auto;
+    }
+
+    .chart-legend-item--mobile .chart-legend-text {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        line-height: 1.15;
+    }
+
+    /* Graph section title */
+    .chart-header h3,
+    .chart-header h2,
+    .graph-title {
+        font-size: var(--mobile-graph-title-size) !important;
+        white-space: normal;
+    }
+
+    /* Breakdown table & Details Section */
+    .details-section {
+        display: block !important;
+    }
+
+    .status-side {
+        display: block !important;
+    }
+
+    #breakdown-table-container {
+        width: 100%;
+        display: block !important;
+        max-height: none !important;
+        opacity: 1 !important;
+    }
+
+    #toggle-table-btn {
+        display: none !important;
+        /* Hide the button since it's already expanded on tab 3 */
+    }
+
+    /* Milestones expansion */
+    .milestones-container {
+        display: block !important;
+        opacity: 1 !important;
+    }
+
+    .status-side--mobile-only {
+        display: block;
+    }
+
+    .status-side--desktop-only {
+        display: none;
+    }
+
+    #show-more-milestones-btn {
+        display: none !important;
+    }
+
+    .table-header-grid {
+        display: grid;
+        font-size: clamp(0.55rem, 2.5vw, 0.7rem);
+        padding: clamp(0.5rem, 2vw, 0.8rem) clamp(0.2rem, 1.2vw, 0.5rem);
+    }
+
+    .table-scroll-area {
+        overflow-x: auto;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: var(--radius-md);
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .breakdown-table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+        box-sizing: border-box;
+    }
+
+    .breakdown-table th,
+    .breakdown-table td {
+        font-size: var(--mobile-table-font);
+        padding: clamp(0.25rem, 1.5vw, 0.6rem) clamp(0.2rem, 1.2vw, 0.5rem);
+        word-break: break-all;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    #breakdown-table-container {
+        width: 100%;
+        overflow: visible;
+        box-sizing: border-box;
+    }
+
+    /* Milestones full width */
+    #milestones-list li,
+    #extra-milestones-list li {
+        width: 100%;
+        margin-bottom: clamp(0.5rem, 2vh, 1rem);
+    }
+
+    /* === NEW ADAPTIVE MOBILE SCALING FOR TABS 2, 3, 4 === */
+
+    /* Tab 2: Inputs & Labels */
+    .input-group label span:first-child {
+        font-size: var(--mobile-label-font);
+    }
+
+    input[type="number"],
+    .custom-select-wrapper select,
+    .selected-option,
+    .selected-currency,
+    .custom-option {
+        font-size: var(--mobile-input-font);
+        padding: var(--mobile-input-padding);
+    }
+
+    /* Tab 3: Breakdown Table */
+    .breakdown-table th,
+    .breakdown-table td {
+        font-size: var(--mobile-table-font);
+        padding: var(--mobile-table-padding);
+    }
+
+    /* Tab 4: Milestones */
+    .milestone-item {
+        padding: var(--mobile-milestone-pad);
+    }
+
+    .milestone-icon {
+        width: var(--mobile-milestone-icon);
+        height: var(--mobile-milestone-icon);
+    }
+
+    .milestone-text h4 {
+        font-size: var(--mobile-milestone-font);
+    }
+
+    .milestone-text p {
+        font-size: var(--mobile-milestone-desc);
+    }
+
+    /* Footer & Disclaimer */
+    .disclaimer-section p text,
+    .disclaimer-section p,
+    footer p {
+        font-size: var(--mobile-footer-font);
+    }
+
+    /* Extra padding around checkbox */
+    .checkbox-group {
+        padding: 0.5rem 0;
+    }
+
+    /* Tab Bar Styles translated from SCSS */
+    #tabbar {
+        display: block;
+        --c-color: var(--mobile-tab-active-color);
+        --c-background: var(--bg-card);
+        --indicator-x: 34px;
+        --active-line-x: 34px;
+        --indicator-circle-o: 1;
+        --indicator-circle-y: 0px;
+        -webkit-tap-highlight-color: transparent;
+        border-radius: 0;
+        overflow: hidden;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background: var(--c-background);
+        z-index: 2147483647;
+        box-shadow: var(--shadow-xl), 0 -10px 30px rgba(0, 0, 0, 0.4);
+        width: 100%;
+        max-width: 100%;
+        transform: translateZ(0);
+        will-change: transform;
+    }
+
+    #tabbar::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--primary-color) 62%, transparent) 14%, color-mix(in srgb, var(--primary-color) 88%, white) 50%, color-mix(in srgb, var(--primary-color) 62%, transparent) 86%, transparent 100%);
+        opacity: 0.55;
+        z-index: 2;
+    }
+
+    #tabbar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -24%;
+        width: 24%;
+        min-width: 84px;
+        height: 1px;
+        border-radius: 999px;
+        background:
+            linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--primary-color) 72%, transparent) 18%, color-mix(in srgb, var(--primary-color) 98%, white) 50%, color-mix(in srgb, var(--primary-color) 72%, transparent) 82%, transparent 100%),
+            radial-gradient(38% 180% at 50% 50%, color-mix(in srgb, var(--primary-color) 72%, white) 0%, transparent 72%);
+        background-repeat: no-repeat;
+        background-size: 100% 100%, 100% 100%;
+        background-position: center center, center center;
+        box-shadow: 0 0 10px color-mix(in srgb, var(--primary-color) 40%, transparent);
+        opacity: 0.9;
+        animation: tabbar-line-wave 8.4s ease-in-out infinite alternate;
+        z-index: 3;
+        pointer-events: none;
+    }
+
+    @keyframes tabbar-line-wave {
+        0% {
+            transform: translateX(0);
+            opacity: 0.7;
+        }
+
+        15% {
+            opacity: 0.95;
+        }
+
+        85% {
+            opacity: 0.95;
+        }
+
+        100% {
+            transform: translateX(520%);
+            opacity: 0.7;
+        }
+    }
+
+    body.light-mode #tabbar {
+        box-shadow: var(--shadow-xl), 0 -5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    #tabbar .indicator {
+        position: absolute;
+        z-index: 1;
+        left: 0;
+        bottom: 0;
+        display: block;
+        width: 68px;
+        height: 72px;
+        fill: var(--c-color);
+        transform: translateX(var(--indicator-x));
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: transform;
+    }
+
+    #tabbar .indicator path {
+        transform: translateY(2px);
+    }
+
+    #tabbar .indicator circle {
+        opacity: var(--indicator-circle-o);
+        transform: translateY(var(--indicator-circle-y)) translateZ(0);
+        transition: transform 0.4s, opacity 0.4s;
+    }
+
+    #tabbar ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        width: 100%;
+        height: 72px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    #tabbar ul li {
+        --icon-y: 0px;
+        --icon-s: 1;
+        --icon-circle: 0px;
+        flex: 1;
+        display: flex;
+        justify-content: center;
+    }
+
+    #tabbar ul li.active {
+        --icon-circle: 28px;
+        --icon-y: -8px;
+        --icon-s: 1.04;
+    }
+
+    #tabbar ul li button {
+        display: block;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        outline: none;
+        background: none;
+        border: none;
+        position: relative;
+        -webkit-appearance: none;
+        appearance: none;
+        transform: translateY(var(--icon-y)) scale(var(--icon-s)) translateZ(0);
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        backface-visibility: hidden;
+        will-change: transform;
+    }
+
+    #tabbar ul li button:before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 50%;
+        background: var(--c-background);
+        clip-path: circle(0px at 50% 100%);
+        transition: clip-path 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+
+    #tabbar ul li button:after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: var(--icon-circle);
+        height: var(--icon-circle);
+        border-radius: 50%;
+        background: color-mix(in srgb, var(--c-color) 18%, transparent);
+        transform: translate(-50%, -50%) scale(0.72);
+        opacity: 0;
+        transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1), height 0.4s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    #tabbar ul li.active button:before {
+        clip-path: circle(28px at 50% 100%);
+    }
+
+    #tabbar ul li.active button:after {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    #tabbar ul li button:active {
+        transform: translateY(-3px) scale(0.96) translateZ(0);
+    }
+
+    #tabbar ul li button svg.tab-icon {
+        color: var(--text-secondary);
+        display: block;
+        overflow: visible;
+        width: 28px;
+        height: 28px;
+        transition: color 0.25s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+        backface-visibility: hidden;
+    }
+
+    #tabbar ul li button svg.tab-icon:first-child {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    #tabbar ul li.active button svg.tab-icon {
+        color: var(--c-color);
+    }
+
+    #tabbar ul li button svg.tab-icon:last-child {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        left: 0;
+        clip-path: circle(0px at 50% 100%);
+        transform: scale(0.72) translateY(6px);
+        opacity: 0;
+        transition: clip-path 0.4s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+    }
+
+    #tabbar ul li.active button svg.tab-icon:last-child {
+        clip-path: circle(28px at 50% 100%);
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+
+    #tabbar ul li.active button svg.tab-icon:first-child {
+        transform: scale(0.82) translateY(-4px);
+        opacity: 0.2;
+    }
+
+    #tabbar ul li button:focus-visible {
+        outline: none;
+        filter: drop-shadow(0 0 8px color-mix(in srgb, var(--primary-color) 45%, transparent));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        #tabbar::after {
+            animation: none;
+        }
+    }
+
+    /* Hide the 4th tab (milestones) â€” it now lives inside tab 3 */
+    #tabbar ul li[data-tab-index="3"] {
+        display: none !important;
+    }
+
+    /* Milestones inside tab 3 should be full-width like the table above it */
+    .details-section .status-side {
+        width: 100%;
+        margin-top: 1.5rem;
+    }
+
+    .details-section .status-side .milestones-container {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 360px) {
+    body {
+        padding: 0.35rem;
+        padding-bottom: 92px;
+    }
+
+    .app-container {
+        padding: 0.15rem;
+    }
+
+    .controls-panel {
+        padding: 1rem;
+    }
+
+    .top-controls {
+        transform: scale(0.56);
+    }
+
+    .top-controls .custom-select-wrapper {
+        width: 132px;
+    }
+
+    .top-controls .selected-option {
+        font-size: 0.72rem;
+        padding: 0.35rem 0.55rem;
+    }
+
+    .github-btn {
+        transform: scale(0.68);
+        margin-top: 0.2rem;
+        transform-origin: top left;
+    }
+
+    .github-btn:hover {
+        transform: scale(0.74);
+    }
+
+    .github-btn:active {
+        transform: scale(0.65);
+    }
+
+    .gh-label {
+        display: inline;
+        font-size: 0.72rem;
+    }
+
+    .github-btn .gh-star-group {
+        margin-left: 0.2rem;
+    }
+
+    .github-btn .gh-star-count {
+        font-size: 0.72rem;
+    }
+
+    .input-wrapper .currency-select,
+    .input-wrapper .custom-currency-select {
+        width: 92px;
+    }
+
+    .input-wrapper .custom-currency-select {
+        right: 0.45rem;
+    }
+
+    .input-wrapper #initial-investment {
+        padding-right: 108px;
+    }
+
+    .selected-currency {
+        padding: 0.4rem 0.5rem;
+        gap: 0.25rem;
+    }
+
+    .selected-currency .currency-short {
+        font-size: 0.72rem;
+    }
+
+    .currency-options {
+        width: 148px;
+    }
+
+    .standard-cards-wrapper {
+        gap: 0.2rem !important;
+    }
+
+    .card h3 {
+        line-height: 1.05;
+    }
+
+    .chart-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .chart-controls {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .chart-type-switches {
+        width: 100%;
+    }
+
+    .chart-type-btn {
+        width: 100%;
+        font-size: 0.7rem;
+        padding: 0.45rem 0.35rem;
+    }
+
+    .chart-visual-toggle {
+        width: auto;
+        justify-content: flex-end;
+        padding: 0.32rem 0.38rem;
+        gap: 0.4rem;
+    }
+
+    .chart-overlay-bar {
+        top: 0.45rem;
+        right: 0.45rem;
+        left: 0.45rem;
+        align-items: flex-start;
+        gap: 0.35rem;
+    }
+
+    .chart-overlay-legend {
+        gap: 0.22rem;
+        max-width: calc(100% - 42px);
+    }
+
+    .chart-legend-item {
+        gap: 0.14rem;
+        font-size: 0.5rem;
+        line-height: 1;
+    }
+
+    .chart-legend-item--mobile {
+        padding: 0.08rem 0.14rem;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.14);
+    }
+
+    .chart-legend-item--mobile .chart-legend-toggle {
+        display: inline-flex;
+        width: 11px;
+        height: 11px;
+        margin-left: 1px;
+        font-size: 8px;
+        border-width: 1px;
+    }
+
+    .chart-legend-item--mobile .chart-legend-label {
+        display: inline-flex;
+        max-width: 0;
+        max-height: 0;
+        opacity: 0;
+        margin-left: 0;
+        gap: 0;
+        overflow: hidden;
+        align-items: center;
+        transform: translateX(-0.16rem);
+        transition: max-width 0.28s ease, max-height 0.28s ease, opacity 0.22s ease, margin-left 0.28s ease, gap 0.28s ease, transform 0.28s ease;
+        pointer-events: none;
+    }
+
+    .chart-legend-item--mobile.is-expanded .chart-legend-label {
+        max-width: 9rem;
+        max-height: 1.4rem;
+        opacity: 1;
+        margin-left: 0.08rem;
+        gap: 0.12rem;
+        overflow: visible;
+        transform: translateX(0);
+        pointer-events: auto;
+    }
+
+    .chart-legend-item--mobile .chart-legend-text {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        line-height: 1.1;
+    }
+
+    .chart-legend-marker--line,
+    .chart-legend-marker--dashed,
+    .chart-legend-marker--box {
+        width: 8px;
+    }
+
+    .chart-legend-marker--box {
+        height: 5px;
+    }
+
+    .chart-legend-marker--dot {
+        width: 5px;
+        height: 5px;
+    }
+
+    .chart-legend-label .tooltip-trigger {
+        width: 10px;
+        height: 10px;
+        margin-left: 1px;
+        font-size: 7px;
+    }
+
+
+    .table-header-grid {
+        font-size: 0.52rem;
+    }
+
+    .breakdown-table th,
+    .breakdown-table td {
+        font-size: 0.58rem;
+    }
+}

@@ -1,0 +1,245 @@
+/*------------2026 Pomerancee. All rights reserved.-----------------*/
+/*------------https://creativecommons.org/licenses/by-nc-sa/4.0/----*/
+/*------------Licensed under CC BY-NC-SA 4.0------------------------*/
+
+/*---------VARIABLES AND THEMES------------*/
+
+:root {
+    /* Dark Mode (Default) - Core color palette and styling variables */
+    --primary-color: #6366f1;
+    /* Indigo 500 - Main accent color */
+    --primary-hover: #818cf8;
+    /* Indigo 400 - Hover state for primary elements */
+    --text-main: #f9fafb;
+    /* Gray 50 - Standard text color */
+    --text-secondary: #9ca3af;
+    /* Gray 400 - Muted text for labels and tooltips */
+    --bg-body: #0f172a;
+    /* Slate 900 - Deep background for the application */
+    --bg-card: #1e293b;
+    /* Slate 800 - Background for containers and cards */
+    --border-color: #334155;
+    /* Slate 700 - Subtle borders for UI elements */
+    --success-color: #10b981;
+    /* Emerald 500 - Positive values and success indicators */
+    --input-bg: #0f172a;
+    /* Slate 900 - Background for input fields */
+    --radius-md: 0.5rem;
+    /* Standard border radius */
+    --radius-lg: 1rem;
+    /* Large border radius for cards */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    --blue-highlight: #3b82f6;
+    /* Blue 500 - Secondary accent color */
+}
+
+/* Light Mode Override */
+body.light-mode {
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --text-main: #111827;
+    --text-secondary: #4b5563;
+    --bg-body: #f3f4f6;
+    --bg-card: #ffffff;
+    --border-color: #e5e7eb;
+    --success-color: #059669;
+    --input-bg: #ffffff;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+body.light-mode .bg-animation {
+    background: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 50%, #dbeafe 100%);
+}
+
+body.light-mode .bg-animation .orb-1 {
+    opacity: 0.15;
+}
+
+body.light-mode .bg-animation .orb-2 {
+    opacity: 0.15;
+}
+
+/* â”€â”€â”€ Light Mode: Controls Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body.light-mode .controls-panel {
+    background: linear-gradient(160deg, #f0f4ff 0%, #ffffff 100%);
+    border: 2.5px solid #c7d2fe;
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.08);
+}
+
+/* â”€â”€â”€ Light Mode: Summary Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+/* Total Invested â€” was white border + white text on white bg */
+body.light-mode .card.invested {
+    border: 2.5px solid #6366f1;
+    border-left: 5px solid #6366f1;
+    background: linear-gradient(135deg, #eef2ff 0%, #ffffff 100%);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.12);
+}
+
+body.light-mode .card.invested .value {
+    color: #4338ca;
+    /* Indigo 700 â€” visible on white */
+}
+
+body.light-mode .card.invested h3 {
+    color: #6366f1;
+}
+
+/* Portfolio Value â€” blue accent */
+body.light-mode .card.portfolio {
+    border: 2.5px solid #3b82f6;
+    border-left: 5px solid #3b82f6;
+    background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.12);
+}
+
+body.light-mode .card.portfolio:hover {
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+}
+
+/* Profit â€” green accent */
+body.light-mode .card.profit {
+    border: 2.5px solid #059669;
+    border-left: 5px solid #059669;
+    background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
+    box-shadow: 0 10px 25px rgba(5, 150, 105, 0.15);
+}
+
+body.light-mode .card.profit:hover {
+    box-shadow: 0 15px 30px rgba(5, 150, 105, 0.22);
+}
+
+body.light-mode .profit-percent {
+    color: #065f46;
+}
+
+/* FIRE â€” orange accent */
+body.light-mode .card.fire {
+    border: 2.5px solid #f97316;
+    border-left: 5px solid #f97316;
+    background: linear-gradient(135deg, #fff7ed 0%, #ffffff 100%);
+    box-shadow: 0 4px 16px rgba(249, 115, 22, 0.12);
+}
+
+/* â”€â”€â”€ Light Mode: Chart & Breakdown containers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body.light-mode .chart-container {
+    border: 2.5px solid #c7d2fe;
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.08);
+}
+
+body.light-mode #breakdown-table-container.expanded {
+    border: 2.5px solid #c7d2fe;
+}
+
+/* â”€â”€â”€ Light Mode: Inputs & Dropdowns â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body.light-mode input[type="number"],
+body.light-mode .selected-option,
+body.light-mode .selected-currency {
+    background: #f8f9ff;
+    border-color: #c7d2fe;
+}
+
+body.light-mode input[type="number"]:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+body.light-mode .custom-options,
+body.light-mode .currency-options {
+    background: #ffffff;
+    border-color: #c7d2fe;
+    box-shadow: 0 8px 24px rgba(79, 70, 229, 0.12);
+}
+
+/* â”€â”€â”€ Light Mode: Milestones Button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body.light-mode .milestones-container .dark-btn {
+    background: #f1f5f9 !important;
+    color: #4338ca !important;
+    border: 1px solid #c7d2fe !important;
+}
+
+body.light-mode .milestones-container .dark-btn:hover {
+    background: #eef2ff !important;
+    border-color: #6366f1 !important;
+    color: #4338ca !important;
+}
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* â”€â”€â”€ Light Mode: Milestones â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body.light-mode .milestones-container {
+    border: 2.5px solid #c7d2fe;
+    background: linear-gradient(135deg, #f0f4ff 0%, #ffffff 100%);
+}
+
+/* â”€â”€â”€ Light Mode: Secondary Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body.light-mode .secondary-btn {
+    border-color: #c7d2fe;
+    color: #4338ca;
+}
+
+body.light-mode .secondary-btn:hover {
+    background: #ede9fe;
+    border-color: #6366f1;
+    color: #4338ca;
+}
+
+/* â”€â”€â”€ Light Mode: Range Slider â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body.light-mode input[type="range"] {
+    background: #c7d2fe;
+}
+
+/* â”€â”€â”€ Light Mode: Table rows â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+body.light-mode .breakdown-table th {
+    background: #f0f4ff;
+    color: #4338ca;
+}
+
+body.light-mode .breakdown-table tr:nth-child(even) {
+    background: rgba(99, 102, 241, 0.04);
+}
+
+/*---------GLOBAL STYLES------------*/
+
+* {
+    /* Box-sizing ensures padding doesn't affect element dimensions */
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    /* Base application styles */
+    font-family: var(--font-family);
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.5;
+    padding: 2rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary-color), var(--success-color));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    color: var(--text-secondary);
+}
+

@@ -1,0 +1,771 @@
+/*---------GITHUB BUTTON------------*/
+
+/* 
+ * 1) ANIMATION & BACKGROUND GRADIENT
+ * This keyframe animation creates the running rainbow effect.
+ * The background maps to a size of 200%, and this continuously smoothly
+ * slides the background back and forth across that gradient spectrum.
+ */
+@keyframes animate-rainbow {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* 
+ * 2) MAIN BUTTON CONTAINER
+ * This class applies to the <a> tag wrapping the button content.
+ * It uses a clever border trick: rendering the main deep blue background over top
+ * of a transparent border to let the rainbow linear-gradient show through from behind.
+ */
+.github-btn {
+    /* Ensures the absolute pseudo ::before aura attaches to the button, not window */
+    position: relative;
+
+    /* Layout properties: making it a centered, flex-based button that scales inline */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    height: 2.5rem;
+    padding: 0 1rem;
+    border-radius: 0.5rem;
+
+    /* Typography matching the rest of the application */
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--text-main);
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+
+    /* Transparent border space where the background edge gradient will display */
+    border: calc(0.08 * 1rem) solid transparent;
+
+    /* 
+     * The Layered Composite Background Strategy:
+     * Layer 1 (Top)      -> Solid deep blue color masking the button body
+     * Layer 2 (Middle)   -> A faint shadow/glow bleed effect on the right 
+     * Layer 3 (Bottom)   -> The 200% width rainbow gradient filling the entire box
+     */
+    background:
+        linear-gradient(var(--bg-card), var(--bg-card)),
+        linear-gradient(var(--bg-card) 50%, rgba(30, 41, 59, 0.6) 80%, rgba(15, 23, 42, 0)),
+        linear-gradient(90deg,
+            hsl(245, 82%, 67%),
+            hsl(160, 84%, 39%),
+            hsl(213, 93%, 68%),
+            hsl(160, 84%, 39%),
+            hsl(245, 82%, 67%));
+
+    /* 
+     * The Background Clip Magic:
+     * The first two layers clip to 'padding-box' (stop before the border).
+     * The final rainbow layer clips to 'border-box' (spans under the transparent border).
+     */
+    background-origin: border-box;
+    background-clip: padding-box, border-box, border-box;
+    background-size: 200% auto;
+
+    /* Tying the CSS movement directly to the background gradient */
+    animation: animate-rainbow 4s linear infinite;
+
+    /* Hardware acceleration & interactions */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 
+ * 3) THE GLOWING AURA EFFECT
+ * The ::before pseudo-element is an invisible box placed 20% underneath the button.
+ * It runs the EXACT same rainbow CSS, but applies a huge 2rem blur (filter).
+ * Because it's placed behind the button via z-index: 0, it creates a halo of colored light.
+ */
+.github-btn::before {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 20%;
+    background: linear-gradient(90deg,
+            hsl(245, 82%, 67%),
+            hsl(160, 84%, 39%),
+            hsl(213, 93%, 68%),
+            hsl(160, 84%, 39%),
+            hsl(245, 82%, 67%));
+    background-size: 200% auto;
+    animation: animate-rainbow 4s linear infinite;
+    filter: blur(2rem);
+    /* This blur creates the "glow" */
+    z-index: 0;
+    /* Underneath the main button layers */
+}
+
+/* 
+ * 4) INTERACTION STATES
+ * Shrinks/Expands the whole button for physical feedback when hovered and clicked. 
+ */
+.github-btn:hover {
+    transform: scale(1.15);
+    /* Magnify when hovered over by mouse */
+}
+
+.github-btn:active {
+    transform: scale(0.95);
+    /* Compress immediately when pushed down */
+}
+
+/* 
+ * 5) INNER COMPARTMENT STYLING (.gh-inner inside the HTML tree)
+ * Wrapping child spans inside .gh-inner ensures text and SVG sits ABOVE
+ * the glowing aura (z-index 1) and correctly aligns horizontally.
+ */
+.github-btn .gh-inner {
+    position: relative;
+    z-index: 1;
+    /* Pushes content above the pseudo-element glow */
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Spacing out the divider between the left text and the right "star" area */
+.github-btn .gh-star-group {
+    margin-left: 0.5rem;
+}
+
+/* Styling the "Star on GitHub" literal text */
+.github-btn .gh-label {
+    margin-left: 0.25rem;
+    color: var(--text-main);
+}
+
+/* Hard-setting SVG logo dimensions relative to font-size */
+.github-btn .gh-logo {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+/* 
+ * 6) STAR INTERACTION
+ * The small SVG star icon rests calmly in a muted color.
+ */
+.github-btn .gh-star-icon {
+    width: 1rem;
+    height: 1rem;
+    color: #6b7280;
+    transform-origin: center;
+    /* Extensive transition catching all states when it's hovered */
+    transition: color 0.3s ease, filter 0.3s ease, rotate 0.6s ease, scale 0.3s ease;
+}
+
+/* 
+ * Magic happens when the *button* (.github-btn) is hovered over.
+ * 1. Bright gold color
+ * 2. It physically scales up to 1.1x
+ * 3. It rotates 360 degrees on its central axis
+ * 4. Filters pile on two layers of bright gold shadow to imitate emitting light 
+ */
+.github-btn:hover .gh-star-icon {
+    color: #facc15;
+    scale: 1.1;
+    rotate: 360deg;
+    filter:
+        drop-shadow(0 0 5px rgba(255, 208, 0, 0.8)) drop-shadow(0 0 10px rgba(255, 208, 0, 0.6));
+}
+
+/* Aligning the "11" counter with monospaced tabular numerals so changing counts don't wiggle */
+.github-btn .gh-star-count {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-main);
+    font-variant-numeric: tabular-nums;
+}
+
+/* 
+ * 7) LIGHT MODE OVERRIDES
+ * To prevent the button from disappearing against light-mode overrides on the :root body,
+ * we rebuild the top two layers of the gradient (Layer 1 and Layer 2) with pure #ffffff whites,
+ * maintaining the colored Layer 3 border underneath exactly the same.
+ */
+body.light-mode .github-btn {
+    background:
+        linear-gradient(#ffffff, #ffffff),
+        linear-gradient(#ffffff 50%, rgba(255, 255, 255, 0.6) 80%, rgba(0, 0, 0, 0)),
+        linear-gradient(90deg,
+            hsl(245, 82%, 67%),
+            hsl(160, 84%, 39%),
+            hsl(213, 93%, 68%),
+            hsl(160, 84%, 39%),
+            hsl(245, 82%, 67%));
+    background-origin: border-box;
+    background-clip: padding-box, border-box, border-box;
+    background-size: 200% auto;
+}
+
+/* Invert nested svg paths and text since they're on a white button now */
+body.light-mode .github-btn .gh-logo path {
+    fill: #1e293b;
+}
+
+body.light-mode .github-btn .gh-star-count,
+body.light-mode .github-btn .gh-label {
+    color: #111827;
+}
+
+
+/*---------THEME TOGGLE SWITCH------------*/
+
+/* Custom animated slider for switching between Light and Dark modes */
+.theme-toggle-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.theme-toggle-wrapper .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 80px;
+    height: 40px;
+    transform: scale(1.0);
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.theme-toggle-wrapper .toggle-switch:hover {
+    transform: scale(1.1);
+}
+
+.theme-toggle-wrapper .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.theme-toggle-wrapper .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, #2c3e50, #34495e);
+    transition: 0.4s;
+    border-radius: 34px;
+    box-shadow: 0 0 15px rgba(44, 62, 80, 0.5);
+    overflow: hidden;
+}
+
+.theme-toggle-wrapper .slider:before {
+    position: absolute;
+    content: "\1F319";
+    height: 32px;
+    width: 32px;
+    left: 4px;
+    bottom: 4px;
+    background: #1e293b;
+    /* Dark toggle in dark mode */
+    color: #f1c40f;
+    /* Moon color */
+    transition: 0.4s;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+.theme-toggle-wrapper input:checked+.slider {
+    background: linear-gradient(145deg, #f1c40f, #f39c12);
+    box-shadow: 0 0 15px rgba(241, 196, 15, 0.5);
+}
+
+.theme-toggle-wrapper input:checked+.slider:before {
+    transform: translateX(40px);
+    content: "\2600\FE0F";
+    background: white;
+    /* White toggle in light mode */
+    color: #f39c12;
+    /* Sun color */
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.9), 0 0 20px rgba(241, 196, 15, 0.45);
+}
+
+.theme-toggle-wrapper .stars {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.theme-toggle-wrapper .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.4s ease;
+}
+
+.theme-toggle-wrapper .star-1 {
+    top: 8px;
+    left: 10%;
+    width: 2px;
+    height: 2px;
+    animation: twinkle 3s infinite ease-in-out, starLoop 12s infinite linear;
+}
+
+.theme-toggle-wrapper .star-2 {
+    top: 24px;
+    left: 25%;
+    width: 1.5px;
+    height: 1.5px;
+    animation: twinkle 4s infinite ease-in-out 0.5s, starLoop 15s infinite linear reverse;
+}
+
+.theme-toggle-wrapper .star-3 {
+    top: 12px;
+    left: 45%;
+    width: 1px;
+    height: 1px;
+    animation: twinkle 5s infinite ease-in-out 1s, starLoop 18s infinite linear;
+}
+
+.theme-toggle-wrapper .star-4 {
+    top: 28px;
+    left: 65%;
+    width: 1.8px;
+    height: 1.8px;
+    animation: twinkle 3.5s infinite ease-in-out 1.5s, starLoop 14s infinite linear;
+}
+
+.theme-toggle-wrapper .star-5 {
+    top: 10px;
+    left: 80%;
+    width: 1.2px;
+    height: 1.2px;
+    animation: twinkle 4.5s infinite ease-in-out 2s, starLoop 16s infinite linear reverse;
+}
+
+.theme-toggle-wrapper .star-6 {
+    top: 22px;
+    left: 90%;
+    width: 1px;
+    height: 1px;
+    animation: twinkle 5.5s infinite ease-in-out 2.5s, starLoop 20s infinite linear;
+}
+
+.theme-toggle-wrapper .comet {
+    position: absolute;
+    top: -10px;
+    left: -20px;
+    width: 20px;
+    height: 1px;
+    background: linear-gradient(to right, white, transparent);
+    transform: rotate(-45deg);
+    opacity: 0;
+    pointer-events: none;
+    animation: shootingStar 12s infinite ease-in-out 5s;
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes starLoop {
+    0% {
+        transform: translateX(-40px);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(80px);
+        opacity: 0;
+    }
+}
+
+@keyframes shootingStar {
+    0% {
+        transform: translate(0, 0) rotate(-45deg);
+        opacity: 0;
+    }
+
+    5% {
+        opacity: 1;
+    }
+
+    15% {
+        transform: translate(100px, 100px) rotate(-45deg);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate(100px, 100px) rotate(-45deg);
+        opacity: 0;
+    }
+}
+
+/* Stars hidden when checked (light mode) */
+.theme-toggle-wrapper input:checked+.slider .star,
+.theme-toggle-wrapper input:checked+.slider .comet {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: none !important;
+}
+
+.theme-toggle-wrapper .clouds {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.theme-toggle-wrapper .cloud {
+    position: absolute;
+    width: 24px;
+    height: 14px;
+    fill: rgba(255, 255, 255, 0.8);
+    transition: all 0.4s ease;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
+    will-change: left, opacity, transform;
+    overflow: visible;
+}
+
+.theme-toggle-wrapper .cloud1 {
+    top: 8px;
+    left: -44px;
+}
+
+.theme-toggle-wrapper .cloud2 {
+    top: 18px;
+    left: -50px;
+}
+
+@keyframes floatCloud1 {
+    0% {
+        left: -44px;
+        opacity: 1;
+    }
+
+    85% {
+        opacity: 1;
+    }
+
+    100% {
+        left: calc(100% + 10px);
+        opacity: 0;
+    }
+}
+
+@keyframes floatCloud2 {
+    0% {
+        left: -50px;
+        opacity: 0.85;
+    }
+
+    82% {
+        opacity: 0.85;
+    }
+
+    100% {
+        left: calc(100% + 8px);
+        opacity: 0;
+    }
+}
+
+/* Clouds hidden by default (dark mode), visible when checked (light mode) */
+.theme-toggle-wrapper .cloud {
+    opacity: 0;
+    transform: translateY(-8px);
+    animation: none;
+}
+
+.theme-toggle-wrapper input:checked+.slider .cloud1 {
+    opacity: 1;
+    left: -44px;
+    transform: none;
+    animation: floatCloud1 6s linear infinite both;
+}
+
+.theme-toggle-wrapper input:checked+.slider .cloud2 {
+    opacity: 0.85;
+    left: -50px;
+    transform: scale(0.7);
+    animation: floatCloud2 7.5s linear infinite 1s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .theme-toggle-wrapper .cloud,
+    .theme-toggle-wrapper .star,
+    .theme-toggle-wrapper .comet {
+        animation: none;
+    }
+}
+
+/*---------ACTION BUTTONS------------*/
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 2rem;
+    border-top: 1px solid color-mix(in srgb, var(--primary-color) 12%, var(--border-color));
+    padding-top: 1.25rem;
+}
+
+.secondary-btn {
+    --button-accent: var(--primary-color);
+    --button-icon: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+    background:
+        linear-gradient(180deg, color-mix(in srgb, var(--button-accent) 8%, var(--bg-card)), color-mix(in srgb, var(--bg-card) 97%, black)),
+        linear-gradient(135deg, color-mix(in srgb, var(--button-accent) 10%, transparent), transparent 60%);
+    border: 1px solid color-mix(in srgb, var(--button-accent) 18%, var(--border-color));
+    color: var(--text-main);
+    padding: 0.92rem 1rem 0.92rem 3rem;
+    border-radius: 0.7rem;
+    cursor: pointer;
+    transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease, background 0.24s ease, color 0.24s ease;
+    font-weight: 600;
+    width: 100%;
+    overflow: hidden;
+    text-align: left;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+    isolation: isolate;
+    line-height: 1.2;
+}
+
+.secondary-btn::before {
+    content: '';
+    position: absolute;
+    left: 2.15rem;
+    top: 50%;
+    width: 3px;
+    height: 1.4rem;
+    border-radius: 999px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--button-accent) 100%, transparent), color-mix(in srgb, var(--button-accent) 44%, transparent));
+    transform: translateY(-50%);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--button-accent) 24%, transparent);
+    opacity: 0.95;
+}
+
+.secondary-btn::after {
+    content: '';
+    position: absolute;
+    left: 0.95rem;
+    top: 50%;
+    width: 1rem;
+    height: 1rem;
+    background: color-mix(in srgb, var(--button-accent) 92%, transparent);
+    transform: translateY(-50%);
+    opacity: 0.95;
+    -webkit-mask-image: var(--button-icon);
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-image: var(--button-icon);
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    box-shadow: 0 0 10px color-mix(in srgb, var(--button-accent) 16%, transparent);
+}
+
+.secondary-btn:focus-visible {
+    outline: none;
+    border-color: color-mix(in srgb, var(--button-accent) 44%, var(--border-color));
+    box-shadow:
+        0 0 0 3px color-mix(in srgb, var(--button-accent) 14%, transparent),
+        0 10px 24px rgba(0, 0, 0, 0.16);
+}
+
+.secondary-btn:hover {
+    border-color: color-mix(in srgb, var(--button-accent) 28%, var(--border-color));
+    color: color-mix(in srgb, var(--button-accent) 74%, var(--text-main));
+    transform: translateY(-1px);
+    box-shadow:
+        0 12px 24px rgba(0, 0, 0, 0.16),
+        0 0 0 1px color-mix(in srgb, var(--button-accent) 12%, transparent);
+}
+
+.secondary-btn:active {
+    transform: translateY(0) scale(0.995);
+}
+
+#set-benchmark-btn,
+#clear-benchmark-btn {
+    --button-accent: #8b5cf6;
+}
+
+#set-benchmark-btn {
+    --button-accent: #f5c84c;
+    --button-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l2.8 5.67 6.26.91-4.53 4.42 1.07 6.25L12 17.27 6.4 20.25l1.07-6.25-4.53-4.42 6.26-.91L12 3Z'/%3E%3C/svg%3E");
+}
+
+#share-btn {
+    --button-accent: #38bdf8;
+    --button-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='18' cy='5' r='3'/%3E%3Ccircle cx='6' cy='12' r='3'/%3E%3Ccircle cx='18' cy='19' r='3'/%3E%3Cpath d='M8.6 10.7 15.4 6.3'/%3E%3Cpath d='M8.6 13.3 15.4 17.7'/%3E%3C/svg%3E");
+}
+
+#download-csv-btn {
+    --button-accent: #34d399;
+    --button-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3h8l4 4v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z'/%3E%3Cpath d='M16 3v5h5'/%3E%3Cpath d='M12 10v6'/%3E%3Cpath d='m9.5 13.5 2.5 2.5 2.5-2.5'/%3E%3C/svg%3E");
+}
+
+#download-pdf-btn {
+    --button-accent: #f472b6;
+    --button-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3h8l4 4v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z'/%3E%3Cpath d='M16 3v5h5'/%3E%3Cpath d='M9 13h6'/%3E%3Cpath d='M9 17h4'/%3E%3C/svg%3E");
+}
+
+#clear-benchmark-btn {
+    --button-accent: #fb7185;
+    --button-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M8 6V4h8v2'/%3E%3Cpath d='m19 6-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6'/%3E%3Cpath d='M10 11v6'/%3E%3Cpath d='M14 11v6'/%3E%3C/svg%3E");
+}
+
+#show-more-milestones,
+#show-more-milestones-desktop {
+    --button-accent: #f5c84c;
+    --button-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 4h8v3a4 4 0 0 1-8 0V4Z'/%3E%3Cpath d='M6 6H4a2 2 0 0 0 2 5h1'/%3E%3Cpath d='M18 6h2a2 2 0 0 1-2 5h-1'/%3E%3Cpath d='M12 11v4'/%3E%3Cpath d='M9 21h6'/%3E%3Cpath d='M10 15h4v6h-4z'/%3E%3C/svg%3E");
+    font-size: clamp(0.68rem, 1.15vw, 0.8rem);
+    line-height: 1.08;
+    padding: 0.84rem 0.82rem 0.84rem 2.45rem;
+    letter-spacing: -0.01em;
+}
+
+#show-more-milestones::before,
+#show-more-milestones-desktop::before {
+    left: 1.82rem;
+    height: 1.05rem;
+}
+
+#show-more-milestones::after,
+#show-more-milestones-desktop::after {
+    left: 0.72rem;
+    width: 0.86rem;
+    height: 0.86rem;
+}
+
+#toggle-table-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    justify-content: center;
+    gap: 0;
+    box-shadow: none;
+}
+
+#toggle-table-btn::before,
+#toggle-table-btn::after {
+    display: none;
+}
+
+#toggle-table-btn:focus-visible {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+#toggle-table-btn:hover {
+    background: var(--bg-card);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#toggle-table-btn:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+    .secondary-btn {
+        padding: 0.84rem 0.92rem 0.84rem 2.7rem;
+        border-radius: 0.68rem;
+        font-size: 0.94rem;
+    }
+
+    .secondary-btn::before {
+        left: 1.95rem;
+        height: 1.2rem;
+    }
+
+    .secondary-btn::after {
+        left: 0.82rem;
+        width: 0.9rem;
+        height: 0.9rem;
+    }
+
+    #show-more-milestones {
+        font-size: 1.02rem;
+        line-height: 1.05;
+        padding: 0.76rem 0.72rem 0.76rem 2.2rem;
+    }
+
+    #show-more-milestones-desktop {
+        font-size: 0.68rem;
+        line-height: 1.05;
+        padding: 0.76rem 0.72rem 0.76rem 2.2rem;
+    }
+
+    #show-more-milestones::before {
+        left: 1.7rem;
+        height: 1.3rem;
+    }
+
+    #show-more-milestones-desktop::before {
+        left: 1.62rem;
+        height: 0.98rem;
+    }
+
+    #show-more-milestones::after {
+        left: 0.56rem;
+        width: 1.1rem;
+        height: 1.1rem;
+    }
+
+    #show-more-milestones-desktop::after {
+        left: 0.64rem;
+        width: 0.8rem;
+        height: 0.8rem;
+    }
+}
+
