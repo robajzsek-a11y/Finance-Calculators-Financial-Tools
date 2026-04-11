@@ -6,7 +6,7 @@
 [![Live Demo](https://img.shields.io/badge/demo-online-green)](https://investmentcalculator.pomerancee.workers.dev)
 ![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)
 ![Responsive](https://img.shields.io/badge/mobile-friendly-blue)
-![GitHub stars](https://img.shields.io/github/stars/robinjiri/Investment-Calculator)
+![GitHub stars](https://img.shields.io/github/stars/robajzsek-a11y/Investing-Calculator)
 
 A modern, minimalist investment calculator designed to project long-term portfolio growth without ads or tracking.
 
@@ -57,12 +57,12 @@ I wanted to create a tool that is **fast**, **modern**, **beginner-friendly**, k
     *   Open `index.html` in your favorite browser.
 
 ## Contributing
-Contributions, ideas, and improvements are welcome. [![Contributing](https://img.shields.io/badge/Contributing-Yes-brightgreen)](https://github.com/robinjiri/Invest-Calculator/blob/main/CONTRIBUTING.md)
+Contributions, ideas, and improvements are welcome. [![Contributing](https://img.shields.io/badge/Contributing-Yes-brightgreen)](https://github.com/robajzsek-a11y/Investing-Calculator/blob/main/CONTRIBUTING.md)
 Feel free to open an issue or submit a pull request.
 
 ## ⭐ Like this project?
 If you find it useful, give it a star on GitHub!  
-[![GitHub stars](https://img.shields.io/github/stars/robajzsek-a11y/Invest-Calculator)](https://github.com/robajzsek-a11y/Invest-Calculator/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/robajzsek-a11y/Investing-Calculator)](https://github.com/robajzsek-a11y/Investing-Calculator/stargazers)
 
 ## License
 This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**. 
