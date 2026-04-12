@@ -3,14 +3,14 @@
 ![License](https://img.shields.io/badge/license-CC--BY--NC--SA-blue)
 ![Made with](https://img.shields.io/badge/Made%20with-JavaScript-yellow)
 ![Platform](https://img.shields.io/badge/hosted%20on-Cloudflare-orange)
-[![Live Demo](https://img.shields.io/badge/demo-online-green)](https://finance-calculators-financial-tools.pages.dev/investment-calculator)
+[![Live Demo](https://img.shields.io/badge/demo-online-green)](https://finance-calculators-financial-tools.pages.dev/Calculators/Investment%20Calculator/index.html)
 ![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)
 ![Responsive](https://img.shields.io/badge/mobile-friendly-blue)
 ![GitHub stars](https://img.shields.io/github/stars/robajzsek-a11y/Investing-Calculator)
 
 A modern, minimalist investment calculator designed to project long-term portfolio growth without ads or tracking.
 
-[**Live Demo**](https://finance-calculators-financial-tools.pages.dev/investment-calculator) | [**License**](#license)
+[**Live Demo**](https://finance-calculators-financial-tools.pages.dev/Calculators/Investment%20Calculator/index.html) | [**License**](#license)
 
 ## Preview
 
@@ -51,7 +51,7 @@ I wanted to create a tool that is **fast**, **modern**, **beginner-friendly**, k
 *   **Design:** Minimalist modern UI. [![Design](https://img.shields.io/badge/Design-Minimalist%20Modern%20UI-green)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 
 ### How to use
-1.  **Online:** Visit the [Live Demo](https://finance-calculators-financial-tools.pages.dev/investment-calculator).
+1.  **Online:** Visit the [Live Demo](https://finance-calculators-financial-tools.pages.dev/Calculators/Investment%20Calculator/index.html).
 2.  **Locally:** 
     *   Clone this repository: `git clone https://github.com/robajzsek-a11y/Finance-Calculators-Financial-Tools.git`
     *   Open `Calculators/Investment Calculator/index.html` in your favorite browser.
