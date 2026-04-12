@@ -1,0 +1,97 @@
+/*---------TOOLTIP STYLES------------*/
+
+/* Helpful informational popups for UI elements */
+.tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    background: var(--border-color);
+    color: var(--text-secondary);
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    margin-left: 6px;
+    cursor: help;
+    transition: all 0.2s;
+    vertical-align: middle;
+}
+
+.tooltip-trigger:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Custom Tooltip Styling */
+[data-tooltip] {
+    position: relative;
+}
+
+[data-tooltip]::before {
+    content: attr(data-tooltip-content);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    /* Center it back but with overflow:visible fix */
+    padding: 0.5rem 0.75rem;
+    background: #1e293b;
+    color: white;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    white-space: normal;
+    width: 220px;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    text-align: center;
+    /* Back to center for better balance */
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+/* Because cards are frequently rendered near the right edge of the screen, force their tooltips to anchor right and expand leftwards so they never bleed off-screen */
+.card [data-tooltip]::before {
+    left: auto;
+    right: -15px; /* Box edge just past the 'i' icon */
+    transform: none; /* Strip the -50% centering */
+}
+
+.chart-visual-toggle [data-tooltip]::before {
+    left: auto;
+    right: 0;
+    transform: none;
+}
+
+/* Tooltip arrow/pointer */
+[data-tooltip]::after {
+    content: '';
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px 5px 0 5px;
+    border-style: solid;
+    border-color: #1e293b transparent transparent transparent;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+    z-index: 9999;
+}
+
+.chart-visual-toggle [data-tooltip]::after {
+    left: auto;
+    right: 3px;
+    transform: none;
+}
+
+[data-tooltip]:hover::before,
+[data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+

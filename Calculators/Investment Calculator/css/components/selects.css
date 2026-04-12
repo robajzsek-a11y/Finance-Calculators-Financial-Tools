@@ -1,0 +1,270 @@
+/*---------LANGUAGE AND CURRENCY SELECTS------------*/
+
+.language-select {
+    /* Hidden native select for accessibility */
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+    outline: none;
+    font-family: inherit;
+    width: 100%;
+}
+
+.language-select:hover,
+.language-select:focus {
+    border-color: var(--primary-color);
+}
+
+.language-select option {
+    background: var(--bg-card);
+    color: var(--text-main);
+}
+
+
+/* Custom Currency Select Styles */
+.custom-currency-select {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100px;
+    z-index: 100;
+}
+
+.selected-currency {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    color: var(--text-main);
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.selected-currency:hover {
+    border-color: var(--primary-color);
+}
+
+.select-arrow {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid var(--text-secondary);
+    margin-left: 8px;
+    transition: transform 0.2s;
+}
+
+.custom-currency-select.open .select-arrow {
+    transform: rotate(180deg);
+}
+
+.currency-options {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    width: 180px;
+    /* Wider when open */
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    max-height: 0;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transform-origin: top;
+    transition: max-height 0.5s ease-in-out, opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0.35s;
+    z-index: 101;
+}
+
+.custom-currency-select.open {
+    z-index: 2000;
+}
+
+.custom-currency-select.open .currency-options {
+    max-height: 300px;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition: max-height 0.5s ease-in-out, opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0s;
+}
+
+.currency-option {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--text-main);
+    transition: background 0.2s;
+}
+
+.currency-option:hover {
+    background: var(--input-bg);
+    color: var(--primary-color);
+}
+
+.currency-option.selected {
+    background: var(--primary-color);
+    color: white;
+}
+
+
+/* Inline currency select next to initial investment input - Adjust for custom select */
+.input-wrapper .currency-select,
+.input-wrapper .custom-currency-select {
+    width: 100px;
+}
+
+/* Make room for inline currency select */
+.input-wrapper #initial-investment {
+    padding-right: 115px;
+}
+
+/* Rest of the styles... */
+.currency-select {
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+    background: var(--input-bg);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+}
+
+.currency-select:focus {
+    border-color: var(--primary-color);
+}
+
+/*---------CUSTOM SELECTS------------*/
+
+/* Advanced dropdown system replacing standard HTML selects */
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+    z-index: 100;
+}
+
+.selected-option {
+    /* Header of the custom dropdown */
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    color: var(--text-main);
+    transition: all 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.selected-option:hover {
+    border-color: var(--primary-color);
+}
+
+.custom-options {
+    /* Dropdown menu containing choices */
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    max-height: 0;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transform-origin: top;
+    transition: max-height 0.5s ease-in-out, opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0.35s;
+    z-index: 101;
+}
+
+.custom-select-wrapper.open {
+    z-index: 2000;
+    /* Higher than tooltips and other elements */
+}
+
+.custom-select-wrapper.open .custom-options {
+    max-height: 400px;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition: max-height 0.5s ease-in-out, opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0s;
+}
+
+.custom-select-wrapper.open .select-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-option {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--text-main);
+    opacity: 0;
+    transform: translateY(-14px);
+    transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s;
+    transition-delay: 0s;
+}
+
+.custom-select-wrapper.open .custom-option,
+.custom-currency-select.open .custom-option {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: calc(var(--stagger-index, 0) * 0.04s);
+}
+
+.custom-option:hover {
+    background: var(--input-bg);
+    color: var(--primary-color);
+}
+
+.custom-option.selected {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Specific overrides for small dropdowns */
+.top-controls .custom-select-wrapper {
+    width: 180px;
+}
+
+.input-wrapper .custom-currency-select {
+    width: 100px;
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.input-wrapper .custom-currency-select .selected-currency {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+.input-wrapper .custom-currency-select .currency-options {
+    width: 180px;
+    right: 0;
+}

@@ -1,0 +1,271 @@
+/*---------SUMMARY CARDS------------*/
+
+/* Status cards showing key financial results at a glance */
+.summary-cards {
+    grid-area: summary;
+    display: grid;
+    grid-template-columns: 1fr;
+    /* Use wrapper for column control */
+    gap: 24px;
+    transition: all 0.3s ease;
+    align-items: center;
+}
+
+.calculator-grid {
+    display: grid;
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
+    min-width: 0;
+}
+
+.results-panel {
+    min-width: 0;
+}
+
+.standard-cards-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    align-items: stretch;
+    width: 100%;
+}
+
+.summary-cards .card {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.summary-cards .card h3 {
+    font-size: 0.9rem;
+    white-space: normal;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+.summary-cards .card.invested {
+    height: auto;
+    min-height: 120px;
+}
+
+.summary-cards .card.portfolio {
+    height: auto;
+    min-height: 120px;
+}
+
+.summary-cards .card.profit {
+    height: auto;
+    min-height: 120px;
+}
+
+/* --- STATUS 2: FIRE IS ON --- */
+.summary-cards.with-fire {
+    grid-template-columns: 1fr 400px;
+    /* Wrapper + FIRE box */
+    justify-content: stretch;
+    align-items: center;
+    /* Center the standard-wrapper against the FIRE box */
+}
+
+.summary-cards.with-fire .standard-cards-wrapper {
+    grid-template-columns: 240px 240px 1fr;
+    /* Internal layout of the 3 boxes */
+}
+
+.summary-cards.with-fire .card.invested {
+    height: 120px;
+}
+
+.summary-cards.with-fire .card.portfolio {
+    height: 155px;
+}
+
+.summary-cards.with-fire .card.profit {
+    height: 185px;
+}
+
+.summary-cards.with-fire .card.fire {
+    min-height: 120px;
+    height: auto;
+}
+
+/* Common Card Styling */
+.summary-cards .card:not(.fire) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card.fire {
+    min-height: 120px;
+    height: auto;
+    border-left: 4px solid #f97316;
+    /* Orange 500 */
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), transparent);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+#fire-status-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.card.fire .fire-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+    padding-bottom: 0.5rem;
+    width: 100%;
+}
+
+.card.fire .fire-stat:last-child {
+    border-bottom: none;
+}
+
+.card.fire .fire-stat span {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.card.fire .fire-stat strong {
+    font-size: 1.25rem;
+    color: #f97316;
+    margin-left: 0;
+}
+
+@media (max-width: 1200px) {
+    .summary-cards.with-fire {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card.fire {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .summary-cards,
+    .summary-cards.with-fire {
+        grid-template-columns: 1fr;
+    }
+
+    .card.fire {
+        grid-column: auto;
+    }
+}
+
+.card.fire h3 {
+    margin-bottom: 0.5rem;
+}
+
+.card.fire .fire-achieved-year {
+    font-size: 0.85rem;
+    color: #f97316;
+    font-weight: 800;
+    padding: 0.25rem 0.5rem;
+    background: rgba(249, 115, 22, 0.1);
+    border-radius: var(--radius-md);
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+
+.card {
+    height: var(--mobile-card-height, auto);
+    background: var(--bg-card);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card:hover,
+.card:focus-within,
+.card:has([data-tooltip]:hover) {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    z-index: 100 !important; /* Force hovered card to the absolute top so its tooltip overlays siblings */
+}
+
+/* Individual Card Styling */
+.card.invested {
+    border: 2.5px solid rgba(255, 255, 255, 0.3);
+    border-left: 5px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.06);
+}
+
+.card.portfolio {
+    border: 2.5px solid rgba(59, 130, 246, 0.5);
+    border-left: 5px solid var(--blue-highlight);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
+}
+
+.card.profit {
+    border: 2.5px solid rgba(16, 185, 129, 0.5);
+    border-left: 5px solid var(--success-color);
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.25);
+    z-index: 2;
+}
+
+.card.profit:hover {
+    transform: scale(1.08) translateY(-4px);
+    box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.3), 0 0 15px rgba(16, 185, 129, 0.2);
+    /* Glow effect */
+}
+
+.card h3 {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+.card.invested .value {
+    color: white;
+}
+
+.card.portfolio .value {
+    color: var(--blue-highlight);
+}
+
+.card.profit .value {
+    color: var(--success-color);
+    font-size: 2.25rem;
+    /* Bigger font as requested */
+}
+
+.card.fire .value {
+    font-size: 1.5rem;
+}
+
+.profit-percent {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #065f46;
+    /* Darker green as requested */
+    margin-top: 0.25rem;
+}
