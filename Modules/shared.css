@@ -1,0 +1,359 @@
+/*---------SEE MORE CALCULATORS BUTTON (SHARED)------------*/
+
+/*---------SHARED LANGUAGE DROPDOWN------------*/
+
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+    z-index: 100;
+}
+
+.selected-option {
+    background: var(--input-bg, var(--bg-card));
+    border: 1px solid var(--border-color, var(--border));
+    border-radius: var(--radius-md, 0.75rem);
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    transition: all 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    min-height: 44px;
+}
+
+.selected-option:hover {
+    border-color: var(--primary-color, var(--primary, #6366f1));
+}
+
+.select-arrow {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid var(--text-secondary);
+    margin-left: 8px;
+    transition: transform 0.2s;
+}
+
+.custom-options {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color, var(--border));
+    border-radius: var(--radius-md, 0.75rem);
+    box-shadow: var(--shadow-md, 0 10px 24px rgba(0, 0, 0, 0.22));
+    max-height: 0;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transform-origin: top;
+    transition: max-height 0.5s ease-in-out, opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0.35s;
+    z-index: 101;
+}
+
+.custom-select-wrapper.open {
+    z-index: 2000;
+}
+
+.custom-select-wrapper.open .custom-options {
+    max-height: 400px;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition: max-height 0.5s ease-in-out, opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0s;
+}
+
+.custom-select-wrapper.open .select-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-option {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--text-main);
+    opacity: 0;
+    transform: translateY(-14px);
+    transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s;
+    transition-delay: 0s;
+}
+
+.custom-select-wrapper.open .custom-option {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: calc(var(--stagger-index, 0) * 0.04s);
+}
+
+.custom-option:hover {
+    background: var(--input-bg, rgba(255, 255, 255, 0.04));
+    color: var(--primary-color, var(--primary, #6366f1));
+}
+
+.custom-option.selected {
+    background: var(--primary-color, var(--primary, #6366f1));
+    color: #fff;
+}
+
+#see-more-btn {
+    position: relative;
+    z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    width: 46px; /* Icon only by default */
+    height: 46px;
+    background: rgba(15, 23, 42, 0.82);
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    border-radius: 14px;
+    color: #e2e8f0;
+    font-family: var(--font, var(--font-family, 'Inter', system-ui, sans-serif));
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    overflow: hidden;
+    transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    user-select: none;
+    -webkit-user-select: none;
+    white-space: nowrap;
+}
+
+#see-more-btn:hover {
+    width: 262px; /* Fits the longest current seeMoreCalculators translation */
+    border-color: rgba(99, 102, 241, 0.65);
+    box-shadow: 0 4px 24px rgba(99, 102, 241, 0.25);
+}
+
+#see-more-btn .smb-icon {
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 10;
+}
+
+#see-more-btn .smb-icon svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: #fff;
+    z-index: 11;
+}
+
+#see-more-btn .smb-label {
+    padding-left: 52px;
+    padding-right: 15px;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+    font-weight: 800;
+    font-family: var(--font, var(--font-family, 'Inter', system-ui, sans-serif));
+    background: linear-gradient(135deg, var(--primary, var(--primary-color, #6366f1)), var(--success, var(--success-color, #10b981)));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#see-more-btn:hover .smb-label {
+    opacity: 1;
+}
+
+@media (max-width: 900px) {
+    #see-more-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        font-size: 0.74rem;
+    }
+    #see-more-btn:hover {
+        width: 224px;
+    }
+
+    #see-more-btn .smb-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+    }
+
+    #see-more-btn .smb-label {
+        padding-left: 44px;
+    }
+}
+
+
+/*---------GITHUB BUTTON------------*/
+
+@keyframes animate-rainbow {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.github-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    height: 2.5rem;
+    padding: 0 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--text-main);
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: calc(0.08 * 1rem) solid transparent;
+    background:
+        linear-gradient(var(--bg-card), var(--bg-card)),
+        linear-gradient(var(--bg-card) 50%, rgba(30, 41, 59, 0.6) 80%, rgba(15, 23, 42, 0)),
+        linear-gradient(90deg,
+            hsl(245, 82%, 67%),
+            hsl(160, 84%, 39%),
+            hsl(213, 93%, 68%),
+            hsl(160, 84%, 39%),
+            hsl(245, 82%, 67%));
+    background-origin: border-box;
+    background-clip: padding-box, border-box, border-box;
+    background-size: 200% auto;
+    animation: animate-rainbow 4s linear infinite;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.github-btn::before {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 20%;
+    background: linear-gradient(90deg,
+            hsl(245, 82%, 67%),
+            hsl(160, 84%, 39%),
+            hsl(213, 93%, 68%),
+            hsl(160, 84%, 39%),
+            hsl(245, 82%, 67%));
+    background-size: 200% auto;
+    animation: animate-rainbow 4s linear infinite;
+    filter: blur(2rem);
+    z-index: 0;
+}
+
+.github-btn:hover {
+    transform: scale(1.1);
+}
+
+.github-btn:active {
+    transform: scale(0.95);
+}
+
+.github-btn .gh-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.github-btn .gh-star-group {
+    margin-left: 0.5rem;
+}
+
+.github-btn .gh-label {
+    margin-left: 0.25rem;
+    color: var(--text-main);
+}
+
+.github-btn .gh-logo {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+.github-btn .gh-star-icon {
+    width: 1rem;
+    height: 1rem;
+    color: #6b7280;
+    transform-origin: center;
+    transition: color 0.3s ease, filter 0.3s ease, rotate 0.6s ease, scale 0.3s ease;
+}
+
+.github-btn:hover .gh-star-icon {
+    color: #facc15;
+    scale: 1.1;
+    rotate: 360deg;
+    filter:
+        drop-shadow(0 0 5px rgba(255, 208, 0, 0.8)) drop-shadow(0 0 10px rgba(255, 208, 0, 0.6));
+}
+
+.github-btn .gh-star-count {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-main);
+    font-variant-numeric: tabular-nums;
+}
+
+body.light-mode .github-btn {
+    background:
+        linear-gradient(#ffffff, #ffffff),
+        linear-gradient(#ffffff 50%, rgba(255, 255, 255, 0.6) 80%, rgba(0, 0, 0, 0)),
+        linear-gradient(90deg,
+            hsl(245, 82%, 67%),
+            hsl(160, 84%, 39%),
+            hsl(213, 93%, 68%),
+            hsl(160, 84%, 39%),
+            hsl(245, 82%, 67%));
+    background-origin: border-box;
+    background-clip: padding-box, border-box, border-box;
+    background-size: 200% auto;
+}
+
+body.light-mode .github-btn .gh-logo path {
+    fill: #1e293b;
+}
+
+body.light-mode .github-btn .gh-star-count,
+body.light-mode .github-btn .gh-label {
+    color: #111827;
+}
+
+.app-header-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.9rem;
+}
+
+.app-header-actions .github-btn {
+    width: fit-content;
+}

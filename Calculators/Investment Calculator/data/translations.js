@@ -48,7 +48,14 @@ window.App.translations = {
         etf_iwda_desc: "Exposure to companies from 23 developed countries.",
         etf_qqq_desc: "Includes 100 of the largest non-financial companies on Nasdaq.",
         githubPage: "GitHub page",
-        etf_vwce_desc: "Covers large and mid-cap stocks from developed and emerging markets."
+        etf_vwce_desc: "Covers large and mid-cap stocks from developed and emerging markets.",
+        seeMoreCalculators: "See More Calculators",
+        footerCopyright: "Copyright © 2026",
+        footerBrand: "Pomerancee",
+        footerLicensedUnder: "Licensed under",
+        footerLicenseName: "Creative Commons License.",
+        footerLicenseType: "CC BY-NC-SA 4.0 International",
+        footerLicenseTerms: "Attribution - NonCommercial - ShareAlike"
     },
     cs: {
         title: "Investiční Kalkulačka", subtitle: "Vizualizujte si svou finanční budoucnost se složeným úrokem",
@@ -92,7 +99,14 @@ window.App.translations = {
         etf_iwda_desc: "Expozice vůči společnostem z 23 vyspělých zemí.",
         etf_qqq_desc: "Zahrnuje 100 největších nefinančních společností na burze Nasdaq.",
         githubPage: "Stránka na GitHubu",
-        etf_vwce_desc: "Zahrnuje akcie společností s velkou a střední tržní kapitalizací z rozvinutých i rozvíjejících se trhů."
+        etf_vwce_desc: "Zahrnuje akcie společností s velkou a střední tržní kapitalizací z rozvinutých i rozvíjejících se trhů.",
+        seeMoreCalculators: "Zobrazit Více Kalkulaček",
+        footerCopyright: "Copyright © 2026",
+        footerBrand: "Pomerancee",
+        footerLicensedUnder: "Licencováno pod",
+        footerLicenseName: "Licencí Creative Commons.",
+        footerLicenseType: "CC BY-NC-SA 4.0 International",
+        footerLicenseTerms: "Uvedení Autora - Nekomercní - Zachování Licence"
     },
     de: {
         title: "Investitionsrechner", subtitle: "Visualisieren Sie Ihre finanzielle Zukunft mit Zinseszins",
@@ -136,7 +150,14 @@ window.App.translations = {
         etf_iwda_desc: "Engagement in Unternehmen aus 23 Industrieländern.",
         etf_qqq_desc: "Enthält 100 der größten nicht-finanziellen Unternehmen an der Nasdaq.",
         githubPage: "GitHub-Seite",
-        etf_vwce_desc: "Deckt Large- und Mid-Cap-Aktien aus Industrie- und Schwellenländern ab."
+        etf_vwce_desc: "Deckt Large- und Mid-Cap-Aktien aus Industrie- und Schwellenländern ab.",
+        seeMoreCalculators: "Mehr Rechner Anzeigen",
+        footerCopyright: "Copyright © 2026",
+        footerBrand: "Pomerancee",
+        footerLicensedUnder: "Lizenziert unter",
+        footerLicenseName: "Creative Commons Lizenz.",
+        footerLicenseType: "CC BY-NC-SA 4.0 International",
+        footerLicenseTerms: "Namensnennung - Nicht kommerziell - Weitergabe unter gleichen Bedingungen"
     },
     fr: {
         title: "Calculateur d'Investissement", subtitle: "Visualisez votre avenir financier avec les intérêts composés",
@@ -180,7 +201,14 @@ window.App.translations = {
         etf_iwda_desc: "Exposition aux entreprises de 23 pays développés.",
         etf_qqq_desc: "Comprend 100 des plus grandes entreprises non financières du Nasdaq.",
         githubPage: "Page GitHub",
-        etf_vwce_desc: "Couvre les actions de grandes et moyennes capitalisations des marchés développés et émergents."
+        etf_vwce_desc: "Couvre les actions de grandes et moyennes capitalisations des marchés développés et émergents.",
+        seeMoreCalculators: "Voir Plus de Calculateurs",
+        footerCopyright: "Copyright © 2026",
+        footerBrand: "Pomerancee",
+        footerLicensedUnder: "Sous licence",
+        footerLicenseName: "Licence Creative Commons.",
+        footerLicenseType: "CC BY-NC-SA 4.0 International",
+        footerLicenseTerms: "Attribution - Pas d'Utilisation Commerciale - Partage dans les Mêmes Conditions"
     },
     es: {
         title: "Calculadora de Inversión", subtitle: "Visualiza tu futuro financiero con interés compuesto",
@@ -224,7 +252,14 @@ window.App.translations = {
         etf_iwda_desc: "Exposición a empresas de 23 países desarrollados.",
         etf_qqq_desc: "Incluye 100 de las mayores empresas no financieras del Nasdaq.",
         githubPage: "Página de GitHub",
-        etf_vwce_desc: "Cubre acciones de gran y mediana capitalización de mercados desarrollados y emergentes."
+        etf_vwce_desc: "Cubre acciones de gran y mediana capitalización de mercados desarrollados y emergentes.",
+        seeMoreCalculators: "Ver Más Calculadoras",
+        footerCopyright: "Copyright © 2026",
+        footerBrand: "Pomerancee",
+        footerLicensedUnder: "Licenciado bajo",
+        footerLicenseName: "Licencia Creative Commons.",
+        footerLicenseType: "CC BY-NC-SA 4.0 Internacional",
+        footerLicenseTerms: "Atribución - No Comercial - Compartir Igual"
     },
     it: {
         title: "Calcolatore di Investimenti", subtitle: "Visualizza il tuo futuro finanziario con l'interesse composto",
@@ -266,7 +301,14 @@ window.App.translations = {
         etf_iwda_desc: "Esposizione ad aziende di 23 paesi sviluppati.",
         etf_qqq_desc: "Include 100 delle più grandi società non finanziarie del Nasdaq.",
         githubPage: "Pagina GitHub",
-        etf_vwce_desc: "Copre titoli a grande e media capitalizzazione dei mercati sviluppati ed emergenti."
+        etf_vwce_desc: "Copre titoli a grande e media capitalizzazione dei mercati sviluppati ed emergenti.",
+        seeMoreCalculators: "Vedi Altri Calcolatori",
+        footerCopyright: "Copyright © 2026",
+        footerBrand: "Pomerancee",
+        footerLicensedUnder: "Concesso in licenza sotto",
+        footerLicenseName: "Licenza Creative Commons.",
+        footerLicenseType: "CC BY-NC-SA 4.0 Internazionale",
+        footerLicenseTerms: "Attribuzione - Non Commerciale - Condividi allo stesso modo"
     },
     pl: {
         title: "Kalkulator Inwestycyjny", subtitle: "Wizualizuj swoją przyszłość finansową z procentem składanym",
@@ -308,7 +350,14 @@ window.App.translations = {
         etf_iwda_desc: "Ekspozycja na firmy z 23 krajów rozwiniętych.",
         etf_qqq_desc: "Obejmuje 100 największych firm niefinansowych na Nasdaq.",
         githubPage: "Strona na GitHub",
-        etf_vwce_desc: "Obejmuje akcje o dużej i średniej kapitalizacji z rynków rozwiniętych i wschodzących."
+        etf_vwce_desc: "Obejmuje akcje o dużej i średniej kapitalizacji z rynków rozwiniętych i wschodzących.",
+        seeMoreCalculators: "Zobacz Więcej Kalkulatorów",
+        footerCopyright: "Copyright © 2026",
+        footerBrand: "Pomerancee",
+        footerLicensedUnder: "Licencjonowane na",
+        footerLicenseName: "Licencji Creative Commons.",
+        footerLicenseType: "CC BY-NC-SA 4.0 Międzynarodowa",
+        footerLicenseTerms: "Uznanie Autorstwa - Użycie Niekomercyjne - Na Tych Samych Warunkach"
     },
     sv: {
         title: "Investeringskalkylator", subtitle: "Visualisera din finansiella framtid",
@@ -350,7 +399,14 @@ window.App.translations = {
         etf_iwda_desc: "Exponering mot företag från 23 utvecklade länder.",
         etf_qqq_desc: "Inkluderar 100 av de största icke-finansiella företagen på Nasdaq.",
         githubPage: "GitHub-sida",
-        etf_vwce_desc: "Omfattar aktier i stora och medelstora företag från utvecklade marknader och tillväxtmarknader."
+        etf_vwce_desc: "Omfattar aktier i stora och medelstora företag från utvecklade marknader och tillväxtmarknader.",
+        seeMoreCalculators: "Se Fler Kalkylatorer",
+        footerCopyright: "Copyright © 2026",
+        footerBrand: "Pomerancee",
+        footerLicensedUnder: "Licensierad under",
+        footerLicenseName: "Creative Commons-licens.",
+        footerLicenseType: "CC BY-NC-SA 4.0 Internationell",
+        footerLicenseTerms: "Erkännande - Ickekommersiell - DelaLika"
     },
     no: {
         title: "Investeringskalkulator", subtitle: "Visualiser din økonomiske fremtid",
@@ -392,7 +448,14 @@ window.App.translations = {
         etf_iwda_desc: "Eksponering mot selskaper fra 23 utviklede land.",
         etf_qqq_desc: "Inkluderer 100 av de største ikke-finansielle selskapene på Nasdaq.",
         githubPage: "GitHub-side",
-        etf_vwce_desc: "Dekker aksjer i store og mellomstore selskaper fra utviklede markeder og fremvoksende markeder."
+        etf_vwce_desc: "Dekker aksjer i store og mellomstore selskaper fra utviklede markeder og fremvoksende markeder.",
+        seeMoreCalculators: "Se Flere Kalkulatorer",
+        footerCopyright: "Copyright © 2026",
+        footerBrand: "Pomerancee",
+        footerLicensedUnder: "Lisensiert under",
+        footerLicenseName: "Creative Commons-lisens.",
+        footerLicenseType: "CC BY-NC-SA 4.0 Internasjonal",
+        footerLicenseTerms: "Navngivelse - Ikkekommersiell - Del på samme vilkår"
     },
     da: {
         title: "Investeringsberegner", subtitle: "Visualiser din økonomiske fremtid",
@@ -434,7 +497,14 @@ window.App.translations = {
         etf_iwda_desc: "Eksponering mod virksomheder fra 23 udviklede lande.",
         etf_qqq_desc: "Omfatter 100 af de største ikke-finansielle virksomheder på Nasdaq.",
         githubPage: "GitHub-side",
-        etf_vwce_desc: "Dækker aktier i store og mellemstore virksomheder fra udviklede markeder og vækstmarkeder."
+        etf_vwce_desc: "Dækker aktier i store og mellemstore virksomheder fra udviklede markeder og vækstmarkeder.",
+        seeMoreCalculators: "Se Flere Beregnere",
+        footerCopyright: "Copyright © 2026",
+        footerBrand: "Pomerancee",
+        footerLicensedUnder: "Licenseret under",
+        footerLicenseName: "Creative Commons-licens.",
+        footerLicenseType: "CC BY-NC-SA 4.0 International",
+        footerLicenseTerms: "Navngivelse - Ikke-kommerciel - Del på samme vilkår"
     },
     hu: {
         title: "Befektetési Kalkulátor", subtitle: "Képzelje el pénzügyi jövőjét kamatos kamattal",
@@ -477,7 +547,14 @@ window.App.translations = {
         etf_iwda_desc: "23 fejlett ország vállalatainak kitettsége.",
         etf_qqq_desc: "A Nasdaq 100 legnagyobb nem pénzügyi vállalatát tartalmazza.",
         githubPage: "GitHub oldal",
-        etf_vwce_desc: "Fejlett és feltörekvő piacok nagy és közepes tőkeértékű részvényeit fedi le."
+        etf_vwce_desc: "Fejlett és feltörekvő piacok nagy és közepes tőkeértékű részvényeit fedi le.",
+        seeMoreCalculators: "Több Kalkulátor Megtekintése",
+        footerCopyright: "Copyright © 2026",
+        footerBrand: "Pomerancee",
+        footerLicensedUnder: "Licencelve",
+        footerLicenseName: "Creative Commons Licenc alatt.",
+        footerLicenseType: "CC BY-NC-SA 4.0 Nemzetközi",
+        footerLicenseTerms: "Nevezd meg! - Ne add el! - Így add tovább!"
     },
     ro: {
         title: "Calculator de Investiții", subtitle: "Vizualizați-vă viitorul financiar",
@@ -520,7 +597,14 @@ window.App.translations = {
         etf_iwda_desc: "Expunere la companii din 23 de țări dezvoltate.",
         etf_qqq_desc: "Include 100 dintre cele mai mari companii non-financiare de pe Nasdaq.",
         githubPage: "Pagină GitHub",
-        etf_vwce_desc: "Acoperă acțiuni cu capitalizare mare și medie de pe piețele dezvoltate și emergente."
+        etf_vwce_desc: "Acoperă acțiuni cu capitalizare mare și medie de pe piețele dezvoltate și emergente.",
+        seeMoreCalculators: "Vezi Mai Multe Calculatoare",
+        footerCopyright: "Copyright © 2026",
+        footerBrand: "Pomerancee",
+        footerLicensedUnder: "Licențiat sub",
+        footerLicenseName: "Licență Creative Commons.",
+        footerLicenseType: "CC BY-NC-SA 4.0 Internațional",
+        footerLicenseTerms: "Atribuire - Necomercial - Distribuire în Condiții Identice"
     },
     bg: {
         title: "Инвестиционен Калкулатор", subtitle: "Визуализирайте финансовото си бъдеще",
@@ -563,7 +647,14 @@ window.App.translations = {
         etf_iwda_desc: "Експозиция към компании от 23 развити страни.",
         etf_qqq_desc: "Включва 100 от най-големите нефинансови компании на Nasdaq.",
         githubPage: "GitHub страница",
-        etf_vwce_desc: "Обхваща акции с голяма и средна капитализация от развити и развиващи се пазари."
+        etf_vwce_desc: "Обхваща акции с голяма и средна капитализация от развити и развиващи се пазари.",
+        seeMoreCalculators: "Вижте Повече Калкулатори",
+        footerCopyright: "Copyright © 2026",
+        footerBrand: "Pomerancee",
+        footerLicensedUnder: "Лицензиран под",
+        footerLicenseName: "Лиценз Creative Commons.",
+        footerLicenseType: "CC BY-NC-SA 4.0 Международен",
+        footerLicenseTerms: "Признание - Некомерсиално - Споделяне на Същите Условия"
     },
     // Adding generic fallbacks for missing ones using English base to ensure app functions
     fallBackDefaults: function(langCode) {
@@ -742,7 +833,14 @@ Object.assign(window.App.translations.ru || (window.App.translations.ru = {}), w
     etf_iwda_desc: "Инвестиции в компании из 23 развитых стран.",
     etf_qqq_desc: "Включает 100 крупнейших нефинансовых компаний на Nasdaq.",
     githubPage: "Страница на GitHub",
-    etf_vwce_desc: "Охватывает акции компаний с большой и средней капитализацией на развитых и развивающихся рынках."
+    etf_vwce_desc: "Охватывает акции компаний с большой и средней капитализацией на развитых и развивающихся рынках.",
+    seeMoreCalculators: "Посмотреть Больше Калькуляторов",
+    footerCopyright: "Copyright © 2026",
+    footerBrand: "Pomerancee",
+    footerLicensedUnder: "Лицензировано под",
+    footerLicenseName: "Лицензией Creative Commons.",
+    footerLicenseType: "CC BY-NC-SA 4.0 Международная",
+    footerLicenseTerms: "С указанием авторства - Некоммерческая - С сохранением условий"
 });
 Object.assign(window.App.translations.ja || (window.App.translations.ja = {}), window.App.translations.en, {
     title: "投資計算機",
@@ -791,7 +889,14 @@ Object.assign(window.App.translations.ja || (window.App.translations.ja = {}), w
     etf_iwda_desc: "先進国23カ国の企業への分散投資を可能にします。",
     etf_qqq_desc: "Nasdaq上場の非金融大手100社で構成されています。",
     githubPage: "GitHubページ",
-    etf_vwce_desc: "先進国および新興国市場の大型・中型株を網羅しています。"
+    etf_vwce_desc: "先進国および新興国市場の大型・中型株を網羅しています。",
+    seeMoreCalculators: "他の計算機を見る",
+    footerCopyright: "著作権 © 2026",
+    footerBrand: "Pomerancee",
+    footerLicensedUnder: "ライセンス",
+    footerLicenseName: "クリエイティブ・コモンズ・ライセンス。",
+    footerLicenseType: "CC BY-NC-SA 4.0 国際",
+    footerLicenseTerms: "表示 - 非営利 - 継承"
 });
 Object.assign(window.App.translations.tr || (window.App.translations.tr = {}), window.App.translations.en, {
     title: "Yatırım Hesaplayıcı",
@@ -840,5 +945,12 @@ Object.assign(window.App.translations.tr || (window.App.translations.tr = {}), w
     etf_iwda_desc: "23 gelişmiş ülkedeki şirketlere yatırım imkanı sunar.",
     etf_qqq_desc: "Nasdaq'taki en büyük finans dışı 100 şirketi içerir.",
     githubPage: "GitHub sayfası",
-    etf_vwce_desc: "Gelişmiş ve gelişmekte olan piyasalardaki büyük og orta ölçekli hisse senetlerini kapsar."
+    etf_vwce_desc: "Gelişmiş ve gelişmekte olan piyasalardaki büyük og orta ölçekli hisse senetlerini kapsar.",
+    seeMoreCalculators: "Daha Fazla Hesaplayıcı Gör",
+    footerCopyright: "Telif Hakkı © 2026",
+    footerBrand: "Pomerancee",
+    footerLicensedUnder: "Lisanslı",
+    footerLicenseName: "Creative Commons Lisansı.",
+    footerLicenseType: "CC BY-NC-SA 4.0 Uluslararası",
+    footerLicenseTerms: "Atıf - Ticari Olmayan - Aynı Lisansla Paylaş"
 });

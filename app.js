@@ -102,3 +102,188 @@ if ('IntersectionObserver' in window) {
         observer.observe(tile);
     });
 }
+
+
+// ── Language System ────────────────────────────────────────────────────
+(function initLanguageSystem() {
+    const customSelectWrapper = document.getElementById('custom-language-select');
+    const selectedOption = document.getElementById('selected-language');
+    const optionsContainer = document.getElementById('language-options');
+    const hiddenSelect = document.getElementById('language-select');
+
+    if (!customSelectWrapper || !selectedOption || !optionsContainer || !hiddenSelect) {
+        console.warn('Language selector elements not found');
+        return;
+    }
+
+    // Language options matching the select element
+    const languages = [
+        { code: 'en', name: 'English (US/UK)' },
+        { code: 'cs', name: 'Čeština (Czech)' },
+        { code: 'de', name: 'Deutsch (German)' },
+        { code: 'fr', name: 'Français (French)' },
+        { code: 'es', name: 'Español (Spanish)' },
+        { code: 'it', name: 'Italiano (Italian)' },
+        { code: 'sv', name: 'Svenska (Swedish)' },
+        { code: 'no', name: 'Norsk (Norwegian)' },
+        { code: 'da', name: 'Dansk (Danish)' },
+        { code: 'pl', name: 'Polski (Polish)' },
+        { code: 'hu', name: 'Magyar (Hungarian)' },
+        { code: 'ro', name: 'Română (Romanian)' },
+        { code: 'bg', name: 'Български (Bulgarian)' },
+        { code: 'ru', name: 'Русский (Russian)' },
+        { code: 'tr', name: 'Türkçe (Turkish)' },
+        { code: 'ja', name: '日本語 (Japanese)' }
+    ];
+
+    // Detect best language using the Language Algorithm
+    const supportedLanguages = languages.map(l => l.code);
+    let currentLanguage = 'en';
+
+    if (window.LanguageAlgorithm && window.LanguageAlgorithm.detectBestLanguage) {
+        currentLanguage = window.LanguageAlgorithm.detectBestLanguage(supportedLanguages, 'en');
+    }
+
+    // Check localStorage for saved preference
+    const savedLanguage = localStorage.getItem('selectedLanguage');
+    if (savedLanguage && supportedLanguages.includes(savedLanguage)) {
+        currentLanguage = savedLanguage;
+    }
+
+    // Populate custom dropdown
+    languages.forEach((lang, index) => {
+        const option = document.createElement('div');
+        option.className = 'custom-option';
+        option.textContent = lang.name;
+        option.dataset.value = lang.code;
+        option.style.setProperty('--stagger-index', index);
+        option.setAttribute('role', 'option');
+        option.setAttribute('tabindex', '0');
+        
+        if (lang.code === currentLanguage) {
+            option.classList.add('selected');
+        }
+
+        option.addEventListener('click', () => selectLanguage(lang.code, lang.name));
+        option.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                selectLanguage(lang.code, lang.name);
+            }
+        });
+
+        optionsContainer.appendChild(option);
+    });
+
+    // Toggle dropdown
+    selectedOption.addEventListener('click', toggleDropdown);
+    selectedOption.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleDropdown();
+        }
+    });
+
+    function toggleDropdown() {
+        const isOpen = customSelectWrapper.classList.toggle('open');
+        selectedOption.setAttribute('aria-expanded', isOpen);
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!customSelectWrapper.contains(e.target)) {
+            customSelectWrapper.classList.remove('open');
+            selectedOption.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    // Select language function
+    function selectLanguage(code, name) {
+        currentLanguage = code;
+        localStorage.setItem('selectedLanguage', code);
+
+        // Update UI
+        selectedOption.querySelector('.option-text').textContent = name;
+        hiddenSelect.value = code;
+
+        // Update selected state
+        optionsContainer.querySelectorAll('.custom-option').forEach(opt => {
+            opt.classList.toggle('selected', opt.dataset.value === code);
+        });
+
+        // Close dropdown
+        customSelectWrapper.classList.remove('open');
+        selectedOption.setAttribute('aria-expanded', 'false');
+
+        // Apply translations
+        applyTranslations(code);
+    }
+
+    // Apply translations to the page
+    function applyTranslations(langCode) {
+        if (!window.App || !window.App.translations || !window.App.translations[langCode]) {
+            console.warn(`Translations for language "${langCode}" not found`);
+            return;
+        }
+
+        const translations = window.App.translations[langCode];
+
+        // Update all elements with data-i18n attribute
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[key]) {
+                element.textContent = translations[key];
+            }
+        });
+
+        // Update elements with data-i18n-alt attribute (for alt text)
+        document.querySelectorAll('[data-i18n-alt]').forEach(element => {
+            const key = element.getAttribute('data-i18n-alt');
+            if (translations[key]) {
+                element.setAttribute('alt', translations[key]);
+            }
+        });
+
+        // Update elements with data-i18n-aria-label attribute
+        document.querySelectorAll('[data-i18n-aria-label]').forEach(element => {
+            const key = element.getAttribute('data-i18n-aria-label');
+            if (translations[key]) {
+                element.setAttribute('aria-label', translations[key]);
+            }
+        });
+
+        // Update elements with data-i18n-title attribute
+        document.querySelectorAll('[data-i18n-title]').forEach(element => {
+            const key = element.getAttribute('data-i18n-title');
+            if (translations[key]) {
+                element.setAttribute('title', translations[key]);
+            }
+        });
+
+        // Update meta tags with data-i18n-content attribute
+        document.querySelectorAll('meta[data-i18n-content]').forEach(element => {
+            const key = element.getAttribute('data-i18n-content');
+            if (translations[key]) {
+                element.setAttribute('content', translations[key]);
+            }
+        });
+
+        // Update page title
+        const titleElement = document.getElementById('page-title');
+        if (titleElement && translations.metaTitle) {
+            titleElement.textContent = translations.metaTitle;
+            document.title = translations.metaTitle;
+        }
+
+        // Update HTML lang attribute
+        document.documentElement.setAttribute('lang', langCode);
+    }
+
+    // Initialize with current language
+    const currentLang = languages.find(l => l.code === currentLanguage);
+    if (currentLang) {
+        selectedOption.querySelector('.option-text').textContent = currentLang.name;
+        hiddenSelect.value = currentLanguage;
+        applyTranslations(currentLanguage);
+    }
+})();

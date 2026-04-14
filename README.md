@@ -22,7 +22,7 @@ Most financial tools online are cluttered with aggressive ads, have outdated des
 | Calculator | Status | Description |
 |------------|--------|-------------|
 | [Investment Calculator](Calculators/Investment%20Calculator/README.md) | ✅ Ready | Compound interest, FIRE milestones, year-by-year breakdown |
-| [Currency Conversion](Calculators/Currency%20conversion/README.md) | 🚧 In Dev | Real-time exchange rates and historical data |
+| [Currency Conversion](Calculators/Currency%20conversion/README.md) | ✅ Ready | Real-time exchange rates and historical data |
 | [Dividend Calculator](Calculators/Dividend%20Calculator/README.md) | 🚧 In Dev | Future dividend income and reinvestment growth |
 | [Inflation Calculator](Calculators/Inflation%20Calculator/README.md) | 🚧 In Dev | Future purchasing power with historical rates |
 | [Loan Calculator](Calculators/Loan%20Calculator/README.md) | 🚧 In Dev | Loan repayments, interest costs, amortization |

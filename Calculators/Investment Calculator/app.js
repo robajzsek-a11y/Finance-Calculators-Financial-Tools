@@ -1427,13 +1427,15 @@ function translateCurrencies(langCode) {
  * Detects user browser language and sets the initial UI translation.
  */
 function initLanguage() {
-    const userLang = navigator.language || navigator.userLanguage || 'en';
-    const baseLang = userLang.split('-')[0];
-    
-    let selectedLang = 'en';
-    if (window.App.translations && window.App.translations[baseLang]) {
-        selectedLang = baseLang;
-    }
+    const supportedLanguages = Object.keys(window.App.translations || {}).filter(k => typeof window.App.translations[k] === 'object');
+    const detector = window.LanguageAlgorithm && typeof window.LanguageAlgorithm.detectBestLanguage === 'function'
+        ? window.LanguageAlgorithm.detectBestLanguage
+        : null;
+
+    let selectedLang = detector
+        ? detector(supportedLanguages, 'en')
+        : 'en';
+    const baseLang = (navigator.language || navigator.userLanguage || 'en').split('-')[0];
     
     // Set matching option in dropdown or fallback
     const validOpts = Array.from(languageSelect.options).map(o => o.value);

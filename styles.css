@@ -217,6 +217,18 @@ img {
     letter-spacing: 0.02em;
 }
 
+.header-language {
+    position: relative;
+}
+
+.header-language .custom-select-wrapper {
+    min-width: 200px;
+}
+
+.header-language .language-select.hidden {
+    display: none;
+}
+
 /* ─── GITHUB BUTTON ─────────────────────────────────────────────────── */
 @keyframes animate-rainbow {
     0% {

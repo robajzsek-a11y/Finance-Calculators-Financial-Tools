@@ -1,6 +1,6 @@
 import { fetchLatestRates, fetchHistoricalRates, getSupportedCurrencies, getFlagImageMarkup } from './api.js';
 import { calculateConversion, formatCurrency } from './calculator.js';
-import { initChart, updateChart, clearChart } from './chart.js';
+import { initChart, updateChart, clearChart, syncChartLocale } from './chart.js';
 
 const currencies = getSupportedCurrencies();
 
@@ -20,8 +20,14 @@ const DOM = {
     convertedLabel: document.getElementById('converted-label'),
     feeLabel: document.getElementById('fee-label'),
     totalLabel: document.getElementById('total-label'),
+    originalApprox: document.getElementById('original-approx'),
+    languageSelect: document.getElementById('language-select'),
+    customLanguageSelect: document.getElementById('custom-language-select'),
+    selectedLanguage: document.getElementById('selected-language'),
+    languageOptions: document.getElementById('language-options'),
     timeBtns: document.querySelectorAll('.time-btn'),
     historyList: document.getElementById('history-list'),
+    historyToggleBtn: document.getElementById('history-toggle-btn'),
     quickBtns: document.querySelectorAll('.quick-amount-btn'),
     copyBtn: document.getElementById('copy-btn')
 };
@@ -38,14 +44,45 @@ try {
 let currentHistoricalData = null;
 let historicalRequestId = 0;
 let customSelectEventsBound = false;
+let historyExpanded = false;
+let currentLanguage = 'en';
+
+const localeMap = {
+    en: 'en-US',
+    cs: 'cs-CZ',
+    de: 'de-DE',
+    fr: 'fr-FR',
+    es: 'es-ES',
+    it: 'it-IT',
+    sv: 'sv-SE',
+    no: 'nb-NO',
+    da: 'da-DK',
+    pl: 'pl-PL',
+    hu: 'hu-HU',
+    ro: 'ro-RO',
+    bg: 'bg-BG',
+    ru: 'ru-RU',
+    tr: 'tr-TR',
+    ja: 'ja-JP'
+};
+
+function getActiveLocale() {
+    return localeMap[currentLanguage] || currentLanguage || 'en-US';
+}
+
+function interpolate(template, values = {}) {
+    return String(template).replace(/\{(\w+)\}/g, (_, key) => values[key] ?? '');
+}
 
 function init() {
+    initLanguage();
     populateCurrencies();
     initCustomCurrencySelect(DOM.currencyFrom);
     initCustomCurrencySelect(DOM.currencyTo);
     loadSavedState();
     syncCustomCurrencySelect(DOM.currencyFrom);
     syncCustomCurrencySelect(DOM.currencyTo);
+    applyTranslations();
 
     DOM.amountFrom.addEventListener('input', handleInput);
     DOM.currencyFrom.addEventListener('change', handleCurrencyChange);
@@ -82,6 +119,7 @@ function init() {
     });
 
     bindCustomSelectEvents();
+    bindHistoryToggle();
     initChart('rateChart');
     fetchRates();
     renderHistory();
@@ -89,6 +127,141 @@ function init() {
     setInterval(() => {
         if (currentRates) updateRateDisplay();
     }, 30000);
+}
+
+function getT() {
+    const allTranslations = window.App?.translations || {};
+    return allTranslations[currentLanguage] || allTranslations.en || {};
+}
+
+function initLanguage() {
+    if (!window.App || !window.App.translations || !DOM.languageSelect) return;
+    const supportedLanguages = Array.from(DOM.languageSelect.options).map(o => o.value);
+    const detector = window.LanguageAlgorithm && typeof window.LanguageAlgorithm.detectBestLanguage === 'function'
+        ? window.LanguageAlgorithm.detectBestLanguage
+        : null;
+
+    const autoDetected = detector ? detector(supportedLanguages, 'en') : 'en';
+    DOM.languageSelect.value = supportedLanguages.includes(autoDetected) ? autoDetected : 'en';
+    currentLanguage = DOM.languageSelect.value;
+
+    updateCustomLanguageOptions();
+    applyTranslations();
+
+    DOM.selectedLanguage?.addEventListener('click', (event) => {
+        event.stopPropagation();
+        DOM.customLanguageSelect?.classList.toggle('open');
+    });
+
+    DOM.languageOptions?.addEventListener('click', (event) => {
+        const option = event.target.closest('.custom-option');
+        if (!option) return;
+        const langCode = option.dataset.value;
+        DOM.languageSelect.value = langCode;
+        currentLanguage = langCode;
+        DOM.customLanguageSelect?.classList.remove('open');
+        updateCustomLanguageOptions();
+        applyTranslations();
+        handleInput();
+    });
+
+    DOM.languageSelect.addEventListener('change', (event) => {
+        currentLanguage = event.target.value;
+        updateCustomLanguageOptions();
+        applyTranslations();
+        handleInput();
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('#custom-language-select')) {
+            DOM.customLanguageSelect?.classList.remove('open');
+        }
+    });
+}
+
+function updateCustomLanguageOptions() {
+    if (!DOM.languageOptions || !DOM.languageSelect || !DOM.selectedLanguage) return;
+    DOM.languageOptions.innerHTML = '';
+
+    Array.from(DOM.languageSelect.options).forEach((option, index) => {
+        const customOption = document.createElement('div');
+        customOption.className = 'custom-option';
+        customOption.dataset.value = option.value;
+        customOption.style.setProperty('--stagger-index', index);
+        customOption.textContent = option.textContent;
+        if (option.value === DOM.languageSelect.value) {
+            customOption.classList.add('selected');
+            const selectedText = DOM.selectedLanguage.querySelector('.option-text');
+            if (selectedText) selectedText.textContent = option.textContent;
+        }
+        DOM.languageOptions.appendChild(customOption);
+    });
+}
+
+function applyTranslations() {
+    const t = getT();
+    window.App.currentTranslation = t;
+    document.documentElement.lang = currentLanguage;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) el.textContent = t[key];
+    });
+
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        const key = el.getAttribute('data-i18n-title');
+        if (t[key]) el.setAttribute('title', t[key]);
+    });
+
+    document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+        const key = el.getAttribute('data-i18n-aria-label');
+        if (t[key]) el.setAttribute('aria-label', t[key]);
+    });
+
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (t[key]) el.setAttribute('placeholder', t[key]);
+    });
+
+    document.querySelectorAll('.custom-select-search').forEach(input => {
+        input.setAttribute('placeholder', t.searchCurrencyPlaceholder || 'Search currency...');
+        input.setAttribute('aria-label', t.searchCurrencyPlaceholder || 'Search currency...');
+    });
+
+    document.querySelectorAll('.custom-select-search-clear').forEach(button => {
+        const label = t.clearSearch || 'Clear search';
+        button.setAttribute('aria-label', label);
+        button.setAttribute('title', label);
+    });
+
+    refreshCurrencyOptionLabels();
+    DOM.rateDisplay.textContent = t.loadingRate || 'Loading rate...';
+    if (currentRates) updateRateDisplay();
+    if (currentHistoricalData && DOM.currencyTo.value) {
+        updateChart(currentHistoricalData, DOM.currencyTo.value);
+    } else {
+        syncChartLocale();
+    }
+    renderHistory();
+    updateHistoryToggleButton();
+}
+
+if (conversionHistory.length > 8) {
+    conversionHistory = conversionHistory.slice(0, 8);
+    localStorage.setItem('currency_history', JSON.stringify(conversionHistory));
+}
+
+function bindHistoryToggle() {
+    if (!DOM.historyToggleBtn) return;
+    DOM.historyToggleBtn.addEventListener('click', () => {
+        DOM.historyToggleBtn.classList.remove('is-clicked');
+        // Force reflow so animation reliably retriggers on every click
+        void DOM.historyToggleBtn.offsetWidth;
+        DOM.historyToggleBtn.classList.add('is-clicked');
+        historyExpanded = !historyExpanded;
+        DOM.historyList?.classList.toggle('is-expanded', historyExpanded);
+        updateHistoryToggleButton();
+    });
 }
 
 function escapeHtml(value) {
@@ -101,27 +274,82 @@ function escapeHtml(value) {
 }
 
 function buildCurrencyLabel(code) {
-    return `${code} - ${currencies[code].name}`;
+    const localizedName = getLocalizedCurrencyName(code);
+    return `${code} - ${localizedName}`;
 }
 
 function formatRateValue(value) {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat(getActiveLocale(), {
         minimumFractionDigits: value >= 1 ? 2 : 4,
         maximumFractionDigits: value >= 1 ? 4 : 8
     }).format(value);
 }
 
 function formatUpdatedLabel(fetchedAt) {
-    if (!fetchedAt) return 'Updated just now';
+    const t = getT();
+    if (!fetchedAt) return t.updatedJustNow || 'Updated just now';
 
     const diffMs = Math.max(0, Date.now() - fetchedAt);
     const diffMinutes = Math.floor(diffMs / 60000);
 
-    if (diffMinutes < 1) return 'Updated just now';
-    if (diffMinutes < 60) return `Updated ${diffMinutes} min ago`;
+    if (diffMinutes < 1) return t.updatedJustNow || 'Updated just now';
+    if (diffMinutes < 60) {
+        return interpolate(t.updatedMinutesAgo || 'Updated {count} min ago', { count: diffMinutes });
+    }
 
     const diffHours = Math.floor(diffMinutes / 60);
-    return `Updated ${diffHours} hr${diffHours === 1 ? '' : 's'} ago`;
+    return interpolate(t.updatedHoursAgo || 'Updated {count} h ago', { count: diffHours });
+}
+
+function getLocalizedCurrencyName(code) {
+    const fallback = currencies[code]?.name || code;
+    if (!code || code === 'BTC' || code === 'ETH' || code === 'XDR') return fallback;
+
+    try {
+        const displayNames = new Intl.DisplayNames([getActiveLocale()], { type: 'currency' });
+        return displayNames.of(code) || fallback;
+    } catch (error) {
+        return fallback;
+    }
+}
+
+function refreshCurrencyOptionLabels() {
+    [DOM.currencyFrom, DOM.currencyTo].forEach(selectEl => {
+        if (!selectEl) return;
+
+        Array.from(selectEl.options).forEach(option => {
+            const code = option.value;
+            const label = buildCurrencyLabel(code);
+            option.textContent = label;
+            option.title = label;
+        });
+
+        const customSelect = getCustomSelect(selectEl);
+        if (customSelect) {
+            customSelect.querySelectorAll('.custom-select-option').forEach(option => {
+                const code = option.dataset.value;
+                const symbol = getCurrencySymbol(code);
+                const name = getLocalizedCurrencyName(code);
+                const label = `${code} - ${symbol} · ${name}`;
+                option.setAttribute('title', label);
+                const text = option.querySelector('.custom-select-option-text');
+                if (text) text.textContent = `${code} - ${symbol} · ${name}`;
+            });
+        }
+
+        if (selectEl.value) syncCustomCurrencySelect(selectEl);
+    });
+}
+
+function getLocalizedErrorMessage(error) {
+    const t = getT();
+    const message = error?.message || '';
+
+    if (message.includes('No internet connection and no cached data available')) {
+        return t.statusOfflineNoCache || 'No internet connection and no cached rates are available.';
+    }
+
+    return t.statusConnectionError || t.errorLoadingRates || 'Live exchange rates are unavailable right now.';
 }
 
 function getCustomSelect(selectEl) {
@@ -162,7 +390,7 @@ function getCurrencySymbol(code) {
 }
 
 function buildCustomOptionMarkup(code) {
-    const name = currencies[code].name;
+    const name = getLocalizedCurrencyName(code);
     const symbol = getCurrencySymbol(code);
     const label = `${code} - ${symbol} · ${name}`;
     return `
@@ -372,7 +600,7 @@ async function fetchRates() {
     currentBase = DOM.currencyFrom.value;
 
     try {
-        DOM.rateDisplay.textContent = 'Loading rate...';
+        DOM.rateDisplay.textContent = getT().loadingRate || 'Loading rate...';
         DOM.rateTrend.textContent = '';
         DOM.rateTrend.className = 'profit-percent';
         DOM.apiStatus.classList.add('hidden');
@@ -381,7 +609,7 @@ async function fetchRates() {
         currentRates = data;
 
         if (data.isCached) {
-            DOM.apiStatus.textContent = 'Using offline cached rates.';
+            DOM.apiStatus.textContent = getT().usingOfflineRates || 'Using offline cached rates.';
             DOM.apiStatus.classList.remove('hidden');
         }
 
@@ -389,8 +617,8 @@ async function fetchRates() {
         handleInput();
         await loadHistoricalData();
     } catch (error) {
-        DOM.rateDisplay.textContent = 'Error loading rates';
-        DOM.apiStatus.textContent = error.message;
+        DOM.rateDisplay.textContent = getT().errorLoadingRates || 'Error loading rates';
+        DOM.apiStatus.textContent = getLocalizedErrorMessage(error);
         DOM.apiStatus.classList.remove('hidden');
         currentHistoricalData = null;
         clearChart();
@@ -511,14 +739,25 @@ function debouncedSaveHistory() {
 
 function updateResults(converted, fee, total, currency) {
     const fromCurrency = DOM.currencyFrom.value;
+    const sourceAmount = parseFloat(DOM.amountFrom.value) || 0;
     
-    if (DOM.convertedLabel) DOM.convertedLabel.textContent = `Converted Amount (${currency})`;
-    if (DOM.feeLabel) DOM.feeLabel.textContent = `Estimated Fee (${fromCurrency})`;
-    if (DOM.totalLabel) DOM.totalLabel.textContent = `Total to Pay (${fromCurrency})`;
+    const t = getT();
+    if (DOM.convertedLabel) DOM.convertedLabel.textContent = t.convertedAmount || 'Converted amount';
+    if (DOM.feeLabel) DOM.feeLabel.textContent = t.fee || 'Fee';
+    if (DOM.totalLabel) DOM.totalLabel.textContent = t.total || 'Total';
+    if (DOM.originalApprox) DOM.originalApprox.textContent = `≈ ${formatCurrency(sourceAmount, fromCurrency)}`;
 
-    DOM.convertedAmount.textContent = `${formatCurrency(converted, currency)}`;
+    DOM.convertedAmount.innerHTML = `
+        ${getFlagImageMarkup(currency, `${currency} flag`, '24x18')}
+        <span>${formatCurrency(converted, currency)} ${currency}</span>
+    `;
+
     DOM.feeAmount.textContent = `${formatCurrency(fee, fromCurrency)}`;
-    DOM.totalPay.textContent = `${formatCurrency(total, fromCurrency)}`;
+
+    DOM.totalPay.innerHTML = `
+        ${getFlagImageMarkup(fromCurrency, `${fromCurrency} flag`, '24x18')}
+        <span>${formatCurrency(total, fromCurrency)}</span>
+    `;
 }
 
 function handleCurrencyChange() {
@@ -612,7 +851,7 @@ function saveHistory() {
         from,
         to,
         result,
-        date: new Date().toLocaleDateString()
+        date: new Date().toLocaleDateString(getActiveLocale())
     };
 
     if (conversionHistory.length > 0 && conversionHistory[0].from === from && conversionHistory[0].to === to && conversionHistory[0].amount === amount) {
@@ -620,7 +859,7 @@ function saveHistory() {
     }
 
     conversionHistory.unshift(item);
-    if (conversionHistory.length > 5) conversionHistory.pop();
+    if (conversionHistory.length > 8) conversionHistory.pop();
 
     localStorage.setItem('currency_history', JSON.stringify(conversionHistory));
     renderHistory();
@@ -628,12 +867,18 @@ function saveHistory() {
 
 function renderHistory() {
     if (conversionHistory.length === 0) {
-        DOM.historyList.innerHTML = '<li class="empty">No recent conversions</li>';
+        DOM.historyList.innerHTML = `<li class="empty">${getT().noRecentConversions || 'No recent conversions'}</li>`;
+        if (DOM.historyToggleBtn) {
+            DOM.historyToggleBtn.classList.add('hidden');
+            DOM.historyToggleBtn.setAttribute('aria-expanded', 'false');
+        }
         return;
     }
 
-    DOM.historyList.innerHTML = conversionHistory.map(item => `
-        <li>
+    const visibleHistory = conversionHistory.slice(0, 8);
+
+    DOM.historyList.innerHTML = visibleHistory.map((item, idx) => `
+        <li class="${idx >= 4 ? 'history-item-extra' : ''}">
             <div class="hist-main">
                 <span class="hist-amt hist-currency">
                     ${getFlagImageMarkup(item.from, `${item.from} flag`, '24x18')}
@@ -648,6 +893,23 @@ function renderHistory() {
             <div class="hist-date">${item.date}</div>
         </li>
     `).join('');
+    DOM.historyList.classList.toggle('is-expanded', historyExpanded);
+    updateHistoryToggleButton();
+}
+
+function updateHistoryToggleButton() {
+    if (!DOM.historyToggleBtn) return;
+    const t = getT();
+    if (conversionHistory.length > 4) {
+        DOM.historyToggleBtn.classList.remove('hidden');
+        DOM.historyToggleBtn.textContent = historyExpanded
+            ? (t.showLess || 'Show less')
+            : `${t.showMore || 'Show more'} (${conversionHistory.length - 4})`;
+        DOM.historyToggleBtn.setAttribute('aria-expanded', String(historyExpanded));
+    } else {
+        DOM.historyToggleBtn.classList.add('hidden');
+        DOM.historyToggleBtn.setAttribute('aria-expanded', 'false');
+    }
 }
 
 init();

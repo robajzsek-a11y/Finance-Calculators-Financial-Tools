@@ -1,10 +1,18 @@
 let currencyChart = null;
 
+function getChartLocale() {
+    return document.documentElement.lang || 'en-US';
+}
+
 function formatChartLabel(dateString) {
-    return new Date(`${dateString}T00:00:00Z`).toLocaleDateString('en-US', {
+    return new Date(`${dateString}T00:00:00Z`).toLocaleDateString(getChartLocale(), {
         month: 'short',
         day: 'numeric'
     });
+}
+
+function getChartDatasetLabel() {
+    return window.App?.currentTranslation?.exchangeRate || 'Exchange rate';
 }
 
 export function initChart(canvasId) {
@@ -27,7 +35,7 @@ export function initChart(canvasId) {
         data: {
             labels: [],
             datasets: [{
-                label: 'Exchange Rate',
+                label: getChartDatasetLabel(),
                 data: [],
                 borderColor: '#6366f1',
                 backgroundColor: gradient,
@@ -86,6 +94,12 @@ export function clearChart() {
     currencyChart.update();
 }
 
+export function syncChartLocale() {
+    if (!currencyChart) return;
+    currencyChart.data.datasets[0].label = getChartDatasetLabel();
+    currencyChart.update('none');
+}
+
 export function updateChart(historicalData, targetCurrency) {
     if (!currencyChart || !historicalData || !historicalData.rates) {
         clearChart();
@@ -111,6 +125,7 @@ export function updateChart(historicalData, targetCurrency) {
     const maxRate = Math.max(...rates);
     const spread = Math.max(maxRate - minRate, maxRate * 0.02, 0.001);
 
+    currencyChart.data.datasets[0].label = getChartDatasetLabel();
     currencyChart.data.labels = dates.map(formatChartLabel);
     currencyChart.data.datasets[0].data = rates;
     currencyChart.options.scales.y.min = Math.max(0, minRate - spread * 0.25);

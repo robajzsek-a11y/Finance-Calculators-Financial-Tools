@@ -33,7 +33,9 @@ export function formatCurrency(value, currencyCode) {
         maxDecimals = 8;
     }
 
-    return new Intl.NumberFormat('en-US', {
+    const locale = document.documentElement.lang || 'en-US';
+
+    return new Intl.NumberFormat(locale, {
         style: 'decimal',
         minimumFractionDigits: minDecimals,
         maximumFractionDigits: maxDecimals
