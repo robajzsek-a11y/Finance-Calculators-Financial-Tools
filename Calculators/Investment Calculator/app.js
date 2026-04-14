@@ -87,8 +87,6 @@ const tableBody = document.getElementById('breakdown-table-body');
 const mobileControlsToggle = document.getElementById('mobile-controls-toggle');
 const controlsContent = document.getElementById('controls-content');
 
-const githubStarCountNode = document.querySelector('.gh-star-count');
-
 // State
 let state = {
     initialInvestment: 10000,
@@ -127,9 +125,6 @@ function init() {
     updateCurrencySymbols();
     updateCustomFrequencyOptions();
     updateCustomEtfOptions();
-
-    // Fetch live stars for GitHub button
-    fetchGitHubStars();
 
     // Check system preference or default to dark
     // state.isDarkMode = true; // Force default dark as requested (already in state)
@@ -193,30 +188,6 @@ function initControlsPanelBorder() {
         updateControlsPanelBorder();
     });
     controlsPanelBorderObserver.observe(controlsPanel);
-}
-
-/**
- * Fetches the live star count from GitHub API for the repo.
- */
-async function fetchGitHubStars() {
-    if (!githubStarCountNode) return;
-
-    try {
-        const response = await fetch('https://api.github.com/repos/robajzsek-a11y/Investing-Calculator');
-        if (!response.ok) return; // Keep hardcoded count if rate-limited or failed
-        
-        const data = await response.json();
-        const stars = data.stargazers_count;
-        
-        // Format thousands nicely (e.g., "1.2k")
-        if (stars >= 1000) {
-            githubStarCountNode.textContent = (stars / 1000).toFixed(1) + 'k';
-        } else {
-            githubStarCountNode.textContent = stars;
-        }
-    } catch (e) {
-        console.warn('Failed to fetch GitHub stars', e);
-    }
 }
 
 /**

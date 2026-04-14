@@ -24,23 +24,6 @@ function initTileBorders() {
 
 initTileBorders();
 
-// ── GitHub star count ─────────────────────────────────────────────────
-// Updates every .gh-star-count element on the page (header btn + CTA banner)
-(async () => {
-    const els = document.querySelectorAll('.gh-star-count');
-    if (!els.length) return;
-    try {
-        const res  = await fetch('https://api.github.com/repos/robajzsek-a11y/Investing-Calculator', { cache: 'no-store' });
-        if (!res.ok) return;
-        const data = await res.json();
-        const n    = data.stargazers_count ?? 0;
-        const label = n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
-        els.forEach(el => { el.textContent = label; });
-    } catch (_) {
-        /* silently fail — button still works */
-    }
-})();
-
 // ── Click ripple effect ────────────────────────────────────────────────
 document.addEventListener('click', (e) => {
     const ripple = document.createElement('div');
