@@ -588,6 +588,11 @@ function bindCustomSelectEvents() {
             return;
         }
 
+        // Don't close if touching the search input or clear button
+        if (e.target.closest('.custom-select-search') || e.target.closest('.custom-select-search-clear')) {
+            return;
+        }
+
         // Close if tapping completely outside any custom-select
         if (!e.target.closest('.custom-select')) {
             closeAllCustomSelects();
@@ -648,6 +653,11 @@ function bindCustomSelectEvents() {
             syncCustomCurrencySelect(selectEl);
             closeAllCustomSelects();
             selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+            return;
+        }
+
+        // Don't close if clicking the search input or clear button
+        if (e.target.closest('.custom-select-search') || e.target.closest('.custom-select-search-clear')) {
             return;
         }
 
