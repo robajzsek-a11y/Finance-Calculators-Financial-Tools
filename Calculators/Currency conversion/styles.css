@@ -1215,14 +1215,7 @@ p {
         font-size: 0.8rem;
     }
 
-    #see-more-btn {
-        width: 42px;
-        height: 42px;
-    }
-
-    #see-more-btn:hover {
-        width: 224px;
-    }
+    /* Uses shared mobile sizing from Modules/shared.css */
 
     .controls-panel {
         padding: 0.85rem 0.75rem;
