@@ -9,6 +9,9 @@
     --border: #334155;
     --orange: #f97316;
     --font: 'Inter', system-ui, sans-serif;
+
+    /* Warm amber tint for the top half of the converter */
+    --bg-amber-top: color-mix(in srgb, var(--bg-card) 88%, var(--orange));
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -227,21 +230,120 @@ p {
 /* Left Panel: Controls */
 .controls-panel {
     position: relative;
-    z-index: 50;
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid rgba(99, 102, 241, 0.2);
-    border-radius: 1.25rem;
-    padding: 2rem 1.5rem;
-    box-shadow: 0 4px 40px -8px rgba(0,0,0,0.6);
-    overflow: hidden;
+    z-index: 10;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    overflow: visible;
+    background: transparent;
+}
+
+/* --- Converter stack with dedicated spacer row --- */
+.converter-stack {
+    position: relative;
+    --card-gap: 15px;
+    --notch-radius: 22px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto var(--card-gap) auto;
+    grid-template-areas:
+        "send"
+        "spacer"
+        "receive";
+}
+
+.send-card,
+.receive-card {
+    border-radius: 1rem;
+    border: none;
+    padding: 1.15rem 1rem 1rem;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    overflow: visible;
+    margin: 0 !important;
+}
+
+/* --- HORNÍ KARTA --- */
+.send-card {
+    grid-area: send;
+    background: rgba(249, 115, 22, 0.12);
+    position: relative;
+    padding-bottom: 1.25rem;
+    border-radius: 1rem;
+    /* Hlavní maska karty */
+    -webkit-mask-image: radial-gradient(ellipse 24px 17px at 50% 100%, transparent 95%, black 100%);
+    mask-image: radial-gradient(ellipse 24px 17px at 50% 100%, transparent 95%, black 100%);
+    /* Trik: Místo borderu použijeme box-shadow, který simuluje outline */
+    box-shadow: 
+        inset 0 0 0 1px color-mix(in srgb, var(--orange) 45%, var(--border)),
+        0 18px 48px -36px rgba(249, 115, 22, 0.5);
+}
+
+.send-card::before {
+    content: none;
+}
+
+/* --- SPODNÍ KARTA --- */
+.receive-card {
+    grid-area: receive;
+    background: var(--bg-card);
+    position: relative;
+    border-radius: 1rem;
+    /* Hlavní maska karty */
+    -webkit-mask-image: radial-gradient(ellipse 24px 17px at 50% 0%, transparent 95%, black 100%);
+    mask-image: radial-gradient(ellipse 24px 17px at 50% 0%, transparent 95%, black 100%);
+    /* Trik: Šedý vnitřní outline */
+    box-shadow: 
+        inset 0 0 0 1px var(--border),
+        0 18px 52px -40px rgba(0, 0, 0, 0.65);
+}
+
+.receive-card::before {
+    content: none;
+}
+
+.send-card .input-group,
+.receive-card .input-group {
+    margin-bottom: 0;
+}
+
+.receive-card .input-group + .input-group {
+    margin-top: 0.9rem;
+}
+
+/* Dedicated middle spacer row for independent swap button */
+.spacer-row {
+    grid-area: spacer;
+    position: relative;
+    height: var(--card-gap);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+/* --- TLAČÍTKO --- */
+.swap-button {
+    position: relative;
+    /* Ujisti se, že střed tlačítka je přesně v ose mezery */
+    z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.swap-button .swap-btn {
+    pointer-events: auto;
+    background: color-mix(in srgb, var(--bg-card) 92%, #0b1221);
+    border: 1px solid var(--border);
+    box-shadow:
+        0 0 15px rgba(0, 0, 0, 0.3),
+        0 16px 40px -22px rgba(0, 0, 0, 0.8);
 }
 .controls-panel-border {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
+    display: none;
 }
 .controls-panel-border path {
     fill: none;
@@ -298,14 +400,35 @@ p {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--bg-card) 92%, transparent);
+    border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
     border-radius: 0.75rem;
     padding: 0.4rem;
     transition: border-color 0.2s;
 }
 .input-wrapper:focus-within {
     border-color: var(--primary);
+}
+
+/* Blend inputs with their card backgrounds */
+.send-card .input-wrapper {
+    background:
+        linear-gradient(180deg,
+            rgba(249, 115, 22, 0.16) 0%,
+            rgba(249, 115, 22, 0.09) 100%);
+    border-color: color-mix(in srgb, var(--orange) 30%, var(--border));
+}
+
+.send-card .quick-amounts {
+    margin-top: 0.38rem;
+}
+
+.receive-card .input-wrapper {
+    background:
+        linear-gradient(180deg,
+            color-mix(in srgb, var(--bg-body) 86%, transparent) 0%,
+            color-mix(in srgb, var(--bg-body) 92%, transparent) 100%);
+    border-color: color-mix(in srgb, var(--border) 70%, transparent);
 }
 .input-wrapper input {
     flex: 1 1 0;
@@ -524,10 +647,11 @@ p {
     transform: translateY(-1px);
 }
 .flag-icon {
-    width: 24px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
+    aspect-ratio: 1 / 1;
     flex-shrink: 0;
-    border-radius: 2px;
+    border-radius: 50%;
     object-fit: cover;
     border: 1px solid rgba(148, 163, 184, 0.2);
     background: rgba(148, 163, 184, 0.12);
@@ -561,18 +685,15 @@ p {
 .swap-wrapper {
     display: flex;
     justify-content: center;
-    margin: 1rem 0;
+    margin: -22px 0;
     position: relative;
+    z-index: 10;
 }
-.swap-wrapper::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: var(--border);
-    z-index: 0;
+
+/* Remove the previous panel-split background layers */
+.swap-wrapper::before,
+.swap-wrapper::after {
+    content: none;
 }
 .swap-btn {
     position: relative;
@@ -580,7 +701,7 @@ p {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: var(--bg-card);
+    background: color-mix(in srgb, var(--bg-card) 82%, var(--bg-body));
     border: 1px solid var(--border);
     color: var(--primary-hover);
     display: flex;
@@ -588,11 +709,14 @@ p {
     justify-content: center;
     cursor: pointer;
     transition: transform 0.3s, border-color 0.2s, box-shadow 0.2s;
-    box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.6);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
+
+/* “Notch” ring so it feels inset between cards */
 .swap-btn:hover {
     border-color: var(--primary);
     color: var(--primary);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 .swap-btn.rotate {
     transform: rotate(180deg);
@@ -688,7 +812,7 @@ p {
 
 .conversion-main-value .flag-icon {
     width: 28px;
-    height: 20px;
+    height: 28px;
 }
 
 .conversion-main-value span {
@@ -730,7 +854,7 @@ p {
 
 .conversion-total .flag-icon {
     width: 20px;
-    height: 14px;
+    height: 20px;
 }
 .card {
     background: rgba(15, 23, 42, 0.6);
@@ -827,14 +951,22 @@ p {
 }
 
 .chart-container {
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid var(--border);
+    background: linear-gradient(145deg, rgba(249, 115, 22, 0.08), rgba(15, 23, 42, 0.6));
+    border: 1px solid rgba(251, 191, 36, 0.2);
     border-radius: 1rem;
     padding: 1.5rem;
     height: 350px;
     width: var(--results-content-width);
     margin: 0;
     position: relative;
+    box-shadow: 
+        0 0 20px rgba(251, 191, 36, 0.1),
+        inset 0 0 0 1px rgba(251, 191, 36, 0.05);
+}
+
+/* Add golden glow to candlestick chart canvas */
+.chart-container canvas {
+    filter: drop-shadow(0 0 3px rgba(251, 191, 36, 0.15));
 }
 
 .history-section {
@@ -856,16 +988,13 @@ p {
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1rem;
 }
 .history-list li {
+    /* Card visuals are defined by the 2-row layout block below. */
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    background: rgba(15,23,42,0.8);
-    border: 1px solid var(--border);
-    border-radius: 0.75rem;
 }
 .history-list li.empty {
     grid-column: 1 / -1;
@@ -961,6 +1090,100 @@ p {
 .hist-date {
     font-size: 0.75rem;
     color: var(--text-secondary);
+}
+
+/* --- Recent conversions: cleaner 2-row card layout --- */
+.history-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    width: 100%;
+    min-width: 250px;
+    padding: 0.95rem 1rem 0.85rem;
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.78), rgba(30, 41, 59, 0.64));
+    border: 1px solid rgba(129, 140, 248, 0.2);
+    border-radius: 0.85rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 10px 24px -20px rgba(99, 102, 241, 0.55);
+    font-family: 'DM Sans', var(--font), 'Inter', system-ui, sans-serif;
+}
+
+.hist-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
+.hist-flags {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.38rem;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.hist-codes {
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-secondary);
+    opacity: 0.9;
+    white-space: nowrap;
+}
+
+.hist-bottom-row {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.42rem;
+    min-width: 0;
+}
+
+.hist-amount {
+    font-size: clamp(0.9rem, 1.75vw, 1.02rem);
+    font-weight: 800;
+    color: #e2e8f0;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.hist-arrow {
+    color: rgba(148, 163, 184, 0.95);
+    flex-shrink: 0;
+}
+
+.hist-date-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.08rem;
+}
+
+.hist-date {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    opacity: 0.9;
+    white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+    .history-list li {
+        min-width: 0;
+    }
+
+    .hist-top-row {
+        gap: 0.45rem;
+    }
+
+    .hist-codes {
+        font-size: 0.72rem;
+    }
+
+    .hist-amount {
+        font-size: 0.95rem;
+    }
 }
 
 @media (max-width: 992px) {

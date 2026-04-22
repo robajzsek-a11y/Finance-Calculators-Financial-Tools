@@ -1,12 +1,14 @@
 import { fetchLatestRates, fetchHistoricalRates, getSupportedCurrencies, getFlagImageMarkup } from './api.js';
 import { calculateConversion, formatCurrency } from './calculator.js';
-import { initChart, updateChart, clearChart, syncChartLocale } from './chart.js';
+import { initChart, updateChart, clearChart, syncChartLocale } from './chart.js?v=20260423010302';
 
 const currencies = getSupportedCurrencies();
 
 const DOM = {
     amountFrom: document.getElementById('amount-from'),
     amountTo: document.getElementById('amount-to'),
+    amountFromSymbol: document.getElementById('amount-from-symbol'),
+    amountToSymbol: document.getElementById('amount-to-symbol'),
     currencyFrom: document.getElementById('currency-from'),
     currencyTo: document.getElementById('currency-to'),
     swapBtn: document.getElementById('swap-btn'),
@@ -408,6 +410,46 @@ function getCurrencySymbol(code) {
     return currencySymbols[code] || code;
 }
 
+function formatWithCurrencySymbol(value, currencyCode) {
+    const formattedValue = typeof value === 'number'
+        ? formatCurrency(value, currencyCode)
+        : String(value);
+    return `${formattedValue}${getCurrencySymbol(currencyCode)}`;
+}
+
+function updateInputCurrencySymbols() {
+    if (DOM.amountFromSymbol) DOM.amountFromSymbol.textContent = getCurrencySymbol(DOM.currencyFrom.value);
+    if (DOM.amountToSymbol) DOM.amountToSymbol.textContent = getCurrencySymbol(DOM.currencyTo.value);
+}
+
+function parseLocaleNumber(value) {
+    if (typeof value === 'number') return value;
+    if (value === null || value === undefined) return Number.NaN;
+
+    const raw = String(value).trim();
+    if (!raw) return Number.NaN;
+
+    // Keep only digits, separators and minus sign.
+    let normalized = raw.replace(/[^\d,.\-]/g, '');
+    if (!normalized) return Number.NaN;
+
+    const lastComma = normalized.lastIndexOf(',');
+    const lastDot = normalized.lastIndexOf('.');
+
+    if (lastComma > -1 && lastDot > -1) {
+        // The last separator is the decimal mark, the other is thousands separator.
+        if (lastComma > lastDot) {
+            normalized = normalized.replace(/\./g, '').replace(',', '.');
+        } else {
+            normalized = normalized.replace(/,/g, '');
+        }
+    } else if (lastComma > -1) {
+        normalized = normalized.replace(',', '.');
+    }
+
+    return Number(normalized);
+}
+
 function buildCustomOptionMarkup(code) {
     const name = getLocalizedCurrencyName(code);
     const symbol = getCurrencySymbol(code);
@@ -704,6 +746,7 @@ function loadSavedState() {
 
     DOM.currencyFrom.value = savedFrom || 'USD';
     DOM.currencyTo.value = savedTo || 'EUR';
+    updateInputCurrencySymbols();
 }
 
 function saveState() {
@@ -854,35 +897,39 @@ function debouncedSaveHistory() {
 
 function updateResults(converted, fee, total, currency) {
     const fromCurrency = DOM.currencyFrom.value;
+    const fromSymbol = getCurrencySymbol(fromCurrency);
+    const targetSymbol = getCurrencySymbol(currency);
     const sourceAmount = parseFloat(DOM.amountFrom.value) || 0;
     
     const t = getT();
     if (DOM.convertedLabel) DOM.convertedLabel.textContent = t.convertedAmount || 'Converted amount';
     if (DOM.feeLabel) DOM.feeLabel.textContent = t.fee || 'Fee';
     if (DOM.totalLabel) DOM.totalLabel.textContent = t.total || 'Total';
-    if (DOM.originalApprox) DOM.originalApprox.textContent = `≈ ${formatCurrency(sourceAmount, fromCurrency)}`;
+    if (DOM.originalApprox) DOM.originalApprox.innerHTML = `≈ ${formatCurrency(sourceAmount, fromCurrency)}&nbsp;${fromSymbol}`;
 
     DOM.convertedAmount.innerHTML = `
         ${getFlagImageMarkup(currency, `${currency} flag`, '24x18')}
-        <span>${formatCurrency(converted, currency)} ${currency}</span>
+        <span>${formatCurrency(converted, currency)} ${currency} - ${targetSymbol}</span>
     `;
 
-    DOM.feeAmount.textContent = `${formatCurrency(fee, fromCurrency)}`;
+    DOM.feeAmount.innerHTML = `${formatCurrency(fee, fromCurrency)}&nbsp;${fromSymbol}`;
 
     DOM.totalPay.innerHTML = `
         ${getFlagImageMarkup(fromCurrency, `${fromCurrency} flag`, '24x18')}
-        <span>${formatCurrency(total, fromCurrency)}</span>
+        <span>${formatCurrency(total, fromCurrency)}&nbsp;${fromSymbol}</span>
     `;
 }
 
 function handleCurrencyChange() {
     syncCustomCurrencySelect(DOM.currencyFrom);
+    updateInputCurrencySymbols();
     saveState();
     fetchRates();
 }
 
 function handleTargetChange() {
     syncCustomCurrencySelect(DOM.currencyTo);
+    updateInputCurrencySymbols();
     saveState();
     updateRateDisplay();
     handleInput();
@@ -896,6 +943,7 @@ function handleSwap() {
 
     syncCustomCurrencySelect(DOM.currencyFrom);
     syncCustomCurrencySelect(DOM.currencyTo);
+    updateInputCurrencySymbols();
 
     DOM.swapBtn.classList.add('rotate');
     setTimeout(() => {
@@ -992,22 +1040,39 @@ function renderHistory() {
 
     const visibleHistory = conversionHistory.slice(0, 8);
 
-    DOM.historyList.innerHTML = visibleHistory.map((item, idx) => `
+    DOM.historyList.innerHTML = visibleHistory.map((item, idx) => {
+        const sourceAmount = parseLocaleNumber(item.amount);
+        const resultAmount = parseLocaleNumber(item.result);
+        const sourceDisplay = Number.isFinite(sourceAmount)
+            ? formatCurrency(sourceAmount, item.from)
+            : String(item.amount ?? '');
+        const resultDisplay = Number.isFinite(resultAmount)
+            ? formatCurrency(resultAmount, item.to)
+            : String(item.result ?? '');
+
+        return `
         <li class="${idx >= 4 ? 'history-item-extra' : ''}">
-            <div class="hist-main">
-                <span class="hist-amt hist-currency">
+            <div class="hist-top-row">
+                <span class="hist-flags">
                     ${getFlagImageMarkup(item.from, `${item.from} flag`, '24x18')}
-                    <span>${formatCurrency(item.amount, item.from)} ${item.from}</span>
-                </span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                <span class="hist-res hist-currency">
+                    <svg class="hist-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
                     ${getFlagImageMarkup(item.to, `${item.to} flag`, '24x18')}
-                    <span>${item.result} ${item.to}</span>
                 </span>
+                <span class="hist-codes">${item.from} &rarr; ${item.to}</span>
             </div>
-            <div class="hist-date">${item.date}</div>
+            <div class="hist-bottom-row">
+                <span class="hist-amount">${sourceDisplay}</span>
+                <span class="hist-arrow" aria-hidden="true">&rarr;</span>
+                <span class="hist-amount hist-amount-target">${resultDisplay}</span>
+            </div>
+            <div class="hist-date-row">
+                <span class="hist-date">${item.date}</span>
+            </div>
         </li>
-    `).join('');
+    `;
+    }).join('');
     DOM.historyList.classList.toggle('is-expanded', historyExpanded);
     updateHistoryToggleButton();
 }
