@@ -195,6 +195,14 @@ function initControlsPanelBorder() {
  * Unified Custom Select Logic
  */
 function setupCustomSelectListeners() {
+    // Track touch position to tell apart a tap from a scroll
+    let touchStartY = 0;
+    let touchStartX = 0;
+    const TAP_THRESHOLD = 8; // px
+
+    // Expose so option handlers can read them
+    setupCustomSelectListeners._getTouchStart = () => ({ touchStartY, touchStartX, TAP_THRESHOLD });
+
     // Helper: attach both click and touchstart to a trigger element
     function addTriggerListeners(el, fn) {
         el.addEventListener('click', fn);
@@ -231,14 +239,25 @@ function setupCustomSelectListeners() {
         closeAllDropdowns(customEtfSelect);
         customEtfSelect.classList.toggle('open');
     });
-    
-    // Close all when clicking/touching outside
-    document.addEventListener('click', () => closeAllDropdowns());
+
+    // Record finger position on every touchstart so options can compare on touchend
     document.addEventListener('touchstart', (e) => {
-        if (!e.target.closest('.custom-currency-select, .custom-select-wrapper')) {
+        if (e.touches[0]) {
+            touchStartY = e.touches[0].clientY;
+            touchStartX = e.touches[0].clientX;
+        }
+
+        // Close all dropdowns only when tapping cleanly outside every dropdown
+        const inDropdown = e.target.closest(
+            '.custom-currency-select, .custom-select-wrapper'
+        );
+        if (!inDropdown) {
             closeAllDropdowns();
         }
     }, { passive: true });
+
+    // Close all when clicking outside on desktop
+    document.addEventListener('click', () => closeAllDropdowns());
 }
 
 function closeAllDropdowns(except = null) {
@@ -275,8 +294,20 @@ function updateCustomCurrencyOptions() {
             selectCurrency(option.value, option.textContent);
             customCurrencySelect.classList.remove('open');
         };
+        // Desktop: click to select
         div.addEventListener('click', selectHandler);
-        div.addEventListener('touchstart', (e) => {
+        // Mobile: use touchend + tap-vs-scroll detection so scrolling the list
+        // doesn't accidentally select the item under the finger
+        div.addEventListener('touchend', (e) => {
+            const t = setupCustomSelectListeners._getTouchStart?.();
+            if (t) {
+                const touch = e.changedTouches[0];
+                if (touch) {
+                    const dy = Math.abs(touch.clientY - t.touchStartY);
+                    const dx = Math.abs(touch.clientX - t.touchStartX);
+                    if (dy > t.TAP_THRESHOLD || dx > t.TAP_THRESHOLD) return; // scroll, not tap
+                }
+            }
             e.preventDefault();
             selectHandler();
         }, { passive: false });

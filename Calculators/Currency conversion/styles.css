@@ -453,6 +453,10 @@ p {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    /* Smooth native scrolling inside the list on iOS */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
 }
 .custom-select-search-wrapper {
     position: relative;

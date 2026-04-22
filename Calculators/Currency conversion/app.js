@@ -541,7 +541,12 @@ function bindCustomSelectEvents() {
     if (customSelectEventsBound) return;
     customSelectEventsBound = true;
 
-    // Temporarily suppress keyboard on all number inputs while a custom dropdown opens
+    // Track touch start position to distinguish tap vs. scroll
+    let touchStartY = 0;
+    let touchStartX = 0;
+    const TAP_THRESHOLD = 8; // pixels — movement under this = tap, over = scroll
+
+    // Temporarily suppress keyboard on all number/text inputs
     function suppressKeyboard() {
         document.querySelectorAll('input[type="number"], input[type="text"]:not([readonly])').forEach(input => {
             input.dataset._wasReadonly = input.hasAttribute('readonly') ? '1' : '0';
@@ -549,48 +554,96 @@ function bindCustomSelectEvents() {
         });
         setTimeout(() => {
             document.querySelectorAll('input[type="number"], input[type="text"]').forEach(input => {
-                if (input.dataset._wasReadonly === '0') {
-                    input.removeAttribute('readonly');
-                }
+                if (input.dataset._wasReadonly === '0') input.removeAttribute('readonly');
                 delete input.dataset._wasReadonly;
             });
         }, 400);
     }
 
-    // Unified handler for trigger activation (click or touch)
-    function handleTrigger(event, isTouchstart) {
-        const trigger = event.target.closest('.custom-select-trigger');
+    // Open/close trigger — still on touchstart so the dropdown responds instantly
+    document.addEventListener('touchstart', (e) => {
+        // Record where the finger landed
+        if (e.touches[0]) {
+            touchStartY = e.touches[0].clientY;
+            touchStartX = e.touches[0].clientX;
+        }
+
+        const trigger = e.target.closest('.custom-select-trigger');
         if (trigger) {
-            if (isTouchstart) {
-                event.preventDefault();
-                suppressKeyboard(); // stop the input from grabbing keyboard focus
-            }
+            e.preventDefault();
+            suppressKeyboard();
             const customSelect = trigger.closest('.custom-select');
             const isOpen = customSelect.classList.contains('open');
             closeAllCustomSelects(customSelect);
-
             if (!isOpen) {
                 positionDropdown(customSelect);
                 const searchInput = customSelect.querySelector('.custom-select-search');
                 if (searchInput) {
                     searchInput.value = '';
                     searchInput.dispatchEvent(new Event('input'));
-                    if (!isTouchstart) setTimeout(() => searchInput.focus(), 10);
                 }
             }
-
             customSelect.classList.toggle('open', !isOpen);
             trigger.setAttribute('aria-expanded', String(!isOpen));
             return;
         }
 
-        const option = event.target.closest('.custom-select-option');
+        // Close if tapping completely outside any custom-select
+        if (!e.target.closest('.custom-select')) {
+            closeAllCustomSelects();
+        }
+    }, { passive: false });
+
+    // Option SELECTION — on touchend so scrolling doesn't accidentally select
+    document.addEventListener('touchend', (e) => {
+        const option = e.target.closest('.custom-select-option');
+        if (!option) return;
+
+        // Check how far the finger moved — if it was a scroll, ignore
+        const touch = e.changedTouches[0];
+        if (touch) {
+            const dy = Math.abs(touch.clientY - touchStartY);
+            const dx = Math.abs(touch.clientX - touchStartX);
+            if (dy > TAP_THRESHOLD || dx > TAP_THRESHOLD) return; // was a scroll, not a tap
+        }
+
+        e.preventDefault();
+        const customSelect = option.closest('.custom-select');
+        const selectEl = document.getElementById(customSelect.dataset.for);
+        if (!selectEl) return;
+
+        selectEl.value = option.dataset.value;
+        syncCustomCurrencySelect(selectEl);
+        closeAllCustomSelects();
+        selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+    }, { passive: false });
+
+    // Click handler for desktop (trigger + option selection)
+    document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('.custom-select-trigger');
+        if (trigger) {
+            const customSelect = trigger.closest('.custom-select');
+            const isOpen = customSelect.classList.contains('open');
+            closeAllCustomSelects(customSelect);
+            if (!isOpen) {
+                positionDropdown(customSelect);
+                const searchInput = customSelect.querySelector('.custom-select-search');
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchInput.dispatchEvent(new Event('input'));
+                    setTimeout(() => searchInput.focus(), 10);
+                }
+            }
+            customSelect.classList.toggle('open', !isOpen);
+            trigger.setAttribute('aria-expanded', String(!isOpen));
+            return;
+        }
+
+        const option = e.target.closest('.custom-select-option');
         if (option) {
-            if (isTouchstart) event.preventDefault();
             const customSelect = option.closest('.custom-select');
             const selectEl = document.getElementById(customSelect.dataset.for);
             if (!selectEl) return;
-
             selectEl.value = option.dataset.value;
             syncCustomCurrencySelect(selectEl);
             closeAllCustomSelects();
@@ -598,28 +651,21 @@ function bindCustomSelectEvents() {
             return;
         }
 
-        if (!isTouchstart && !event.target.closest('.custom-select')) {
+        if (!e.target.closest('.custom-select')) {
             closeAllCustomSelects();
         }
-    }
-
-    document.addEventListener('click', (e) => handleTrigger(e, false));
-    document.addEventListener('touchstart', (e) => {
-        const inSelect = e.target.closest('.custom-select');
-        if (inSelect) {
-            handleTrigger(e, true);
-        } else {
-            closeAllCustomSelects();
-        }
-    }, { passive: false });
-
-    document.addEventListener('keydown', event => {
-        if (event.key === 'Escape') closeAllCustomSelects();
     });
 
-    window.addEventListener('scroll', () => {
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeAllCustomSelects();
+    });
+
+    // Only close on window scroll if the scroll didn't come from inside a dropdown menu
+    window.addEventListener('scroll', (e) => {
+        if (e.target && e.target.closest && e.target.closest('.custom-select-menu')) return;
         closeAllCustomSelects();
-    }, { passive: true });
+    }, { passive: true, capture: true });
+
     window.addEventListener('resize', () => {
         closeAllCustomSelects();
     });
