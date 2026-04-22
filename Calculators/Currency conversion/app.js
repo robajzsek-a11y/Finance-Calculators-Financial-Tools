@@ -546,6 +546,11 @@ function bindCustomSelectEvents() {
     let touchStartX = 0;
     const TAP_THRESHOLD = 8; // pixels — movement under this = tap, over = scroll
 
+    function isTypingInCustomSelectSearch() {
+        const active = document.activeElement;
+        return Boolean(active && active.classList && active.classList.contains('custom-select-search'));
+    }
+
     // Temporarily suppress keyboard on all number/text inputs
     function suppressKeyboard() {
         document.querySelectorAll('input[type="number"], input[type="text"]:not([readonly])').forEach(input => {
@@ -670,13 +675,16 @@ function bindCustomSelectEvents() {
         if (e.key === 'Escape') closeAllCustomSelects();
     });
 
-    // Only close on window scroll if the scroll didn't come from inside a dropdown menu
+    // Keep dropdown open while typing in mobile search input.
+    // On phones, opening the keyboard can trigger scroll/resize events.
     window.addEventListener('scroll', (e) => {
+        if (isTypingInCustomSelectSearch()) return;
         if (e.target && e.target.closest && e.target.closest('.custom-select-menu')) return;
         closeAllCustomSelects();
     }, { passive: true, capture: true });
 
     window.addEventListener('resize', () => {
+        if (isTypingInCustomSelectSearch()) return;
         closeAllCustomSelects();
     });
 }
