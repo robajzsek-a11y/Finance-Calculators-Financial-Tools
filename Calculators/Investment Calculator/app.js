@@ -123,6 +123,7 @@ function init() {
     // Set initial DOM values from state
     syncDOMWithState();
     updateCurrencySymbols();
+    updateCustomCurrencyOptions(); // Populate currency dropdown options
     updateCustomFrequencyOptions();
     updateCustomEtfOptions();
 
@@ -194,36 +195,50 @@ function initControlsPanelBorder() {
  * Unified Custom Select Logic
  */
 function setupCustomSelectListeners() {
+    // Helper: attach both click and touchstart to a trigger element
+    function addTriggerListeners(el, fn) {
+        el.addEventListener('click', fn);
+        el.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // prevent ghost click & blur-close race
+            fn(e);
+        }, { passive: false });
+    }
+
     // Currency Dropdown
-    selectedCurrencyDisplay.addEventListener('click', (e) => {
+    addTriggerListeners(selectedCurrencyDisplay, (e) => {
         e.stopPropagation();
         closeAllDropdowns(customCurrencySelect);
         customCurrencySelect.classList.toggle('open');
     });
 
     // Language Dropdown
-    selectedLanguageDisplay.addEventListener('click', (e) => {
+    addTriggerListeners(selectedLanguageDisplay, (e) => {
         e.stopPropagation();
         closeAllDropdowns(customLanguageSelect);
         customLanguageSelect.classList.toggle('open');
     });
 
     // Frequency Dropdown
-    selectedFrequencyDisplay.addEventListener('click', (e) => {
+    addTriggerListeners(selectedFrequencyDisplay, (e) => {
         e.stopPropagation();
         closeAllDropdowns(customFrequencySelect);
         customFrequencySelect.classList.toggle('open');
     });
 
     // ETF Dropdown
-    selectedEtfDisplay.addEventListener('click', (e) => {
+    addTriggerListeners(selectedEtfDisplay, (e) => {
         e.stopPropagation();
         closeAllDropdowns(customEtfSelect);
         customEtfSelect.classList.toggle('open');
     });
     
-    // Close all when clicking outside
+    // Close all when clicking/touching outside
     document.addEventListener('click', () => closeAllDropdowns());
+    document.addEventListener('touchstart', (e) => {
+        if (!e.target.closest('.custom-currency-select, .custom-select-wrapper')) {
+            closeAllDropdowns();
+        }
+    }, { passive: true });
 }
 
 function closeAllDropdowns(except = null) {
@@ -256,10 +271,15 @@ function updateCustomCurrencyOptions() {
             updateCustomSelectDisplay(option.value, option.textContent);
         }
         
-        div.addEventListener('click', () => {
+        const selectHandler = () => {
             selectCurrency(option.value, option.textContent);
             customCurrencySelect.classList.remove('open');
-        });
+        };
+        div.addEventListener('click', selectHandler);
+        div.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            selectHandler();
+        }, { passive: false });
         
         currencyOptionsContainer.appendChild(div);
     }

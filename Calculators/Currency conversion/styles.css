@@ -58,6 +58,7 @@ body {
     padding: 3rem 2.5rem;
     max-width: 520px;
     width: 100%;
+    box-sizing: border-box;
     text-align: center;
     box-shadow: 0 4px 40px -8px rgba(0,0,0,0.6);
     animation: revealUp 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
@@ -1089,16 +1090,14 @@ p {
     }
 
     .quick-amounts {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-        flex-wrap: nowrap;
-        padding-bottom: 0.2rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding-bottom: 0;
     }
 
     .quick-amount-btn {
-        flex: 0 0 auto;
-        min-width: 92px;
+        flex: 1 1 calc(50% - 0.25rem);
+        min-width: 80px;
         min-height: 42px;
         font-size: 0.85rem;
         padding: 0 0.8rem;
@@ -1257,5 +1256,38 @@ p {
     .chart-container {
         height: 245px;
         padding: 0.75rem 0.6rem;
+    }
+}
+
+/* Bug 2 — Reduce card padding on mobile so it doesn't overflow horizontally */
+@media (max-width: 768px) {
+    .card {
+        padding: 1rem;
+        max-width: 100%;
+    }
+
+    .controls-panel,
+    .controls-panel > *,
+    .input-group,
+    .input-wrapper {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+/* Bug 3 — Quick-amount buttons: 2-column grid on very small screens */
+@media (max-width: 480px) {
+    .quick-amounts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        flex-wrap: unset; /* override the flex-wrap from the 900px block */
+    }
+
+    .quick-amount-btn {
+        flex: unset;
+        min-width: unset;
+        width: 100%;
     }
 }
