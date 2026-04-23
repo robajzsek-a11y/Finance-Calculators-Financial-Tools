@@ -267,8 +267,8 @@ function applyTranslations() {
     updateHistoryToggleButton();
 }
 
-if (conversionHistory.length > 8) {
-    conversionHistory = conversionHistory.slice(0, 8);
+if (conversionHistory.length > 9) {
+    conversionHistory = conversionHistory.slice(0, 9);
     localStorage.setItem('currency_history', JSON.stringify(conversionHistory));
 }
 
@@ -383,6 +383,15 @@ function closeAllCustomSelects(except = null) {
         select.classList.remove('open');
         const trigger = select.querySelector('.custom-select-trigger');
         if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        // Hide the menu with inline styles
+        const selectId = select.dataset.for;
+        const menu = document.querySelector(`.custom-select-menu[data-for="${selectId}"]`);
+        if (menu) {
+            menu.style.visibility = 'hidden';
+            menu.style.maxHeight = '0';
+            menu.style.opacity = '0';
+            menu.style.pointerEvents = 'none';
+        }
     });
 }
 
@@ -470,19 +479,30 @@ function initCustomCurrencySelect(selectEl) {
     const wrapper = document.createElement('div');
     wrapper.className = 'custom-select';
     wrapper.dataset.for = selectEl.id;
-    wrapper.innerHTML = `
-        <button type="button" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false"></button>
-        <div class="custom-select-menu" role="listbox">
-            <div class="custom-select-search-wrapper">
-                <input type="text" class="custom-select-search" placeholder="Search currency..." autocomplete="off">
-                <button type="button" class="custom-select-search-clear" aria-label="Clear search" style="display: none;">&times;</button>
-            </div>
-            <div class="custom-select-options"></div>
+    
+    // Create the trigger button
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'custom-select-trigger';
+    trigger.setAttribute('aria-haspopup', 'listbox');
+    trigger.setAttribute('aria-expanded', 'false');
+    
+    // Create the menu (will be appended to body)
+    const menu = document.createElement('div');
+    menu.className = 'custom-select-menu';
+    menu.setAttribute('role', 'listbox');
+    menu.dataset.for = selectEl.id; // Link menu to select
+    menu.innerHTML = `
+        <div class="custom-select-search-wrapper">
+            <input type="text" class="custom-select-search" placeholder="Search currency..." autocomplete="off">
+            <button type="button" class="custom-select-search-clear" aria-label="Clear search" style="display: none;">&times;</button>
         </div>
+        <div class="custom-select-options"></div>
     `;
-
-    selectEl.insertAdjacentElement('afterend', wrapper);
-    const optionsContainer = wrapper.querySelector('.custom-select-options');
+    
+    // Build options HTML
+    const optionsContainer = menu.querySelector('.custom-select-options');
+    console.log('Building options for', selectEl.id, 'currencies:', Object.keys(currencies).length);
     const optionsHtml = Object.keys(currencies)
         .map((code, i) => {
             const markup = buildCustomOptionMarkup(code);
@@ -490,10 +510,20 @@ function initCustomCurrencySelect(selectEl) {
         })
         .join('');
     optionsContainer.innerHTML = optionsHtml;
+    console.log('Options HTML length:', optionsHtml.length);
+    console.log('Options in container:', optionsContainer.children.length);
+    
+    // Append menu to body so it's not clipped by parent masks
+    document.body.appendChild(menu);
+    
+    // Add trigger to wrapper
+    wrapper.appendChild(trigger);
+    
+    selectEl.insertAdjacentElement('afterend', wrapper);
         
     // Add search event listener
-    const searchInput = wrapper.querySelector('.custom-select-search');
-    const clearBtn = wrapper.querySelector('.custom-select-search-clear');
+    const searchInput = menu.querySelector('.custom-select-search');
+    const clearBtn = menu.querySelector('.custom-select-search-clear');
     
     searchInput.addEventListener('input', (e) => {
         const val = e.target.value.toLowerCase();
@@ -549,39 +579,56 @@ function syncCustomCurrencySelect(selectEl) {
 
 function positionDropdown(customSelect) {
     const trigger = customSelect.querySelector('.custom-select-trigger');
-    const menu = customSelect.querySelector('.custom-select-menu');
+    const selectId = customSelect.dataset.for;
+    const menu = document.querySelector(`.custom-select-menu[data-for="${selectId}"]`);
+    
+    if (!trigger || !menu) return;
     
     const triggerRect = trigger.getBoundingClientRect();
     
+    // Reset positioning
     menu.style.top = '';
     menu.style.bottom = '';
+    menu.style.left = '';
+    menu.style.right = '';
     
     const menuWidth = Math.min(400, window.innerWidth * 0.9);
     menu.style.width = menuWidth + 'px';
     
+    // Calculate left position
     let left = triggerRect.left;
     if (left + menuWidth > window.innerWidth) {
         left = window.innerWidth - menuWidth - 10;
     }
-    menu.style.left = Math.max(10, left) + 'px';
+    left = Math.max(10, left);
+    menu.style.left = left + 'px';
 
     const spaceBelow = window.innerHeight - triggerRect.bottom;
     const spaceAbove = triggerRect.top;
     
+    // Position vertically
     if (spaceBelow < 280 && spaceAbove > spaceBelow) {
+        // Open upward
         customSelect.classList.add('open-up');
-        menu.style.bottom = (window.innerHeight - triggerRect.top + 5) + 'px';
+        const bottomPos = window.innerHeight - triggerRect.top + 5;
+        menu.style.bottom = bottomPos + 'px';
         menu.style.top = 'auto';
     } else {
+        // Open downward
         customSelect.classList.remove('open-up');
-        menu.style.top = (triggerRect.bottom + 5) + 'px';
+        const topPos = triggerRect.bottom + 5;
+        menu.style.top = topPos + 'px';
         menu.style.bottom = 'auto';
     }
 }
 
 function bindCustomSelectEvents() {
-    if (customSelectEventsBound) return;
+    if (customSelectEventsBound) {
+        console.log('Custom select events already bound, skipping');
+        return;
+    }
     customSelectEventsBound = true;
+    console.log('Binding custom select events');
 
     // Track touch start position to distinguish tap vs. scroll
     let touchStartY = 0;
@@ -620,18 +667,34 @@ function bindCustomSelectEvents() {
             e.preventDefault();
             suppressKeyboard();
             const customSelect = trigger.closest('.custom-select');
+            const selectId = customSelect.dataset.for;
+            const menu = document.querySelector(`.custom-select-menu[data-for="${selectId}"]`);
             const isOpen = customSelect.classList.contains('open');
             closeAllCustomSelects(customSelect);
-            if (!isOpen) {
+            if (!isOpen && menu) {
+                customSelect.classList.add('open');
+                trigger.setAttribute('aria-expanded', 'true');
+                // Force show the menu with inline styles
+                menu.style.visibility = 'visible';
+                menu.style.maxHeight = '280px';
+                menu.style.opacity = '1';
+                menu.style.pointerEvents = 'auto';
+                menu.style.transform = 'translateY(0)';
                 positionDropdown(customSelect);
-                const searchInput = customSelect.querySelector('.custom-select-search');
+                const searchInput = menu.querySelector('.custom-select-search');
                 if (searchInput) {
                     searchInput.value = '';
                     searchInput.dispatchEvent(new Event('input'));
                 }
+            } else if (menu) {
+                customSelect.classList.remove('open');
+                trigger.setAttribute('aria-expanded', 'false');
+                // Hide the menu with inline styles
+                menu.style.visibility = 'hidden';
+                menu.style.maxHeight = '0';
+                menu.style.opacity = '0';
+                menu.style.pointerEvents = 'none';
             }
-            customSelect.classList.toggle('open', !isOpen);
-            trigger.setAttribute('aria-expanded', String(!isOpen));
             return;
         }
 
@@ -641,7 +704,7 @@ function bindCustomSelectEvents() {
         }
 
         // Close if tapping completely outside any custom-select
-        if (!e.target.closest('.custom-select')) {
+        if (!e.target.closest('.custom-select') && !e.target.closest('.custom-select-menu')) {
             closeAllCustomSelects();
         }
     }, { passive: false });
@@ -660,8 +723,11 @@ function bindCustomSelectEvents() {
         }
 
         e.preventDefault();
-        const customSelect = option.closest('.custom-select');
-        const selectEl = document.getElementById(customSelect.dataset.for);
+        // Find which menu this option belongs to
+        const menu = option.closest('.custom-select-menu');
+        if (!menu) return;
+        const selectId = menu.dataset.for;
+        const selectEl = document.getElementById(selectId);
         if (!selectEl) return;
 
         selectEl.value = option.dataset.value;
@@ -674,27 +740,96 @@ function bindCustomSelectEvents() {
     document.addEventListener('click', (e) => {
         const trigger = e.target.closest('.custom-select-trigger');
         if (trigger) {
+            e.stopPropagation();
+            e.preventDefault();
             const customSelect = trigger.closest('.custom-select');
+            const selectId = customSelect.dataset.for;
+            const menu = document.querySelector(`.custom-select-menu[data-for="${selectId}"]`);
             const isOpen = customSelect.classList.contains('open');
-            closeAllCustomSelects(customSelect);
-            if (!isOpen) {
-                positionDropdown(customSelect);
-                const searchInput = customSelect.querySelector('.custom-select-search');
-                if (searchInput) {
-                    searchInput.value = '';
-                    searchInput.dispatchEvent(new Event('input'));
-                    setTimeout(() => searchInput.focus(), 10);
-                }
+            
+            console.log('=== DROPDOWN DEBUG ===');
+            console.log('Trigger clicked');
+            console.log('selectId:', selectId);
+            console.log('customSelect element:', customSelect);
+            console.log('menu element:', menu);
+            console.log('isOpen:', isOpen);
+            
+            if (!menu) {
+                console.error('ERROR: .custom-select-menu not found for', selectId);
+                return;
             }
-            customSelect.classList.toggle('open', !isOpen);
-            trigger.setAttribute('aria-expanded', String(!isOpen));
+            
+            if (!isOpen) {
+                // Close all other dropdowns first
+                document.querySelectorAll('.custom-select.open').forEach(select => {
+                    if (select !== customSelect) {
+                        select.classList.remove('open');
+                        const t = select.querySelector('.custom-select-trigger');
+                        if (t) t.setAttribute('aria-expanded', 'false');
+                        // Also hide the menu with inline styles
+                        const sid = select.dataset.for;
+                        const m = document.querySelector(`.custom-select-menu[data-for="${sid}"]`);
+                        if (m) {
+                            m.style.visibility = 'hidden';
+                            m.style.maxHeight = '0';
+                            m.style.opacity = '0';
+                            m.style.pointerEvents = 'none';
+                        }
+                    }
+                });
+                
+                // Open this dropdown
+                customSelect.classList.add('open');
+                trigger.setAttribute('aria-expanded', 'true');
+                
+                // Force show the menu with inline styles
+                console.log('Setting inline styles on menu...');
+                menu.style.visibility = 'visible';
+                menu.style.maxHeight = '280px';
+                menu.style.opacity = '1';
+                menu.style.pointerEvents = 'auto';
+                menu.style.transform = 'translateY(0)';
+                
+                console.log('Menu computed styles after setting:');
+                const computed = window.getComputedStyle(menu);
+                console.log('visibility:', computed.visibility);
+                console.log('maxHeight:', computed.maxHeight);
+                console.log('opacity:', computed.opacity);
+                console.log('display:', computed.display);
+                console.log('position:', computed.position);
+                
+                // Position the dropdown
+                setTimeout(() => {
+                    positionDropdown(customSelect);
+                    const searchInput = menu.querySelector('.custom-select-search');
+                    if (searchInput) {
+                        searchInput.value = '';
+                        searchInput.dispatchEvent(new Event('input'));
+                        searchInput.focus();
+                    }
+                }, 10);
+            } else {
+                // Close this dropdown
+                customSelect.classList.remove('open');
+                trigger.setAttribute('aria-expanded', 'false');
+                // Hide the menu with inline styles
+                menu.style.visibility = 'hidden';
+                menu.style.maxHeight = '0';
+                menu.style.opacity = '0';
+                menu.style.pointerEvents = 'none';
+                console.log('Closed dropdown');
+            }
             return;
         }
 
         const option = e.target.closest('.custom-select-option');
         if (option) {
-            const customSelect = option.closest('.custom-select');
-            const selectEl = document.getElementById(customSelect.dataset.for);
+            e.stopPropagation();
+            // Find which menu this option belongs to
+            const menu = option.closest('.custom-select-menu');
+            if (!menu) return;
+            const selectId = menu.dataset.for;
+            const selectEl = document.getElementById(selectId);
             if (!selectEl) return;
             selectEl.value = option.dataset.value;
             syncCustomCurrencySelect(selectEl);
@@ -708,7 +843,7 @@ function bindCustomSelectEvents() {
             return;
         }
 
-        if (!e.target.closest('.custom-select')) {
+        if (!e.target.closest('.custom-select') && !e.target.closest('.custom-select-menu')) {
             closeAllCustomSelects();
         }
     });
@@ -717,17 +852,26 @@ function bindCustomSelectEvents() {
         if (e.key === 'Escape') closeAllCustomSelects();
     });
 
-    // Keep dropdown open while typing in mobile search input.
-    // On phones, opening the keyboard can trigger scroll/resize events.
-    window.addEventListener('scroll', (e) => {
-        if (isTypingInCustomSelectSearch()) return;
-        if (e.target && e.target.closest && e.target.closest('.custom-select-menu')) return;
-        closeAllCustomSelects();
-    }, { passive: true, capture: true });
+    // Reposition dropdown on scroll to keep it aligned with the trigger
+    let scrollTimeout;
+    const handleScroll = () => {
+        // Reposition any open dropdowns immediately
+        const openSelect = document.querySelector('.custom-select.open');
+        if (openSelect) {
+            positionDropdown(openSelect);
+        }
+    };
+    
+    // Listen to scroll on window and document
+    window.addEventListener('scroll', handleScroll, true);
+    document.addEventListener('scroll', handleScroll, true);
 
     window.addEventListener('resize', () => {
-        if (isTypingInCustomSelectSearch()) return;
-        closeAllCustomSelects();
+        // Reposition instead of closing
+        const openSelect = document.querySelector('.custom-select.open');
+        if (openSelect) {
+            positionDropdown(openSelect);
+        }
     });
 }
 
@@ -1022,7 +1166,7 @@ function saveHistory() {
     }
 
     conversionHistory.unshift(item);
-    if (conversionHistory.length > 8) conversionHistory.pop();
+    if (conversionHistory.length > 9) conversionHistory.pop();
 
     localStorage.setItem('currency_history', JSON.stringify(conversionHistory));
     renderHistory();
@@ -1038,7 +1182,9 @@ function renderHistory() {
         return;
     }
 
-    const visibleHistory = conversionHistory.slice(0, 8);
+    // Show max 9 items (3 initial + 6 more)
+    const visibleHistory = conversionHistory.slice(0, 9);
+    console.log('Rendering history:', visibleHistory.length, 'items from', conversionHistory.length, 'total');
 
     DOM.historyList.innerHTML = visibleHistory.map((item, idx) => {
         const sourceAmount = parseLocaleNumber(item.amount);
@@ -1051,7 +1197,7 @@ function renderHistory() {
             : String(item.result ?? '');
 
         return `
-        <li class="${idx >= 4 ? 'history-item-extra' : ''}">
+        <li class="${idx >= 3 ? 'history-item-extra' : ''}">
             <div class="hist-top-row">
                 <span class="hist-flags">
                     ${getFlagImageMarkup(item.from, `${item.from} flag`, '24x18')}
@@ -1080,11 +1226,12 @@ function renderHistory() {
 function updateHistoryToggleButton() {
     if (!DOM.historyToggleBtn) return;
     const t = getT();
-    if (conversionHistory.length > 4) {
+    if (conversionHistory.length > 3) {
         DOM.historyToggleBtn.classList.remove('hidden');
+        const extraCount = Math.min(conversionHistory.length - 3, 6);
         DOM.historyToggleBtn.textContent = historyExpanded
             ? (t.showLess || 'Show less')
-            : `${t.showMore || 'Show more'} (${conversionHistory.length - 4})`;
+            : `${t.showMore || 'Show more'} (${extraCount})`;
         DOM.historyToggleBtn.setAttribute('aria-expanded', String(historyExpanded));
     } else {
         DOM.historyToggleBtn.classList.add('hidden');

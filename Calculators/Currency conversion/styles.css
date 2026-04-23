@@ -541,7 +541,7 @@ p {
     border: 1px solid var(--border);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     z-index: 9999;
-    transition: max-height 0.5s ease-in-out, opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0.35s;
+    transition: max-height 0.3s ease, opacity 0.2s ease, transform 0.2s ease;
 }
 /* Custom Scrollbar for Dropdown */
 .custom-select-options::-webkit-scrollbar {
@@ -564,12 +564,12 @@ p {
     transform-origin: bottom;
 }
 .custom-select.open .custom-select-menu {
-    max-height: 280px;
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: translateY(0);
-    transition: max-height 0.5s ease-in-out, opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0s;
+    max-height: 280px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateY(0) !important;
+    transition: max-height 0.3s ease, opacity 0.2s ease, transform 0.2s ease;
 }
 .custom-select-options {
     overflow-y: auto;
@@ -628,15 +628,11 @@ p {
     cursor: pointer;
     text-align: left;
     font-size: 0.8rem;
-    opacity: 0;
-    transform: translateY(-14px);
-    transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s, border-color 0.2s;
-    transition-delay: 0s;
-}
-.custom-select.open .custom-select-option {
+    /* Start visible for debugging */
     opacity: 1;
     transform: translateY(0);
-    transition-delay: calc(var(--stagger-index, 0) * 0.04s);
+    transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s, border-color 0.2s;
+    transition-delay: 0s;
 }
 .custom-select-option:hover,
 .custom-select-option.selected {
@@ -1212,6 +1208,11 @@ p {
         --mobile-title-size: clamp(1.35rem, 6vw, 1.75rem);
         --mobile-subtitle-size: clamp(0.86rem, 3.4vw, 0.95rem);
     }
+    
+    /* Reduce gap between send and receive cards on mobile */
+    .converter-stack {
+        --card-gap: 1px;
+    }
 
     body {
         padding: var(--mobile-body-padding);
@@ -1248,16 +1249,115 @@ p {
         line-height: 1.45;
     }
 
-    .app-header-actions {
-        width: 100%;
-        align-items: stretch;
-        margin-top: 0.55rem;
+    .header-content {
+        align-items: flex-start;
+        gap: 0.5rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "title"
+            "description"
+            "buttons"
+            "seemore";
     }
 
-    .top-controls {
-        position: static;
+    .app-header-copy {
         width: 100%;
+        padding-right: 0;
+        display: contents;
+    }
+    
+    .app-title {
+        grid-area: title;
+        font-size: var(--mobile-title-size);
+        margin-bottom: 0;
+        line-height: 1.12;
+    }
+
+    .app-description {
+        grid-area: description;
+        font-size: var(--mobile-subtitle-size);
+        margin-bottom: 0;
+        line-height: 1.45;
+    }
+    
+    /* Buttons area - just GitHub button */
+    .app-header-actions {
+        grid-area: buttons;
+        display: contents;
+        width: 100%;
+        margin-top: 0;
+    }
+    
+    /* GitHub button - in buttons area */
+    .app-header-actions .github-btn {
+        grid-area: buttons;
+        padding: 0 0.7rem;
+        gap: 0.4rem;
+        min-width: auto;
+        min-height: 44px;
+        height: 44px;
+        justify-self: start;
+    }
+
+    /* See more button - full width in its own row */
+    .app-header-actions #see-more-btn {
+        grid-area: seemore;
+        width: 100% !important;
+        justify-content: center;
+        font-weight: 600;
+        background: rgba(99, 102, 241, 0.18);
+        border-color: rgba(99, 102, 241, 0.35);
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+        min-height: 44px;
+        height: 44px;
+        transition: none !important;
+    }
+    
+    /* Disable all state animations on mobile */
+    .app-header-actions #see-more-btn:hover,
+    .app-header-actions #see-more-btn:active,
+    .app-header-actions #see-more-btn:focus {
+        width: 100% !important;
+        transform: none !important;
+    }
+
+    /* Language selector - in buttons area, right side */
+    .top-controls {
+        grid-area: buttons;
+        position: static;
+        width: auto;
         align-items: flex-start;
+        margin-top: 0;
+        justify-self: end;
+        align-self: start;
+    }
+    
+    /* Make language selector same height as buttons */
+    .top-controls #custom-language-select,
+    .top-controls #custom-language-select .selected-option {
+        min-height: 44px;
+        height: 44px;
+    }
+    
+    /* Show only "GitHub" text instead of "View on GitHub" */
+    .app-header-actions .github-btn .gh-label {
+        font-size: 0;
+    }
+    
+    .app-header-actions .github-btn .gh-label::after {
+        content: "GitHub";
+        font-size: 0.82rem;
+    }
+    
+    .app-header-actions .github-btn .gh-logo {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .app-header-actions #see-more-btn .smb-label {
+        font-size: 0.85rem;
+        font-weight: 600;
     }
 
     .app-header-actions .github-btn,
@@ -1388,15 +1488,16 @@ p {
         width: 100%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        justify-content: flex-start;
+        justify-content: space-between;
         flex-wrap: nowrap;
+        gap: 0.25rem;
     }
 
     .time-btn {
-        flex: 0 0 auto;
-        min-width: 56px;
+        flex: 1 1 0;
+        min-width: 0;
         min-height: 40px;
-        padding: 0.35rem 0.8rem;
+        padding: 0.35rem 0.5rem;
     }
 
     .chart-container {
@@ -1447,6 +1548,19 @@ p {
     .input-wrapper {
         gap: 0.3rem;
     }
+    
+    /* Limit currency dropdown width on mobile to show more of the amount */
+    .input-wrapper .custom-select {
+        max-width: 120px;
+        flex-shrink: 0;
+    }
+    
+    /* Ensure input takes remaining space */
+    .input-wrapper input[type="number"],
+    .input-wrapper input[type="text"] {
+        flex: 1;
+        min-width: 0;
+    }
 
     .input-wrapper input {
         font-size: 0.95rem;
@@ -1493,6 +1607,44 @@ p {
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
+    }
+    
+    /* Fix conversion result box width on mobile */
+    .conversion-result-box {
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    /* Fix chart header width on mobile */
+    .chart-header {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    /* Fix chart container width on mobile */
+    .chart-container {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    /* Fix history section width on mobile */
+    .history-section {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    /* Fix results panel content */
+    .results-panel {
+        --results-content-width: 100%;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    
+    .summary-cards {
+        width: 100%;
+        max-width: 100%;
     }
 }
 

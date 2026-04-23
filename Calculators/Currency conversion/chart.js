@@ -78,9 +78,9 @@ function drawCandlesticks(canvas, ohlcData, labels, minValue, maxValue, animatio
     
     // Draw candlesticks with animation
     ohlcData.forEach((candle, index) => {
-        // Stagger animation for each candle
-        const candleDelay = index / candleCount;
-        const candleProgress = Math.max(0, Math.min(1, (animationProgress - candleDelay) * 2));
+        // Stagger animation from left to right (each candle starts slightly later)
+        const staggerDelay = (index / candleCount) * 0.3; // 30% of timeline for stagger
+        const candleProgress = Math.max(0, Math.min(1, (animationProgress - staggerDelay) / 0.7)); // Remaining 70% for animation
         
         if (candleProgress <= 0) return;
         
@@ -91,7 +91,7 @@ function drawCandlesticks(canvas, ohlcData, labels, minValue, maxValue, animatio
         const openY = scaleY(candle.open);
         const closeY = scaleY(candle.close);
         
-        // Animate from baseline
+        // Animate from baseline (bottom) upward
         const animatedHighY = baselineY - (baselineY - highY) * candleProgress;
         const animatedLowY = baselineY - (baselineY - lowY) * candleProgress;
         const animatedOpenY = baselineY - (baselineY - openY) * candleProgress;
@@ -372,7 +372,7 @@ export function updateChart(historicalData, targetCurrency) {
         dates,
         labels: dates.map(formatChartLabel),
         ohlc,
-        min: Math.max(0, minRate - spread * 0.15),
+        min: minRate - spread * 0.15, // Allow negative if needed for proper scaling
         max: maxRate + spread * 0.15
     };
 
