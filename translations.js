@@ -8,7 +8,7 @@ window.App = window.App || {};
 window.App.translations = {
     en: {
         // Meta tags
-        metaTitle: "Finance Calculators - Free Ad-Free Financial Tools | Pomerancee",
+        metaTitle: "Finance Toolkit| Pomerancee",
         metaDescription: "A suite of professional, ad-free finance calculators covering investments, loans, mortgages, dividends, inflation, currency conversion, portfolio simulation, and savings.",
         ogTitle: "Finance Calculators - Free Ad-Free Financial Tools",
         ogDescription: "A suite of professional, ad-free finance calculators covering investments, loans, mortgages, dividends, inflation, currency conversion, portfolio simulation, and savings.",
@@ -23,7 +23,7 @@ window.App.translations = {
         languageSelectLabel: "Select language",
         
         // Hero section
-        heroTitleLine1: "Best Local Personal",
+        heroTitleLine1: "Best Local",
         heroTitleHighlight: "Finance Toolkit",
         heroSubtitle: "Professional-grade calculators to plan, analyse, and grow your financial future. Free, private, and built for everyone.",
         heroStatsAria: "Toolkit statistics",
@@ -104,7 +104,7 @@ window.App.translations = {
     
     cs: {
         // Meta tags
-        metaTitle: "Finanční Kalkulačky - Bezplatné Nástroje Bez Reklam | Pomerancee",
+        metaTitle: "Finanční Sada Nástrojů | Pomerancee",
         metaDescription: "Sada profesionálních finančních kalkulaček bez reklam pokrývající investice, půjčky, hypotéky, dividendy, inflaci, převod měn, simulaci portfolia a úspory.",
         ogTitle: "Finanční Kalkulačky - Bezplatné Nástroje Bez Reklam",
         ogDescription: "Sada profesionálních finančních kalkulaček bez reklam pokrývající investice, půjčky, hypotéky, dividendy, inflaci, převod měn, simulaci portfolia a úspory.",
@@ -119,7 +119,7 @@ window.App.translations = {
         languageSelectLabel: "Vyberte jazyk",
         
         // Hero section
-        heroTitleLine1: "Nejlepší Lokální Osobní",
+        heroTitleLine1: "Nejlepší Lokální",
         heroTitleHighlight: "Finanční Sada Nástrojů",
         heroSubtitle: "Profesionální kalkulačky pro plánování, analýzu a růst vaší finanční budoucnosti. Zdarma, soukromé a vytvořené pro každého.",
         heroStatsAria: "Statistiky sady nástrojů",

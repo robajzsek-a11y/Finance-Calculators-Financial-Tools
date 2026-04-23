@@ -159,7 +159,7 @@ p {
     font-size: 2.5rem;
     font-weight: 800;
     letter-spacing: -0.04em;
-    background: linear-gradient(135deg, var(--primary-hover), var(--orange));
+    background: linear-gradient(90deg, #818cf8 0%, #f97316 25%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

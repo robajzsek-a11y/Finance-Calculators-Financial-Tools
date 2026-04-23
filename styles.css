@@ -819,42 +819,42 @@ img {
 }
 
 .calc-tile[data-tool="dividend"] .tile-name {
-    background: linear-gradient(95deg, #10b981, #6366f1);
+    background: linear-gradient(95deg, #7c3aed, #f59e0b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .calc-tile[data-tool="inflation"] .tile-name {
-    background: linear-gradient(120deg, #f97316, #818cf8);
+    background: linear-gradient(120deg, #ef4444, #eab308);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .calc-tile[data-tool="loan"] .tile-name {
-    background: linear-gradient(140deg, #a855f7, #6366f1);
+    background: linear-gradient(140deg, #f97316, #ec4899);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .calc-tile[data-tool="mortgage"] .tile-name {
-    background: linear-gradient(115deg, #14b8a6, #818cf8);
+    background: linear-gradient(115deg, #3b82f6, #14b8a6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .calc-tile[data-tool="portfolio"] .tile-name {
-    background: linear-gradient(150deg, #6366f1, #f97316);
+    background: linear-gradient(150deg, #8b5cf6, #10b981);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .calc-tile[data-tool="saving"] .tile-name {
-    background: linear-gradient(100deg, #818cf8, #10b981);
+    background: linear-gradient(100deg, #14b8a6, #a855f7);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
