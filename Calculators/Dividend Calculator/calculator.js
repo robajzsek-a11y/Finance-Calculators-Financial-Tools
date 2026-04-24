@@ -11,7 +11,7 @@
 window.DividendCalc = window.DividendCalc || {};
 
 /**
- * Calculates dividend income over time with optional reinvestment and contributions.
+ * Calculates dividend income over time with optional reinvestment, contributions, and tax.
  * 
  * @param {number} numShares - Number of shares owned
  * @param {number} pricePerShare - Price per share
@@ -21,6 +21,9 @@ window.DividendCalc = window.DividendCalc || {};
  * @param {boolean} addContributions - Whether to add regular contributions
  * @param {string} contributionFreq - 'monthly' or 'yearly'
  * @param {number} contributionAmount - Amount to contribute
+ * @param {boolean} applyTax - Whether to apply withholding tax
+ * @param {number} taxRate - Tax rate as percentage (default 15)
+ * @param {string} dividendFrequency - 'monthly', 'quarterly', 'semi-annually', 'annually'
  * @returns {Object} Result containing yearly breakdown and totals
  */
 window.DividendCalc.calculateDividends = function(
@@ -31,7 +34,10 @@ window.DividendCalc.calculateDividends = function(
     reinvest = false,
     addContributions = false,
     contributionFreq = 'monthly',
-    contributionAmount = 0
+    contributionAmount = 0,
+    applyTax = false,
+    taxRate = 15,
+    dividendFrequency = 'quarterly'
 ) {
     const labels = [];
     const portfolioValueData = [];
@@ -41,29 +47,79 @@ window.DividendCalc.calculateDividends = function(
 
     let currentShares = numShares;
     let totalDividendsReceived = 0;
+    let totalDividendsPaid = 0; // Before tax
+    let totalTaxPaid = 0;
     let totalContributed = numShares * pricePerShare;
 
-    // Calculate for each year (starting from year 1)
+    // Determine payment frequency
+    const paymentsPerYear = {
+        'monthly': 12,
+        'quarterly': 4,
+        'semi-annually': 2,
+        'annually': 1
+    }[dividendFrequency] || 4;
+
+    const contributionsPerYear = contributionFreq === 'monthly' ? 12 : 1;
+
+    // Calculate for each year
     for (let year = 1; year <= years; year++) {
-        // Calculate dividend income for this year
-        const yearlyDividendIncome = currentShares * annualDividend;
-        totalDividendsReceived += yearlyDividendIncome;
+        let yearlyDividendIncome = 0;
+        let yearlyDividendGross = 0;
+        let yearlyTaxPaid = 0;
+        let yearStartShares = currentShares;
 
-        // Handle contributions
-        if (addContributions && contributionAmount > 0) {
-            const contributionsPerYear = contributionFreq === 'monthly' ? 12 : 1;
-            const yearlyContribution = contributionAmount * contributionsPerYear;
-            const sharesFromContributions = yearlyContribution / pricePerShare;
+        // Process each dividend payment period within the year
+        for (let period = 1; period <= paymentsPerYear; period++) {
+            // STEP 1: Calculate GROSS dividend for this period (before tax)
+            // The gross dividend per period is the annual dividend divided by payment frequency
+            // multiplied by the CURRENT number of shares (which grows with reinvestment)
+            const periodDividendGross = (annualDividend / paymentsPerYear) * currentShares;
+            yearlyDividendGross += periodDividendGross;
+
+            // STEP 2: Apply TAX to the gross dividend
+            // Tax per period = (Gross Dividend per period) × (Tax Rate / 100)
+            // This tax is DEDUCTED and is NOT available for reinvestment
+            // Example: $100 gross × 15% tax = $15 tax, leaving $85 net
+            const taxAmount = applyTax ? (periodDividendGross * taxRate / 100) : 0;
             
-            currentShares += sharesFromContributions;
-            totalContributed += yearlyContribution;
+            // STEP 3: Calculate NET dividend (after tax deduction)
+            // This is the actual amount the investor receives and can reinvest
+            // Net Dividend = Gross Dividend - Tax
+            // The tax money is "gone" and will NOT generate future returns
+            const netDividend = periodDividendGross - taxAmount;
+            
+            yearlyDividendIncome += netDividend;
+            yearlyTaxPaid += taxAmount;
+
+            // STEP 4: Reinvest ONLY the NET dividend (if reinvestment is enabled)
+            // CRITICAL: Only the NET amount (after tax) is reinvested
+            // This creates "tax drag" on compounding:
+            // - Monthly with 15% tax: Reinvest 85% of dividend 12 times/year
+            // - Annually with 15% tax: Reinvest 85% of dividend 1 time/year
+            // More frequent reinvestment of NET amounts = more compounding despite tax drag
+            if (reinvest && netDividend > 0) {
+                const sharesFromDividends = netDividend / pricePerShare;
+                currentShares += sharesFromDividends;
+            }
+
+            // Handle contributions within the year (distributed across periods)
+            if (addContributions && contributionAmount > 0) {
+                const periodsPerContribution = paymentsPerYear / contributionsPerYear;
+                
+                // Add contribution if this period aligns with contribution frequency
+                if (period % Math.max(1, Math.round(periodsPerContribution)) === 0 || periodsPerContribution >= 1) {
+                    const contributionThisPeriod = contributionAmount * (contributionsPerYear / paymentsPerYear);
+                    const sharesFromContributions = contributionThisPeriod / pricePerShare;
+                    
+                    currentShares += sharesFromContributions;
+                    totalContributed += contributionThisPeriod;
+                }
+            }
         }
 
-        // Handle reinvestment
-        if (reinvest) {
-            const sharesFromDividends = yearlyDividendIncome / pricePerShare;
-            currentShares += sharesFromDividends;
-        }
+        totalDividendsReceived += yearlyDividendIncome;
+        totalDividendsPaid += yearlyDividendGross;
+        totalTaxPaid += yearlyTaxPaid;
 
         const portfolioValue = currentShares * pricePerShare;
 
@@ -77,13 +133,22 @@ window.DividendCalc.calculateDividends = function(
             shares: Math.round(currentShares * 100) / 100,
             portfolioValue: Math.round(portfolioValue),
             dividendIncome: Math.round(yearlyDividendIncome),
-            totalDividends: Math.round(totalDividendsReceived)
+            dividendGross: Math.round(yearlyDividendGross),
+            taxPaid: Math.round(yearlyTaxPaid),
+            totalDividends: Math.round(totalDividendsReceived),
+            totalTax: Math.round(totalTaxPaid)
         });
     }
 
     const finalYear = breakdown[breakdown.length - 1];
     const annualIncome = finalYear.dividendIncome;
-    const monthlyIncome = annualIncome / 12;
+    const annualGross = finalYear.dividendGross;
+    const annualTax = finalYear.taxPaid;
+
+    // Calculate per-period values based on payment frequency
+    const incomePerPeriod = annualIncome / paymentsPerYear;
+    const grossPerPeriod = annualGross / paymentsPerYear;
+    const taxPerPeriod = annualTax / paymentsPerYear;
 
     return {
         labels,
@@ -93,8 +158,16 @@ window.DividendCalc.calculateDividends = function(
         breakdown: breakdown,
         summary: {
             annualIncome: Math.round(annualIncome),
-            monthlyIncome: Math.round(monthlyIncome * 100) / 100,
+            annualGross: Math.round(annualGross),
+            annualTax: Math.round(annualTax),
+            incomePerPeriod: Math.round(incomePerPeriod * 100) / 100,
+            grossPerPeriod: Math.round(grossPerPeriod * 100) / 100,
+            taxPerPeriod: Math.round(taxPerPeriod * 100) / 100,
+            paymentsPerYear: paymentsPerYear,
+            monthlyIncome: Math.round((annualIncome / 12) * 100) / 100,
             totalDividends: Math.round(totalDividendsReceived),
+            totalDividendsGross: Math.round(totalDividendsPaid),
+            totalTaxPaid: Math.round(totalTaxPaid),
             finalShares: Math.round(currentShares * 100) / 100,
             finalPortfolioValue: Math.round(portfolioValueData[portfolioValueData.length - 1]),
             totalContributed: Math.round(totalContributed),
