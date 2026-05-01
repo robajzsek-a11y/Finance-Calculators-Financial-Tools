@@ -1,30 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Dividend Calculator - Income & Yield Tool | Pomerancee</title>
-    <meta name="description" content="Calculate dividend income, yield, and growth projections. Free, ad-free dividend calculator for income investors.">
-    
+    <meta name="description"
+        content="Calculate dividend income, yield, and growth projections. Free, ad-free dividend calculator for income investors.">
+
     <meta property="og:title" content="Dividend Calculator - Income & Yield Tool">
-    <meta property="og:description" content="Calculate dividend income, yield, and growth projections. Free, ad-free dividend calculator for income investors.">
+    <meta property="og:description"
+        content="Calculate dividend income, yield, and growth projections. Free, ad-free dividend calculator for income investors.">
     <meta property="og:url" content="https://financecalculators.pomerancee.workers.dev/dividend">
     <meta property="og:site_name" content="Pomerancee Tools">
     <meta property="og:image" content="https://financecalculators.pomerancee.workers.dev/og-image.png">
     <meta property="og:type" content="website">
-    
+
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://financecalculators.pomerancee.workers.dev/dividend">
     <meta name="twitter:title" content="Dividend Calculator - Income & Yield Tool">
-    <meta name="twitter:description" content="Calculate dividend income, yield, and growth projections. Free, ad-free dividend calculator for income investors.">
+    <meta name="twitter:description"
+        content="Calculate dividend income, yield, and growth projections. Free, ad-free dividend calculator for income investors.">
     <meta name="twitter:image" content="https://financecalculators.pomerancee.workers.dev/og-image.png">
-    
+
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="../../Modules/shared.css">
     <link rel="stylesheet" href="styles.css">
@@ -32,6 +37,7 @@
     <script src="../../Modules/Language-Algorythm.js"></script>
     <script src="data/translations.js"></script>
 </head>
+
 <body>
     <!-- Ambient Background Animation -->
     <div class="bg-animation">
@@ -44,22 +50,37 @@
             <div class="header-content">
                 <div class="app-header-copy">
                     <h1 class="app-title" data-i18n="title">Dividend Calculator</h1>
-                    <p class="app-description" data-i18n="subtitle">Calculate dividend income, yield, and growth with reinvestment projections</p>
+                    <p class="app-description" data-i18n="subtitle">Calculate dividend income, yield, and growth with
+                        reinvestment projections</p>
                     <div class="app-header-actions">
-                        <a href="https://github.com/robajzsek-a11y/Investing-Calculator" target="_blank" rel="noopener noreferrer" class="github-btn" data-i18n-title="viewOnGitHub" data-i18n-aria="viewOnGitHub">
+                        <a href="https://github.com/robajzsek-a11y/Investing-Calculator" target="_blank"
+                            rel="noopener noreferrer" class="github-btn" data-i18n-title="viewOnGitHub"
+                            data-i18n-aria="viewOnGitHub">
                             <span class="gh-inner">
-                                <svg class="gh-logo" viewBox="0 0 438.549 438.549" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M409.132 114.573c-19.608-33.596-46.205-60.194-79.798-79.8-33.598-19.607-70.277-29.408-110.063-29.408-39.781 0-76.472 9.804-110.063 29.408-33.596 19.605-60.192 46.204-79.8 79.8C9.803 148.168 0 184.854 0 224.63c0 47.78 13.94 90.745 41.827 128.906 27.884 38.164 63.906 64.572 108.063 79.227 5.14.954 8.945.283 11.419-1.996 2.475-2.282 3.711-5.14 3.711-8.562 0-.571-.049-5.708-.144-15.417a2549.81 2549.81 0 01-.144-25.406l-6.567 1.136c-4.187.767-9.469 1.092-15.846 1-6.374-.089-12.991-.757-19.842-1.999-6.854-1.231-13.229-4.086-19.13-8.559-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.899-9.233-8.992-14.559-4.093-5.331-8.232-8.945-12.419-10.848l-1.999-1.431c-1.332-.951-2.568-2.098-3.711-3.429-1.142-1.331-1.997-2.663-2.568-3.997-.572-1.335-.098-2.43 1.427-3.289 1.525-.859 4.281-1.276 8.28-1.276l5.708.853c3.807.763 8.516 3.042 14.133 6.851 5.614 3.806 10.229 8.754 13.846 14.842 4.38 7.806 9.657 13.754 15.846 17.847 6.184 4.093 12.419 6.136 18.699 6.136 6.28 0 11.704-.476 16.274-1.423 4.565-.952 8.848-2.383 12.847-4.285 1.713-12.758 6.377-22.559 13.988-29.41-10.848-1.14-20.601-2.857-29.264-5.14-8.658-2.286-17.605-5.996-26.835-11.14-9.235-5.137-16.896-11.516-22.985-19.126-6.09-7.614-11.088-17.61-14.987-29.979-3.901-12.374-5.852-26.648-5.852-42.826 0-23.035 7.52-42.637 22.557-58.817-7.044-17.318-6.379-36.732 1.997-58.24 5.52-1.715 13.706-.428 24.554 3.853 10.85 4.283 18.794 7.952 23.84 10.994 5.046 3.041 9.089 5.618 12.135 7.708 17.705-4.947 35.976-7.421 54.818-7.421s37.117 2.474 54.823 7.421l10.849-6.849c7.419-4.57 16.18-8.758 26.262-12.565 10.088-3.805 17.802-4.853 23.134-3.138 8.562 21.509 9.325 40.922 2.279 58.24 15.036 16.18 22.559 35.787 22.559 58.817 0 16.178-1.958 30.497-5.853 42.966-3.9 12.471-8.941 22.457-15.125 29.979-6.191 7.521-13.901 13.85-23.131 18.986-9.232 5.14-18.182 8.85-26.84 11.136-8.662 2.286-18.415 4.004-29.263 5.146 9.894 8.562 14.842 22.077 14.842 40.539v60.237c0 3.422 1.19 6.279 3.572 8.562 2.379 2.279 6.136 2.95 11.276 1.995 44.163-14.653 80.185-41.062 108.068-79.226 27.88-38.161 41.825-81.126 41.825-128.906-.01-39.771-9.818-76.454-29.414-110.049z" fill="currentColor"/></svg>
+                                <svg class="gh-logo" viewBox="0 0 438.549 438.549" xmlns="http://www.w3.org/2000/svg"
+                                    aria-hidden="true">
+                                    <path
+                                        d="M409.132 114.573c-19.608-33.596-46.205-60.194-79.798-79.8-33.598-19.607-70.277-29.408-110.063-29.408-39.781 0-76.472 9.804-110.063 29.408-33.596 19.605-60.192 46.204-79.8 79.8C9.803 148.168 0 184.854 0 224.63c0 47.78 13.94 90.745 41.827 128.906 27.884 38.164 63.906 64.572 108.063 79.227 5.14.954 8.945.283 11.419-1.996 2.475-2.282 3.711-5.14 3.711-8.562 0-.571-.049-5.708-.144-15.417a2549.81 2549.81 0 01-.144-25.406l-6.567 1.136c-4.187.767-9.469 1.092-15.846 1-6.374-.089-12.991-.757-19.842-1.999-6.854-1.231-13.229-4.086-19.13-8.559-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.899-9.233-8.992-14.559-4.093-5.331-8.232-8.945-12.419-10.848l-1.999-1.431c-1.332-.951-2.568-2.098-3.711-3.429-1.142-1.331-1.997-2.663-2.568-3.997-.572-1.335-.098-2.43 1.427-3.289 1.525-.859 4.281-1.276 8.28-1.276l5.708.853c3.807.763 8.516 3.042 14.133 6.851 5.614 3.806 10.229 8.754 13.846 14.842 4.38 7.806 9.657 13.754 15.846 17.847 6.184 4.093 12.419 6.136 18.699 6.136 6.28 0 11.704-.476 16.274-1.423 4.565-.952 8.848-2.383 12.847-4.285 1.713-12.758 6.377-22.559 13.988-29.41-10.848-1.14-20.601-2.857-29.264-5.14-8.658-2.286-17.605-5.996-26.835-11.14-9.235-5.137-16.896-11.516-22.985-19.126-6.09-7.614-11.088-17.61-14.987-29.979-3.901-12.374-5.852-26.648-5.852-42.826 0-23.035 7.52-42.637 22.557-58.817-7.044-17.318-6.379-36.732 1.997-58.24 5.52-1.715 13.706-.428 24.554 3.853 10.85 4.283 18.794 7.952 23.84 10.994 5.046 3.041 9.089 5.618 12.135 7.708 17.705-4.947 35.976-7.421 54.818-7.421s37.117 2.474 54.823 7.421l10.849-6.849c7.419-4.57 16.18-8.758 26.262-12.565 10.088-3.805 17.802-4.853 23.134-3.138 8.562 21.509 9.325 40.922 2.279 58.24 15.036 16.18 22.559 35.787 22.559 58.817 0 16.178-1.958 30.497-5.853 42.966-3.9 12.471-8.941 22.457-15.125 29.979-6.191 7.521-13.901 13.85-23.131 18.986-9.232 5.14-18.182 8.85-26.84 11.136-8.662 2.286-18.415 4.004-29.263 5.146 9.894 8.562 14.842 22.077 14.842 40.539v60.237c0 3.422 1.19 6.279 3.572 8.562 2.379 2.279 6.136 2.95 11.276 1.995 44.163-14.653 80.185-41.062 108.068-79.226 27.88-38.161 41.825-81.126 41.825-128.906-.01-39.771-9.818-76.454-29.414-110.049z"
+                                        fill="currentColor" />
+                                </svg>
                                 <span class="gh-label" data-i18n="viewOnGitHub">View on GitHub</span>
                             </span>
                             <span class="gh-inner gh-star-group">
-                                <svg class="gh-star-icon" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24"><path clip-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" fill-rule="evenodd"/></svg>
+                                <svg class="gh-star-icon" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
+                                    <path clip-rule="evenodd"
+                                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+                                        fill-rule="evenodd" />
+                                </svg>
                                 <span class="gh-star-count">...</span>
                             </span>
                         </a>
-                        <a id="see-more-btn" href="../../index.html" title="See more calculators" aria-label="See more calculators">
+                        <a id="see-more-btn" href="../../index.html" title="See more calculators"
+                            aria-label="See more calculators">
                             <span class="smb-icon">
-                                <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <polyline points="6,22 12,14 17,18 26,8" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                                <svg width="20" height="20" viewBox="0 0 32 32" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <polyline points="6,22 12,14 17,18 26,8" stroke="white" stroke-width="2.4"
+                                        stroke-linecap="round" stroke-linejoin="round" fill="none" />
                                     <circle cx="26" cy="8" r="2.5" fill="white" />
                                 </svg>
                             </span>
@@ -97,20 +118,46 @@
             </div>
         </header>
 
+        <!-- ── Action Bar ─────────────────────────────────────────────────── -->
+        <div class="action-bar" role="toolbar" aria-label="Calculator actions">
+            <button type="button" id="btn-share" class="action-btn">
+                <svg class="action-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                </svg>
+                <span class="action-btn-label" data-i18n="share">Share</span>
+            </button>
+            <button type="button" id="btn-save-html" class="action-btn">
+                <svg class="action-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                <span class="action-btn-label" data-i18n="saveHtml">Save HTML</span>
+            </button>
+            <button type="button" id="btn-export-table" class="action-btn">
+                <svg class="action-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <path d="M3 9h18M3 15h18M9 3v18"/>
+                </svg>
+                <span class="action-btn-label" data-i18n="exportTable">Export Table</span>
+            </button>
+        </div>
+
         <main class="calculator-grid">
             <!-- Left Panel: Controls -->
             <section class="controls-panel">
                 <svg class="controls-panel-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                     <path class="controls-panel-border-track" pathLength="100"></path>
                     <path class="controls-panel-border-wave" pathLength="100"></path>
-                    <path class="controls-panel-border-wave controls-panel-border-wave-secondary" pathLength="100"></path>
+                    <path class="controls-panel-border-wave controls-panel-border-wave-secondary" pathLength="100">
+                    </path>
                 </svg>
-                
+
                 <div class="controls-content">
                     <!-- Investment Inputs Section -->
                     <div class="input-section">
                         <h2 class="section-title" data-i18n="investmentDetails">Investment Details</h2>
-                        
+
                         <!-- Currency Selector -->
                         <div class="input-group">
                             <label for="currency-select" data-i18n="currency">Currency</label>
@@ -121,15 +168,19 @@
                                         <span class="custom-select-text">USD - US Dollar</span>
                                     </span>
                                     <span class="custom-select-chevron">
-                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round" />
                                         </svg>
                                     </span>
                                 </button>
                                 <div class="custom-select-menu" data-for="currency">
                                     <div class="custom-select-search-wrapper">
-                                        <input type="text" class="custom-select-search" placeholder="Search currency..." />
-                                        <button type="button" class="custom-select-search-clear" style="display: none;">&times;</button>
+                                        <input type="text" class="custom-select-search"
+                                            placeholder="Search currency..." />
+                                        <button type="button" class="custom-select-search-clear"
+                                            style="display: none;">&times;</button>
                                     </div>
                                     <div class="custom-select-options">
                                         <button type="button" class="custom-select-option selected" data-value="USD">
@@ -173,7 +224,7 @@
                                 <option value="CHF">CHF - Swiss Franc</option>
                             </select>
                         </div>
-                        
+
                         <div class="input-row">
                             <div class="input-group">
                                 <label for="num-shares" data-i18n="numberOfShares">Number of Shares</label>
@@ -212,10 +263,10 @@
 
                     <!-- Strategy Settings Section -->
                     <div class="divider"></div>
-                    
+
                     <div class="input-section">
                         <h2 class="section-title" data-i18n="strategySettings">Strategy Settings</h2>
-                        
+
                         <div class="toggle-group">
                             <label class="toggle-label">
                                 <span data-i18n="reinvestDividends">Reinvest Dividends</span>
@@ -238,12 +289,15 @@
 
                         <div id="contribution-options" class="contribution-options">
                             <div class="frequency-selector">
-                                <button type="button" class="freq-btn active" data-freq="monthly" data-i18n="monthly">Monthly</button>
-                                <button type="button" class="freq-btn" data-freq="yearly" data-i18n="yearly">Yearly</button>
+                                <button type="button" class="freq-btn active" data-freq="monthly"
+                                    data-i18n="monthly">Monthly</button>
+                                <button type="button" class="freq-btn" data-freq="yearly"
+                                    data-i18n="yearly">Yearly</button>
                             </div>
-                            
+
                             <div class="input-group">
-                                <label for="contribution-amount" data-i18n="contributionAmount">Contribution Amount</label>
+                                <label for="contribution-amount" data-i18n="contributionAmount">Contribution
+                                    Amount</label>
                                 <div class="input-wrapper">
                                     <span class="currency-symbol">$</span>
                                     <input type="number" id="contribution-amount" value="100" min="0" step="1">
@@ -269,17 +323,35 @@
                                     <span class="percent-symbol">%</span>
                                 </div>
                             </div>
-                            
+
                             <div class="input-group">
-                                <label for="dividend-frequency" data-i18n="dividendPaymentFrequency">Dividend Payment Frequency</label>
+                                <label for="dividend-frequency" data-i18n="dividendPaymentFrequency">Dividend Payment
+                                    Frequency</label>
                                 <div class="frequency-selector">
-                                    <button type="button" class="freq-btn" data-freq="monthly" data-i18n="monthly">Monthly</button>
-                                    <button type="button" class="freq-btn active" data-freq="quarterly" data-i18n="quarterly">Quarterly</button>
-                                    <button type="button" class="freq-btn" data-freq="semi-annually" data-i18n="semiAnnually">Semi</button>
-                                    <button type="button" class="freq-btn" data-freq="annually" data-i18n="annually">Yearly</button>
+                                    <button type="button" class="freq-btn" data-freq="monthly"
+                                        data-i18n="monthly">Monthly</button>
+                                    <button type="button" class="freq-btn active" data-freq="quarterly"
+                                        data-i18n="quarterly">Quarterly</button>
+                                    <button type="button" class="freq-btn" data-freq="semi-annually"
+                                        data-i18n="semiAnnually">Semi</button>
+                                    <button type="button" class="freq-btn" data-freq="annually"
+                                        data-i18n="annually">Yearly</button>
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Additional Stocks Section -->
+                    <div class="additional-stocks-section">
+                        <button type="button" id="add-stock-btn" aria-label="Add additional stock">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M7 1V13M1 7H13" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" />
+                            </svg>
+                            <span data-i18n="addAdditionalStock">+ Add Additional Stock</span>
+                        </button>
+                        <div id="additional-stocks-container"></div>
                     </div>
                 </div>
             </section>
@@ -291,7 +363,8 @@
                     <h3 class="summary-title" data-i18n="dividendIncome">Dividend Income</h3>
                     <div class="summary-main">
                         <div class="summary-value" id="annual-income">$250.00</div>
-                        <div class="summary-tax hidden" id="annual-tax"><span data-i18n="taxes">Taxes:</span> <span class="tax-value">$0 (0%)</span></div>
+                        <div class="summary-tax hidden" id="annual-tax"><span data-i18n="taxes">Taxes:</span> <span
+                                class="tax-value">$0 (0%)</span></div>
                         <div class="summary-label" id="annual-label" data-i18n="annual">Annual</div>
                     </div>
                     <div class="summary-secondary">
@@ -299,7 +372,8 @@
                             <span class="secondary-label" data-i18n="monthlyLabel">Monthly:</span>
                             <span class="secondary-value" id="monthly-income">$20.83</span>
                         </div>
-                        <div class="secondary-tax hidden" id="monthly-tax"><span data-i18n="taxes">Taxes:</span> <span class="tax-value">$0 (0%)</span></div>
+                        <div class="secondary-tax hidden" id="monthly-tax"><span data-i18n="taxes">Taxes:</span> <span
+                                class="tax-value">$0 (0%)</span></div>
                     </div>
                 </div>
 
@@ -318,15 +392,15 @@
                     <div class="chart-box pie-chart-box" id="pie-chart-container">
                         <h3 class="chart-title" data-i18n="portfolioComposition">Portfolio Composition</h3>
                         <p class="chart-subtitle">
-                            <span data-i18n="totalPortfolioValue">Total portfolio value:</span> 
+                            <span data-i18n="totalPortfolioValue">Total portfolio value:</span>
                             <span id="portfolio-value">$5,000</span>
                         </p>
                         <p class="chart-subtitle">
-                            <span id="dividend-after-years-label"></span> 
+                            <span id="dividend-after-years-label"></span>
                             <span id="portfolio-dividend-value">$250</span>
                         </p>
                         <p class="chart-subtitle" id="portfolio-tax-line">
-                            <span data-i18n="taxesPaid">Taxes paid:</span> 
+                            <span data-i18n="taxesPaid">Taxes paid:</span>
                             <span id="portfolio-tax-paid" class="tax-value">$0 (0%)</span>
                         </p>
                         <div class="chart-wrapper">
@@ -349,9 +423,10 @@
                         <!-- Card 1: Portfolio Overview -->
                         <div class="kpi-card">
                             <div class="kpi-header">
-                                <svg class="kpi-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 3v18h18"/>
-                                    <path d="m19 9-5 5-4-4-3 3"/>
+                                <svg class="kpi-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M3 3v18h18" />
+                                    <path d="m19 9-5 5-4-4-3 3" />
                                 </svg>
                                 <h3 class="kpi-title" data-i18n="portfolioOverview">Portfolio Overview</h3>
                             </div>
@@ -374,9 +449,10 @@
                         <!-- Card 2: Dividend Breakdown -->
                         <div class="kpi-card">
                             <div class="kpi-header">
-                                <svg class="kpi-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="2" y="5" width="20" height="14" rx="2"/>
-                                    <path d="M2 10h20"/>
+                                <svg class="kpi-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                                    <path d="M2 10h20" />
                                 </svg>
                                 <h3 class="kpi-title" data-i18n="dividendBreakdown">Dividend Breakdown</h3>
                             </div>
@@ -403,11 +479,12 @@
                         <!-- Card 3: Tax Summary (Conditional) -->
                         <div class="kpi-card" id="kpi-tax-card">
                             <div class="kpi-header">
-                                <svg class="kpi-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="9" cy="7" r="4"/>
-                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                <svg class="kpi-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                                 </svg>
                                 <h3 class="kpi-title" data-i18n="taxSummary">Tax Summary</h3>
                             </div>
@@ -426,9 +503,10 @@
                         <!-- Card 4: Snowball Milestone -->
                         <div class="kpi-card">
                             <div class="kpi-header">
-                                <svg class="kpi-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 2v20"/>
-                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                <svg class="kpi-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20" />
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                                 </svg>
                                 <h3 class="kpi-title" data-i18n="snowballMilestone">Snowball Milestone</h3>
                             </div>
@@ -447,10 +525,11 @@
                         <!-- Card 5: Contribution Impact (Conditional) -->
                         <div class="kpi-card" id="kpi-contribution-card">
                             <div class="kpi-header">
-                                <svg class="kpi-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                    <polyline points="17 8 12 3 7 8"/>
-                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                <svg class="kpi-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
                                 </svg>
                                 <h3 class="kpi-title" data-i18n="contributionImpact">Contribution Impact</h3>
                             </div>
@@ -465,55 +544,131 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Card 6: Stock Breakdown (Conditional — appears when additional stocks exist) -->
+                        <div class="kpi-card kpi-card--wide hidden" id="kpi-breakdown-card">
+                            <div class="kpi-header">
+                                <svg class="kpi-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                                </svg>
+                                <h3 class="kpi-title" data-i18n="stockBreakdown">Stock Breakdown</h3>
+                            </div>
+                            <div class="kpi-content" id="kpi-breakdown-body">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
         </main>
     </div>
 
+    <!-- ── Export Format Modal ───────────────────────────────────────────── -->
+    <div class="modal-overlay" id="export-modal" role="dialog" aria-modal="true" aria-labelledby="export-modal-title">
+        <div class="modal-card">
+            <div class="modal-header">
+            <h2 class="modal-title" id="export-modal-title" data-i18n="exportPortfolioData">Export Portfolio Data</h2>
+                <button type="button" class="modal-close" id="export-modal-close" aria-label="Close">&times;</button>
+            </div>
+            <p class="modal-subtitle" data-i18n="exportSubtitle">Choose your preferred format to download the full portfolio report.</p>
+            <div class="export-format-grid">
+                <button type="button" class="export-format-card" id="export-xlsx-btn">
+                    <span class="efc-icon">📗</span>
+                    <span class="efc-title" data-i18n="excelTitle">Excel (.xlsx)</span>
+                    <span class="efc-desc" data-i18n="excelDesc">Multiple sheets, formatted for analysis &amp; printing</span>
+                    <span class="efc-accent efc-accent--green"></span>
+                </button>
+                <button type="button" class="export-format-card" id="export-csv-btn">
+                    <span class="efc-icon">📄</span>
+                    <span class="efc-title" data-i18n="csvTitle">CSV (.csv)</span>
+                    <span class="efc-desc" data-i18n="csvDesc">Universal format, opens in any spreadsheet app</span>
+                    <span class="efc-accent efc-accent--blue"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Share Fallback Modal ──────────────────────────────────────────── -->
+    <div class="modal-overlay" id="share-fallback-modal" role="dialog" aria-modal="true" aria-labelledby="share-fallback-title">
+        <div class="modal-card modal-card--narrow">
+            <div class="modal-header">
+            <h2 class="modal-title" id="share-fallback-title" data-i18n="shareLink">Share Link</h2>
+                <button type="button" class="modal-close" id="share-fallback-close" aria-label="Close">&times;</button>
+            </div>
+            <p class="modal-subtitle" data-i18n="shareLinkSubtitle">Copy the link below to share your portfolio:</p>
+            <div class="share-fallback-row">
+                <input type="text" id="share-fallback-url" class="share-fallback-input" readonly aria-label="Share URL">
+                <button type="button" id="share-fallback-copy" class="share-copy-btn" data-i18n="copy">Copy</button>
+            </div>
+        </div>
+    </div>
+
     <!-- GitHub CTA Banner -->
     <section class="gh-cta" aria-label="GitHub project">
         <div class="gh-cta-inner">
-            <svg class="gh-cta-octocat" viewBox="0 0 438.549 438.549" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M409.132 114.573c-19.608-33.596-46.205-60.194-79.798-79.8-33.598-19.607-70.277-29.408-110.063-29.408-39.781 0-76.472 9.804-110.063 29.408-33.596 19.605-60.192 46.204-79.8 79.8C9.803 148.168 0 184.854 0 224.63c0 47.78 13.94 90.745 41.827 128.906 27.884 38.164 63.906 64.572 108.063 79.227 5.14.954 8.945.283 11.419-1.996 2.475-2.282 3.711-5.14 3.711-8.562 0-.571-.049-5.708-.144-15.417a2549.81 2549.81 0 01-.144-25.406l-6.567 1.136c-4.187.767-9.469 1.092-15.846 1-6.374-.089-12.991-.757-19.842-1.999-6.854-1.231-13.229-4.086-19.13-8.559-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.899-9.233-8.992-14.559-4.093-5.331-8.232-8.945-12.419-10.848l-1.999-1.431c-1.332-.951-2.568-2.098-3.711-3.429-1.142-1.331-1.997-2.663-2.568-3.997-.572-1.335-.098-2.43 1.427-3.289 1.525-.859 4.281-1.276 8.28-1.276l5.708.853c3.807.763 8.516 3.042 14.133 6.851 5.614 3.806 10.229 8.754 13.846 14.842 4.38 7.806 9.657 13.754 15.846 17.847 6.184 4.093 12.419 6.136 18.699 6.136 6.28 0 11.704-.476 16.274-1.423 4.565-.952 8.848-2.383 12.847-4.285 1.713-12.758 6.377-22.559 13.988-29.41-10.848-1.14-20.601-2.857-29.264-5.14-8.658-2.286-17.605-5.996-26.835-11.14-9.235-5.137-16.896-11.516-22.985-19.126-6.09-7.614-11.088-17.61-14.987-29.979-3.901-12.374-5.852-26.648-5.852-42.826 0-23.035 7.52-42.637 22.557-58.817-7.044-17.318-6.379-36.732 1.997-58.24 5.52-1.715 13.706-.428 24.554 3.853 10.85 4.283 18.794 7.952 23.84 10.994 5.046 3.041 9.089 5.618 12.135 7.708 17.705-4.947 35.976-7.421 54.818-7.421s37.117 2.474 54.823 7.421l10.849-6.849c7.419-4.57 16.18-8.758 26.262-12.565 10.088-3.805 17.802-4.853 23.134-3.138 8.562 21.509 9.325 40.922 2.279 58.24 15.036 16.18 22.559 35.787 22.559 58.817 0 16.178-1.958 30.497-5.853 42.966-3.9 12.471-8.941 22.457-15.125 29.979-6.191 7.521-13.901 13.85-23.131 18.986-9.232 5.14-18.182 8.85-26.84 11.136-8.662 2.286-18.415 4.004-29.263 5.146 9.894 8.562 14.842 22.077 14.842 40.539v60.237c0 3.422 1.19 6.279 3.572 8.562 2.379 2.279 6.136 2.95 11.276 1.995 44.163-14.653 80.185-41.062 108.068-79.226 27.88-38.161 41.825-81.126 41.825-128.906-.01-39.771-9.818-76.454-29.414-110.049z" fill="currentColor"/></svg>
-            <div class="gh-cta-eyebrow"><span class="gh-cta-eyebrow-dot" aria-hidden="true"></span> <span data-i18n="openSource"></span>Open Source</span></div>
+            <svg class="gh-cta-octocat" viewBox="0 0 438.549 438.549" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
+                <path
+                    d="M409.132 114.573c-19.608-33.596-46.205-60.194-79.798-79.8-33.598-19.607-70.277-29.408-110.063-29.408-39.781 0-76.472 9.804-110.063 29.408-33.596 19.605-60.192 46.204-79.8 79.8C9.803 148.168 0 184.854 0 224.63c0 47.78 13.94 90.745 41.827 128.906 27.884 38.164 63.906 64.572 108.063 79.227 5.14.954 8.945.283 11.419-1.996 2.475-2.282 3.711-5.14 3.711-8.562 0-.571-.049-5.708-.144-15.417a2549.81 2549.81 0 01-.144-25.406l-6.567 1.136c-4.187.767-9.469 1.092-15.846 1-6.374-.089-12.991-.757-19.842-1.999-6.854-1.231-13.229-4.086-19.13-8.559-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.899-9.233-8.992-14.559-4.093-5.331-8.232-8.945-12.419-10.848l-1.999-1.431c-1.332-.951-2.568-2.098-3.711-3.429-1.142-1.331-1.997-2.663-2.568-3.997-.572-1.335-.098-2.43 1.427-3.289 1.525-.859 4.281-1.276 8.28-1.276l5.708.853c3.807.763 8.516 3.042 14.133 6.851 5.614 3.806 10.229 8.754 13.846 14.842 4.38 7.806 9.657 13.754 15.846 17.847 6.184 4.093 12.419 6.136 18.699 6.136 6.28 0 11.704-.476 16.274-1.423 4.565-.952 8.848-2.383 12.847-4.285 1.713-12.758 6.377-22.559 13.988-29.41-10.848-1.14-20.601-2.857-29.264-5.14-8.658-2.286-17.605-5.996-26.835-11.14-9.235-5.137-16.896-11.516-22.985-19.126-6.09-7.614-11.088-17.61-14.987-29.979-3.901-12.374-5.852-26.648-5.852-42.826 0-23.035 7.52-42.637 22.557-58.817-7.044-17.318-6.379-36.732 1.997-58.24 5.52-1.715 13.706-.428 24.554 3.853 10.85 4.283 18.794 7.952 23.84 10.994 5.046 3.041 9.089 5.618 12.135 7.708 17.705-4.947 35.976-7.421 54.818-7.421s37.117 2.474 54.823 7.421l10.849-6.849c7.419-4.57 16.18-8.758 26.262-12.565 10.088-3.805 17.802-4.853 23.134-3.138 8.562 21.509 9.325 40.922 2.279 58.24 15.036 16.18 22.559 35.787 22.559 58.817 0 16.178-1.958 30.497-5.853 42.966-3.9 12.471-8.941 22.457-15.125 29.979-6.191 7.521-13.901 13.85-23.131 18.986-9.232 5.14-18.182 8.85-26.84 11.136-8.662 2.286-18.415 4.004-29.263 5.146 9.894 8.562 14.842 22.077 14.842 40.539v60.237c0 3.422 1.19 6.279 3.572 8.562 2.379 2.279 6.136 2.95 11.276 1.995 44.163-14.653 80.185-41.062 108.068-79.226 27.88-38.161 41.825-81.126 41.825-128.906-.01-39.771-9.818-76.454-29.414-110.049z"
+                    fill="currentColor" />
+            </svg>
+            <div class="gh-cta-eyebrow"><span class="gh-cta-eyebrow-dot" aria-hidden="true"></span> <span
+                    data-i18n="openSource"></span></span></div>
             <h2 class="gh-cta-title" data-i18n="ctaTitle">This project is still in development!</h2>
             <h3 class="gh-cta-subtitle" data-i18n="ctaSubtitle">Check it out on GitHub</h3>
-            <p class="gh-cta-text" data-i18n="ctaText">See how this dividend calculator grows: follow progress, suggest features, report bugs, or contribute. Every star helps.</p>
-            <a class="github-btn" href="https://github.com/robajzsek-a11y/Investing-Calculator" target="_blank" rel="noopener noreferrer" data-i18n-title="viewOnGitHub" data-i18n-aria="viewOnGitHub">
+            <p class="gh-cta-text" data-i18n="ctaText">See how this dividend calculator grows: follow progress, suggest
+                features, report bugs, or contribute. Every star helps.</p>
+            <a class="github-btn" href="https://github.com/robajzsek-a11y/Investing-Calculator" target="_blank"
+                rel="noopener noreferrer" data-i18n-title="viewOnGitHub" data-i18n-aria="viewOnGitHub">
                 <span class="gh-inner">
-                    <svg class="gh-logo" viewBox="0 0 438.549 438.549" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M409.132 114.573c-19.608-33.596-46.205-60.194-79.798-79.8-33.598-19.607-70.277-29.408-110.063-29.408-39.781 0-76.472 9.804-110.063 29.408-33.596 19.605-60.192 46.204-79.8 79.8C9.803 148.168 0 184.854 0 224.63c0 47.78 13.94 90.745 41.827 128.906 27.884 38.164 63.906 64.572 108.063 79.227 5.14.954 8.945.283 11.419-1.996 2.475-2.282 3.711-5.14 3.711-8.562 0-.571-.049-5.708-.144-15.417a2549.81 2549.81 0 01-.144-25.406l-6.567 1.136c-4.187.767-9.469 1.092-15.846 1-6.374-.089-12.991-.757-19.842-1.999-6.854-1.231-13.229-4.086-19.13-8.559-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.899-9.233-8.992-14.559-4.093-5.331-8.232-8.945-12.419-10.848l-1.999-1.431c-1.332-.951-2.568-2.098-3.711-3.429-1.142-1.331-1.997-2.663-2.568-3.997-.572-1.335-.098-2.43 1.427-3.289 1.525-.859 4.281-1.276 8.28-1.276l5.708.853c3.807.763 8.516 3.042 14.133 6.851 5.614 3.806 10.229 8.754 13.846 14.842 4.38 7.806 9.657 13.754 15.846 17.847 6.184 4.093 12.419 6.136 18.699 6.136 6.28 0 11.704-.476 16.274-1.423 4.565-.952 8.848-2.383 12.847-4.285 1.713-12.758 6.377-22.559 13.988-29.41-10.848-1.14-20.601-2.857-29.264-5.14-8.658-2.286-17.605-5.996-26.835-11.14-9.235-5.137-16.896-11.516-22.985-19.126-6.09-7.614-11.088-17.61-14.987-29.979-3.901-12.374-5.852-26.648-5.852-42.826 0-23.035 7.52-42.637 22.557-58.817-7.044-17.318-6.379-36.732 1.997-58.24 5.52-1.715 13.706-.428 24.554 3.853 10.85 4.283 18.794 7.952 23.84 10.994 5.046 3.041 9.089 5.618 12.135 7.708 17.705-4.947 35.976-7.421 54.818-7.421s37.117 2.474 54.823 7.421l10.849-6.849c7.419-4.57 16.18-8.758 26.262-12.565 10.088-3.805 17.802-4.853 23.134-3.138 8.562 21.509 9.325 40.922 2.279 58.24 15.036 16.18 22.559 35.787 22.559 58.817 0 16.178-1.958 30.497-5.853 42.966-3.9 12.471-8.941 22.457-15.125 29.979-6.191 7.521-13.901 13.85-23.131 18.986-9.232 5.14-18.182 8.85-26.84 11.136-8.662 2.286-18.415 4.004-29.263 5.146 9.894 8.562 14.842 22.077 14.842 40.539v60.237c0 3.422 1.19 6.279 3.572 8.562 2.379 2.279 6.136 2.95 11.276 1.995 44.163-14.653 80.185-41.062 108.068-79.226 27.88-38.161 41.825-81.126 41.825-128.906-.01-39.771-9.818-76.454-29.414-110.049z" fill="currentColor"/></svg>
+                    <svg class="gh-logo" viewBox="0 0 438.549 438.549" xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true">
+                        <path
+                            d="M409.132 114.573c-19.608-33.596-46.205-60.194-79.798-79.8-33.598-19.607-70.277-29.408-110.063-29.408-39.781 0-76.472 9.804-110.063 29.408-33.596 19.605-60.192 46.204-79.8 79.8C9.803 148.168 0 184.854 0 224.63c0 47.78 13.94 90.745 41.827 128.906 27.884 38.164 63.906 64.572 108.063 79.227 5.14.954 8.945.283 11.419-1.996 2.475-2.282 3.711-5.14 3.711-8.562 0-.571-.049-5.708-.144-15.417a2549.81 2549.81 0 01-.144-25.406l-6.567 1.136c-4.187.767-9.469 1.092-15.846 1-6.374-.089-12.991-.757-19.842-1.999-6.854-1.231-13.229-4.086-19.13-8.559-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.899-9.233-8.992-14.559-4.093-5.331-8.232-8.945-12.419-10.848l-1.999-1.431c-1.332-.951-2.568-2.098-3.711-3.429-1.142-1.331-1.997-2.663-2.568-3.997-.572-1.335-.098-2.43 1.427-3.289 1.525-.859 4.281-1.276 8.28-1.276l5.708.853c3.807.763 8.516 3.042 14.133 6.851 5.614 3.806 10.229 8.754 13.846 14.842 4.38 7.806 9.657 13.754 15.846 17.847 6.184 4.093 12.419 6.136 18.699 6.136 6.28 0 11.704-.476 16.274-1.423 4.565-.952 8.848-2.383 12.847-4.285 1.713-12.758 6.377-22.559 13.988-29.41-10.848-1.14-20.601-2.857-29.264-5.14-8.658-2.286-17.605-5.996-26.835-11.14-9.235-5.137-16.896-11.516-22.985-19.126-6.09-7.614-11.088-17.61-14.987-29.979-3.901-12.374-5.852-26.648-5.852-42.826 0-23.035 7.52-42.637 22.557-58.817-7.044-17.318-6.379-36.732 1.997-58.24 5.52-1.715 13.706-.428 24.554 3.853 10.85 4.283 18.794 7.952 23.84 10.994 5.046 3.041 9.089 5.618 12.135 7.708 17.705-4.947 35.976-7.421 54.818-7.421s37.117 2.474 54.823 7.421l10.849-6.849c7.419-4.57 16.18-8.758 26.262-12.565 10.088-3.805 17.802-4.853 23.134-3.138 8.562 21.509 9.325 40.922 2.279 58.24 15.036 16.18 22.559 35.787 22.559 58.817 0 16.178-1.958 30.497-5.853 42.966-3.9 12.471-8.941 22.457-15.125 29.979-6.191 7.521-13.901 13.85-23.131 18.986-9.232 5.14-18.182 8.85-26.84 11.136-8.662 2.286-18.415 4.004-29.263 5.146 9.894 8.562 14.842 22.077 14.842 40.539v60.237c0 3.422 1.19 6.279 3.572 8.562 2.379 2.279 6.136 2.95 11.276 1.995 44.163-14.653 80.185-41.062 108.068-79.226 27.88-38.161 41.825-81.126 41.825-128.906-.01-39.771-9.818-76.454-29.414-110.049z"
+                            fill="currentColor" />
+                    </svg>
                     <span class="gh-label" data-i18n="viewOnGitHub">View on GitHub</span>
                 </span>
                 <span class="gh-inner gh-star-group">
-                    <svg class="gh-star-icon" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24"><path clip-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" fill-rule="evenodd"/></svg>
+                    <svg class="gh-star-icon" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
+                        <path clip-rule="evenodd"
+                            d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+                            fill-rule="evenodd" />
+                    </svg>
                     <span class="gh-star-count">...</span>
                 </span>
             </a>
         </div>
     </section>
     <!-- Footer -->
-        <footer class="site-footer">
-            <p>
-                <span data-i18n="footerCopyrightPrefix">Copyright &copy; 2026</span>
-                <strong>Pomerancee</strong>
-                &middot;
-                <span data-i18n="footerCopyrightSuffix">Finance Toolkit Calculators</span>
-            </p>
-            <p>
-                <span data-i18n="licensedUnder">Licensed under</span>
-                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
-                    <span data-i18n="licenseName">Creative Commons License.</span>
-                    <span data-i18n="licenseType">CC BY-NC-SA 4.0 International</span>
-                </a>
-                <br>
-                (<span data-i18n="licenseTerms">Attribution - NonCommercial - ShareAlike</span>)
-            </p>
-        </footer>
+    <footer class="site-footer">
+        <p>
+            <span data-i18n="footerCopyrightPrefix">Copyright &copy; 2026</span>
+            <strong>Pomerancee</strong>
+            &middot;
+            <span data-i18n="footerCopyrightSuffix">Finance Toolkit Calculators</span>
+        </p>
+        <p>
+            <span data-i18n="licensedUnder">Licensed under</span>
+            <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+                <span data-i18n="licenseName">Creative Commons License.</span>
+                <span data-i18n="licenseType">CC BY-NC-SA 4.0 International</span>
+            </a>
+            <br>
+            (<span data-i18n="licenseTerms">Attribution - NonCommercial - ShareAlike</span>)
+        </p>
+    </footer>
 
     <script src="../../Modules/github-stars.js"></script>
     <script src="currencies.js"></script>
     <script src="calculator.js"></script>
     <script src="chart.js"></script>
     <script src="app.js"></script>
+    <script src="export.js"></script>
 </body>
+
 </html>

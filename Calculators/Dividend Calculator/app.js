@@ -75,10 +75,15 @@ let state = {
     taxRate: 15,
     dividendFrequency: 'quarterly',
     selectedYears: 10,
-    lastUpdatedField: 'dividend', // Track which field was last updated
+    lastUpdatedField: 'dividend',
     currency: 'USD',
-    currencySymbol: '$'
+    currencySymbol: '$',
+    additionalStocks: [],
+    stockIdCounter: 0
 };
+
+// Expose globally so export.js can always read the live state
+window.appState = state;
 
 let pieChart = null;
 let barChart = null;
@@ -311,20 +316,33 @@ function initTranslations() {
  * Initializes the application
  */
 function init() {
-    // Initialize translations first
+    // Load state from URL params first (Share / restore portfolio)
+    if (typeof window.loadStateFromURL === 'function') {
+        window.loadStateFromURL(state);
+    }
+
+    // Initialize translations
     initTranslations();
-    
+
+    // Seed global currency symbol for chart.js centerText plugin
+    window.currentCurrencySymbol = state.currencySymbol;
+
     // Initialize charts
     pieChart = initPieChart(pieChartCanvas.getContext('2d'));
     barChart = initBarChart(barChartCanvas.getContext('2d'));
 
-    // Set initial DOM values from state
+    // Sync all DOM inputs with (possibly URL-restored) state
     syncDOMWithState();
+
+    // Rebuild additional stock cards if any were decoded from URL
+    if (state.additionalStocks.length > 0) {
+        renderAdditionalStockCards();
+    }
 
     // Attach event listeners
     attachEventListeners();
 
-    // Initial calculation
+    // Initial calculation and render
     calculateAndRender();
 
     // Initialize GitHub stars
@@ -462,6 +480,12 @@ function attachEventListeners() {
 
     // Currency dropdown
     setupCurrencyDropdown();
+
+    // Add additional stock button
+    const addStockBtn = document.getElementById('add-stock-btn');
+    if (addStockBtn) {
+        addStockBtn.addEventListener('click', addAdditionalStock);
+    }
 }
 
 /**
@@ -628,13 +652,16 @@ function closeAllDropdowns(except = null) {
 }
 
 /**
- * Updates currency symbols in the UI
+ * Updates currency symbols in the UI (including any additional stock cards)
  */
 function updateCurrencySymbols() {
+    // .currency-symbol is used in both main inputs and additional stock cards
     const currencySymbolElements = document.querySelectorAll('.currency-symbol');
     currencySymbolElements.forEach(el => {
         el.textContent = state.currencySymbol;
     });
+    // Expose globally so chart.js centerText plugin can use the current symbol
+    window.currentCurrencySymbol = state.currencySymbol;
 }
 
 /**
@@ -809,10 +836,11 @@ function updateAnnualLabel() {
 }
 
 /**
- * Calculates and renders results
+ * Calculates and renders results — aggregates main stock + all additional stocks
  */
 function calculateAndRender() {
-    const result = calculateDividends(
+    // ── Main stock ───────────────────────────────────────────────────────────
+    const mainResult = calculateDividends(
         state.numShares,
         state.pricePerShare,
         state.annualDividend,
@@ -826,136 +854,391 @@ function calculateAndRender() {
         state.dividendFrequency
     );
 
-    // Format currency with symbol
-    const formatCurrency = (value) => {
-        return `${state.currencySymbol}${value.toLocaleString()}`;
+    // ── Additional stocks (shared settings; no extra contributions) ──────────
+    const additionalResults = state.additionalStocks.map(stock => ({
+        stock,
+        result: calculateDividends(
+            stock.numShares,
+            stock.pricePerShare,
+            stock.annualDividend,
+            state.selectedYears,
+            state.reinvest,
+            false,                  // contributions belong to main stock only
+            state.contributionFreq,
+            0,
+            state.applyTax,
+            state.taxRate,
+            state.dividendFrequency
+        )
+    }));
+
+    // ── Aggregate ────────────────────────────────────────────────────────────
+    const allResults = [mainResult, ...additionalResults.map(r => r.result)];
+
+    const combined = {
+        annualIncome:        allResults.reduce((s, r) => s + r.summary.annualIncome, 0),
+        annualGross:         allResults.reduce((s, r) => s + r.summary.annualGross, 0),
+        annualTax:           allResults.reduce((s, r) => s + r.summary.annualTax, 0),
+        taxPerPeriod:        allResults.reduce((s, r) => s + r.summary.taxPerPeriod, 0),
+        monthlyIncome:       allResults.reduce((s, r) => s + r.summary.monthlyIncome, 0),
+        totalDividends:      allResults.reduce((s, r) => s + r.summary.totalDividends, 0),
+        totalDividendsGross: allResults.reduce((s, r) => s + (r.summary.totalDividendsGross || r.summary.totalDividends), 0),
+        totalTaxPaid:        allResults.reduce((s, r) => s + r.summary.totalTaxPaid, 0),
+        finalPortfolioValue: allResults.reduce((s, r) => s + r.summary.finalPortfolioValue, 0),
+        originalInvestment:  allResults.reduce((s, r) => s + r.summary.originalInvestment, 0),
+        // Contributions only from main stock; additional stocks add their original investment
+        totalContributed: mainResult.summary.totalContributed +
+            additionalResults.reduce((s, { result: r }) => s + r.summary.originalInvestment, 0)
     };
 
-    // Update summary displays
-    annualIncomeDisplay.textContent = formatCurrency(result.summary.annualIncome);
-    monthlyIncomeDisplay.textContent = formatCurrency(result.summary.monthlyIncome);
-    
-    // Update tax displays in Dividend Income card based on payment frequency
-    if (state.applyTax && result.summary.totalTaxPaid > 0) {
-        // Get the annual tax from final year
-        const annualTax = result.summary.annualTax;
-        
-        // Calculate tax per period based on dividend payment frequency
-        const taxPerPeriod = result.summary.taxPerPeriod;
-        
-        // Use the actual tax rate from state for percentage display
+    // Combined year-by-year dividend income for bar chart
+    const combinedDividendIncome = mainResult.dividendIncome.map((_, i) =>
+        allResults.reduce((sum, r) => sum + (r.dividendIncome[i] || 0), 0)
+    );
+
+    // ── Currency formatter ───────────────────────────────────────────────────
+    const formatCurrency = (value) => `${state.currencySymbol}${value.toLocaleString()}`;
+
+    // ── Summary card ─────────────────────────────────────────────────────────
+    annualIncomeDisplay.textContent  = formatCurrency(combined.annualIncome);
+    monthlyIncomeDisplay.textContent = formatCurrency(combined.monthlyIncome);
+
+    if (state.applyTax && combined.totalTaxPaid > 0) {
+        const annualTax  = combined.annualTax;
         const taxPercent = state.taxRate.toFixed(1);
-        
-        // Get frequency label for display
-        const frequencyLabels = {
-            'monthly': 'Monthly',
-            'quarterly': 'Quarterly',
-            'semi-annually': 'Semi-Annually',
-            'annually': 'Annually'
-        };
-        const frequencyLabel = frequencyLabels[state.dividendFrequency] || 'Quarterly';
-        
-        // Update annual tax display (always show annual)
-        annualTaxDisplay.querySelector('.tax-value').textContent = `${formatCurrency(annualTax)} (${taxPercent}%)`;
-        annualTaxDisplay.classList.remove('hidden');
-        
-        // Update period tax display (show based on selected frequency)
-        // For monthly frequency, show monthly tax
-        // For other frequencies, calculate monthly equivalent for consistency
         const monthlyTax = annualTax / 12;
-        monthlyTaxDisplay.querySelector('.tax-value').textContent = `${formatCurrency(Math.round(monthlyTax * 100) / 100)} (${taxPercent}%)`;
+
+        annualTaxDisplay.querySelector('.tax-value').textContent =
+            `${formatCurrency(annualTax)} (${taxPercent}%)`;
+        annualTaxDisplay.classList.remove('hidden');
+
+        monthlyTaxDisplay.querySelector('.tax-value').textContent =
+            `${formatCurrency(Math.round(monthlyTax * 100) / 100)} (${taxPercent}%)`;
         monthlyTaxDisplay.classList.remove('hidden');
     } else {
         annualTaxDisplay.classList.add('hidden');
         monthlyTaxDisplay.classList.add('hidden');
     }
-    
-    // Update tax display visibility and value in Portfolio Composition
-    if (state.applyTax && result.summary.totalTaxPaid > 0) {
-        // Show tax breakdown
-        const taxPaid = result.summary.totalTaxPaid;
-        const totalDividendsGross = result.summary.totalDividendsGross || result.summary.totalDividends;
-        const taxPercentage = totalDividendsGross > 0 ? ((taxPaid / totalDividendsGross) * 100).toFixed(1) : 0;
+
+    // ── Portfolio composition subtitle ───────────────────────────────────────
+    if (state.applyTax && combined.totalTaxPaid > 0) {
+        const taxPaid       = combined.totalTaxPaid;
+        const totalGross    = combined.totalDividendsGross;
+        const taxPercentage = totalGross > 0 ? ((taxPaid / totalGross) * 100).toFixed(1) : 0;
         portfolioTaxPaidDisplay.textContent = `${formatCurrency(taxPaid)} (${taxPercentage}%)`;
         portfolioTaxPaidDisplay.parentElement.classList.remove('hidden');
     } else {
         portfolioTaxPaidDisplay.parentElement.classList.add('hidden');
     }
-    
-    // Update portfolio value display
-    portfolioValueDisplay.textContent = formatCurrency(result.summary.finalPortfolioValue);
-    
-    // Update portfolio dividend display
+
+    portfolioValueDisplay.textContent = formatCurrency(combined.finalPortfolioValue);
     updateDividendAfterYearsLabel();
-    portfolioDividendValueDisplay.textContent = formatCurrency(result.summary.totalDividends);
+    portfolioDividendValueDisplay.textContent = formatCurrency(combined.totalDividends);
 
-    // Update pie chart (if reinvesting OR contributions are enabled)
+    // ── Charts ───────────────────────────────────────────────────────────────
     if (state.reinvest || state.addContributions) {
-        const reinvestedAmount = state.reinvest ? (result.summary.finalPortfolioValue - result.summary.totalContributed) : 0;
-        const contributionsAmount = state.addContributions ? (result.summary.totalContributed - result.summary.originalInvestment) : 0;
-        updatePieChart(result.summary.originalInvestment, Math.max(0, reinvestedAmount), contributionsAmount);
+        const reinvestedAmount    = state.reinvest
+            ? (combined.finalPortfolioValue - combined.totalContributed) : 0;
+        const contributionsAmount = state.addContributions
+            ? (mainResult.summary.totalContributed - mainResult.summary.originalInvestment) : 0;
+        updatePieChart(combined.originalInvestment, Math.max(0, reinvestedAmount), contributionsAmount);
     }
+    updateBarChart(mainResult.labels, combinedDividendIncome);
 
-    // Update bar chart
-    updateBarChart(result.labels, result.dividendIncome);
-    
-    // ========== UPDATE KPI CARDS ==========
-    
-    // Card 1: Portfolio Overview
-    kpiPortfolioValue.textContent = formatCurrency(result.summary.finalPortfolioValue);
-    kpiTotalDividends.textContent = formatCurrency(result.summary.totalDividends);
-    
-    // Calculate Total ROI
-    const totalROI = result.summary.originalInvestment > 0 
-        ? ((result.summary.totalDividends / result.summary.originalInvestment) * 100).toFixed(1)
-        : 0;
+    // ── KPI Card 1: Portfolio Overview ───────────────────────────────────────
+    kpiPortfolioValue.textContent = formatCurrency(combined.finalPortfolioValue);
+    kpiTotalDividends.textContent = formatCurrency(combined.totalDividends);
+
+    const totalROI = combined.originalInvestment > 0
+        ? ((combined.totalDividends / combined.originalInvestment) * 100).toFixed(1) : 0;
     kpiROI.textContent = `${totalROI}%`;
-    
-    // Card 2: Dividend Breakdown (use net income after tax)
-    const annualIncome = result.summary.annualIncome;
+
+    // ── KPI Card 2: Dividend Breakdown ───────────────────────────────────────
+    const annualIncome  = combined.annualIncome;
     const monthlyIncome = annualIncome / 12;
-    const weeklyIncome = annualIncome / 52;
-    const dailyIncome = annualIncome / 365;
-    
-    kpiDivYear.textContent = formatCurrency(Math.round(annualIncome));
+    const weeklyIncome  = annualIncome / 52;
+    const dailyIncome   = annualIncome / 365;
+
+    kpiDivYear.textContent  = formatCurrency(Math.round(annualIncome));
     kpiDivMonth.textContent = formatCurrency(Math.round(monthlyIncome * 100) / 100);
-    kpiDivWeek.textContent = formatCurrency(Math.round(weeklyIncome * 100) / 100);
-    kpiDivDay.textContent = formatCurrency(Math.round(dailyIncome * 100) / 100);
-    
-    // Card 3: Tax Summary (Conditional)
-    if (state.applyTax && result.summary.totalTaxPaid > 0) {
-        kpiTotalTax.textContent = formatCurrency(result.summary.totalTaxPaid);
-        kpiTaxRate.textContent = `${state.taxRate.toFixed(1)}%`;
+    kpiDivWeek.textContent  = formatCurrency(Math.round(weeklyIncome  * 100) / 100);
+    kpiDivDay.textContent   = formatCurrency(Math.round(dailyIncome   * 100) / 100);
+
+    // ── KPI Card 3: Tax Summary ───────────────────────────────────────────────
+    if (state.applyTax && combined.totalTaxPaid > 0) {
+        kpiTotalTax.textContent = formatCurrency(combined.totalTaxPaid);
+        kpiTaxRate.textContent  = `${state.taxRate.toFixed(1)}%`;
         kpiTaxCard.classList.remove('hidden');
     } else {
         kpiTaxCard.classList.add('hidden');
     }
-    
-    // Card 4: Snowball Milestone
-    // Yield on Cost = Current Annual Dividend / Original Investment
-    const yieldOnCost = result.summary.originalInvestment > 0
-        ? ((annualIncome / result.summary.originalInvestment) * 100).toFixed(1)
-        : 0;
+
+    // ── KPI Card 4: Snowball Milestone ───────────────────────────────────────
+    const yieldOnCost = combined.originalInvestment > 0
+        ? ((annualIncome / combined.originalInvestment) * 100).toFixed(1) : 0;
     kpiYieldOnCost.textContent = `${yieldOnCost}%`;
-    
-    // Payback Progress = Total Dividends / Original Investment
-    const paybackProgress = result.summary.originalInvestment > 0
-        ? ((result.summary.totalDividends / result.summary.originalInvestment) * 100).toFixed(1)
-        : 0;
+
+    const paybackProgress = combined.originalInvestment > 0
+        ? ((combined.totalDividends / combined.originalInvestment) * 100).toFixed(1) : 0;
     kpiPaybackProgress.textContent = `${paybackProgress}%`;
-    
-    // Card 5: Contribution Impact (Conditional)
+
+    // ── KPI Card 5: Contribution Impact ──────────────────────────────────────
     if (state.addContributions) {
-        const totalContributed = result.summary.totalContributed;
-        const marketGrowth = result.summary.finalPortfolioValue - totalContributed;
-        
+        const totalContributed = combined.totalContributed;
+        const marketGrowth     = combined.finalPortfolioValue - totalContributed;
         kpiTotalContributed.textContent = formatCurrency(totalContributed);
-        kpiMarketGrowth.textContent = formatCurrency(Math.max(0, marketGrowth));
+        kpiMarketGrowth.textContent     = formatCurrency(Math.max(0, marketGrowth));
         kpiContributionCard.classList.remove('hidden');
     } else {
         kpiContributionCard.classList.add('hidden');
     }
+
+    // ── KPI Card 6: Stock Breakdown (only when additional stocks exist) ───────
+    const breakdownCard = document.getElementById('kpi-breakdown-card');
+    if (state.additionalStocks.length > 0 && breakdownCard) {
+        const t = (window.DividendCalc && window.DividendCalc.translations &&
+            window.DividendCalc.translations[currentLanguage]) || {};
+
+        const perStockBreakdown = [
+            { name: t.mainStock || 'Main Stock', result: mainResult },
+            ...additionalResults.map(({ stock, result }) => ({
+                name: stock.label.trim() || `Stock ${stock.id}`,
+                result
+            }))
+        ];
+        updateStockBreakdownCard(perStockBreakdown, formatCurrency);
+        breakdownCard.classList.remove('hidden');
+    } else if (breakdownCard) {
+        breakdownCard.classList.add('hidden');
+    }
+
+    // Cache results for CSV/Excel export
+    window.lastCalcData = {
+        combined,
+        mainResult,
+        additionalResults,
+        snapState: {
+            numShares:          state.numShares,
+            pricePerShare:      state.pricePerShare,
+            annualDividend:     state.annualDividend,
+            currency:           state.currency,
+            currencySymbol:     state.currencySymbol,
+            taxRate:            state.taxRate,
+            applyTax:           state.applyTax,
+            reinvest:           state.reinvest,
+            addContributions:   state.addContributions,
+            contributionAmount: state.contributionAmount,
+            contributionFreq:   state.contributionFreq,
+            dividendFrequency:  state.dividendFrequency,
+            selectedYears:      state.selectedYears,
+            additionalStocks:   state.additionalStocks
+        }
+    };
 }
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', init);
+
+/*──────────────────────────────────────────────────────────────────────────
+  MULTI-STOCK PORTFOLIO — HELPER FUNCTIONS
+──────────────────────────────────────────────────────────────────────────*/
+
+/**
+ * Safely escapes a string for insertion into HTML
+ */
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+/**
+ * Debounced recalculate — used by additional stock inputs
+ */
+let additionalStockDebounce;
+function scheduleRecalc() {
+    clearTimeout(additionalStockDebounce);
+    additionalStockDebounce = setTimeout(() => calculateAndRender(), 300);
+}
+
+/**
+ * Adds a new additional stock entry and re-renders
+ */
+function addAdditionalStock() {
+    state.stockIdCounter++;
+    state.additionalStocks.push({
+        id:             state.stockIdCounter,
+        label:          '',
+        numShares:      0,
+        pricePerShare:  0,
+        annualDividend: 0,
+        dividendYield:  0,
+        lastUpdated:    'dividend'
+    });
+    renderAdditionalStockCards();
+    calculateAndRender();
+}
+
+/**
+ * Removes an additional stock by ID and re-renders
+ */
+function removeAdditionalStock(id) {
+    state.additionalStocks = state.additionalStocks.filter(s => s.id !== id);
+    renderAdditionalStockCards();
+    calculateAndRender();
+}
+
+/**
+ * Rebuilds all additional stock cards from state.additionalStocks
+ */
+function renderAdditionalStockCards() {
+    const container = document.getElementById('additional-stocks-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    state.additionalStocks.forEach((stock, index) => {
+        const sym  = state.currencySymbol;
+        const card = document.createElement('div');
+        card.className   = 'additional-stock-card';
+        card.dataset.stockId = stock.id;
+
+        card.innerHTML = `
+            <div class="stock-card-header">
+                <span class="stock-number-badge">Stock ${index + 2}</span>
+                <input
+                    type="text"
+                    class="stock-name-input"
+                    placeholder="Ticker / Name (optional)"
+                    value="${escapeHtml(stock.label)}"
+                    maxlength="32"
+                    aria-label="Stock name or ticker"
+                >
+                <button type="button" class="stock-remove-btn" aria-label="Remove stock" title="Remove this stock">&times;</button>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Number of Shares</label>
+                    <div class="input-wrapper">
+                        <input type="number" class="stock-shares" value="${stock.numShares || ''}" min="0" step="1" placeholder="0">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Price per Share</label>
+                    <div class="input-wrapper">
+                        <span class="currency-symbol">${escapeHtml(sym)}</span>
+                        <input type="number" class="stock-price" value="${stock.pricePerShare || ''}" min="0" step="0.01" placeholder="0.00">
+                    </div>
+                </div>
+            </div>
+
+            <div class="linked-inputs-row">
+                <div class="input-group">
+                    <label>Annual Dividend / Share</label>
+                    <div class="input-wrapper">
+                        <span class="currency-symbol">${escapeHtml(sym)}</span>
+                        <input type="number" class="stock-dividend" value="${stock.annualDividend || ''}" min="0" step="0.01" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="linked-inputs-divider">OR</div>
+                <div class="input-group">
+                    <label>Dividend Yield %</label>
+                    <div class="input-wrapper">
+                        <input type="number" class="stock-yield" value="${stock.dividendYield || ''}" min="0" step="0.01" placeholder="0.00">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // ── Wire up inputs ────────────────────────────────────────────────
+        const nameInput     = card.querySelector('.stock-name-input');
+        const sharesInput   = card.querySelector('.stock-shares');
+        const priceInput    = card.querySelector('.stock-price');
+        const dividendInput = card.querySelector('.stock-dividend');
+        const yieldInput    = card.querySelector('.stock-yield');
+        const removeBtn     = card.querySelector('.stock-remove-btn');
+
+        // Name — no recalc needed (purely cosmetic for breakdown card)
+        nameInput.addEventListener('input', () => {
+            stock.label = nameInput.value;
+        });
+
+        // Unified updater: reads inputs, recalculates linked field, stores to state
+        function syncStockFromInputs() {
+            const shares = parseFloat(sharesInput.value)   || 0;
+            const price  = parseFloat(priceInput.value)    || 0;
+            stock.numShares     = shares;
+            stock.pricePerShare = price;
+
+            if (stock.lastUpdated === 'dividend') {
+                const div            = parseFloat(dividendInput.value) || 0;
+                stock.annualDividend = div;
+                stock.dividendYield  = price > 0 ? (div / price) * 100 : 0;
+                yieldInput.value     = stock.dividendYield.toFixed(2);
+            } else {
+                const yld            = parseFloat(yieldInput.value) || 0;
+                stock.dividendYield  = yld;
+                stock.annualDividend = (yld / 100) * price;
+                dividendInput.value  = stock.annualDividend.toFixed(2);
+            }
+        }
+
+        sharesInput.addEventListener('input',   () => { syncStockFromInputs(); scheduleRecalc(); });
+        priceInput.addEventListener('input',    () => { syncStockFromInputs(); scheduleRecalc(); });
+        dividendInput.addEventListener('input', () => { stock.lastUpdated = 'dividend'; syncStockFromInputs(); scheduleRecalc(); });
+        yieldInput.addEventListener('input',    () => { stock.lastUpdated = 'yield';    syncStockFromInputs(); scheduleRecalc(); });
+
+        // Remove button
+        removeBtn.addEventListener('click', () => removeAdditionalStock(stock.id));
+
+        container.appendChild(card);
+    });
+}
+
+/**
+ * Renders the per-stock breakdown table inside KPI Card 6
+ * @param {Array} perStockBreakdown  - [{ name, result }]
+ * @param {Function} formatCurrency  - currency formatter from calculateAndRender scope
+ */
+function updateStockBreakdownCard(perStockBreakdown, formatCurrency) {
+    const body = document.getElementById('kpi-breakdown-body');
+    if (!body) return;
+
+    const applyTax = state.applyTax;
+
+    let html = `
+        <table class="stock-breakdown-table">
+            <thead>
+                <tr>
+                    <th>Stock</th>
+                    <th>Annual Income</th>
+                    <th>Monthly Income</th>
+                    ${applyTax ? '<th>Annual Tax</th>' : ''}
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    perStockBreakdown.forEach(({ name, result }) => {
+        const annual  = result.summary.annualIncome;
+        const monthly = result.summary.monthlyIncome;
+        const tax     = result.summary.annualTax;
+
+        html += `
+            <tr>
+                <td class="sbt-name">${escapeHtml(name)}</td>
+                <td class="sbt-annual">${formatCurrency(Math.round(annual))}</td>
+                <td class="sbt-monthly">${formatCurrency(Math.round(monthly * 100) / 100)}</td>
+                ${applyTax ? `<td class="sbt-tax">${formatCurrency(Math.round(tax))}</td>` : ''}
+            </tr>
+        `;
+    });
+
+    html += `</tbody></table>`;
+    body.innerHTML = html;
+}
+

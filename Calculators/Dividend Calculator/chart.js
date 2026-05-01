@@ -152,15 +152,26 @@ window.DividendCalc.initPieChart = function(canvasContext) {
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 
-                // Draw "Total" label
+                // Get current language translation for "TOTAL" label
+                const lang = window.currentLanguage || 'en';
+                const t = (window.DividendCalc && window.DividendCalc.translations && window.DividendCalc.translations[lang])
+                    ? window.DividendCalc.translations[lang]
+                    : (window.DividendCalc && window.DividendCalc.translations && window.DividendCalc.translations['en'])
+                        || {};
+                const totalLabel = (t.total || 'TOTAL').toUpperCase();
+                
+                // Get current currency symbol (updated whenever user changes currency)
+                const currSym = window.currentCurrencySymbol || '$';
+                
+                // Draw translated "Total" label
                 ctx.fillStyle = 'rgba(156, 163, 175, 0.8)';
                 ctx.font = `bold ${labelFontSize}px Inter, sans-serif`;
-                ctx.fillText('TOTAL', centerX, centerY - labelOffset);
+                ctx.fillText(totalLabel, centerX, centerY - labelOffset);
                 
-                // Draw total value
+                // Draw total value with current currency symbol
                 ctx.fillStyle = '#ffffff';
                 ctx.font = `bold ${valueFontSize}px Inter, sans-serif`;
-                const formattedTotal = '$' + total.toLocaleString();
+                const formattedTotal = currSym + total.toLocaleString();
                 ctx.fillText(formattedTotal, centerX, centerY + valueOffset);
                 
                 ctx.restore();
